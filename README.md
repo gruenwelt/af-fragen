@@ -1,0 +1,2 @@
+# amateurfunk-fragenkatalog
+Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen
