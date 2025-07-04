@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Tree from './Tree.svelte';
   import { page } from '$app/stores';
+  import { base } from '$app/paths';
 
   export let nodes: any[] = [];
   export let level = 1;
@@ -38,7 +39,7 @@
             dispatch('sectionclick', node);
           }}
         >
-          - {node.title}
+          <span>-</span> <span class="hover:underline">{node.title}</span>
         </button>
       {:else if level === 1}
         <button

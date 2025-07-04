@@ -9,6 +9,8 @@ import { onMount, tick } from 'svelte';
 import { page } from '$app/stores';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { base } from '$app/paths';
+import { browser } from '$app/environment';
 
 // --- Data Imports ---
 import data from '$lib/data/fragenkatalog3b.json';
@@ -82,6 +84,7 @@ let questions: Question[] = collectQuestions(data.sections);
 
 // Filter questions based on class query parameter
 $: filteredQuestions = (() => {
+  if (!browser) return [];
   const c = $page.url.searchParams.get('class');
   if (c === '1' || c === '2' || c === '3') {
     return questions.filter(q => q.class === c);
@@ -90,7 +93,7 @@ $: filteredQuestions = (() => {
 })();
 
 // Select the tree data for the left menu based on class query param
-$: selectedClass = $page.url.searchParams.get('class') || 'Alle';
+$: selectedClass = browser ? $page.url.searchParams.get('class') || 'Alle' : 'Alle';
 
 $: treeData = (() => {
   function filterTreeByClass(nodes: any[], selectedClass: string): any[] {
@@ -194,7 +197,7 @@ async function scrollToQuestion(questionId: string) {
           </div>
           {#if q.picture_question}
             <div class="flex justify-center mb-5">
-              <img src={`/src/lib/images/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+              <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
             </div>
           {:else}
             <div class="mb-5"></div>
@@ -202,28 +205,28 @@ async function scrollToQuestion(questionId: string) {
           <div class="grid grid-cols-2 gap-3">
             <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
               {#if q.picture_a}
-                <img src={`/src/lib/images/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
+                <img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
               {:else}
                 <KatexRenderer latexString={q.answer_a} />
               {/if}
             </div>
             <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
               {#if q.picture_b}
-                <img src={`/src/lib/images/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
+                <img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
               {:else}
                 <KatexRenderer latexString={q.answer_b} />
               {/if}
             </div>
             <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
               {#if q.picture_c}
-                <img src={`/src/lib/images/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
+                <img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
               {:else}
                 <KatexRenderer latexString={q.answer_c} />
               {/if}
             </div>
             <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
               {#if q.picture_d}
-                <img src={`/src/lib/images/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
+                <img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
               {:else}
                 <KatexRenderer latexString={q.answer_d} />
               {/if}
