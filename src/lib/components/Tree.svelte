@@ -1,6 +1,13 @@
 <script lang="ts">
+  import type { SvelteComponentTyped } from 'svelte';
   import { createEventDispatcher } from 'svelte';
-  import Tree from './Tree.svelte';
+  type TreeProps = { nodes?: any[]; level?: number; selectedTitle?: string | null };
+  let TreeComponent: (new (...args: any) => SvelteComponentTyped<TreeProps>) | null = null;
+  $: if (!TreeComponent) {
+    import('./Tree.svelte').then((mod) => {
+      TreeComponent = mod.default;
+    });
+  }
 
   // Props
   export let nodes: any[] = [];
@@ -70,7 +77,9 @@
 
       <!-- Recurse into sub-sections -->
       {#if node.sections && level < 3 && (level !== 1 || !collapsedSections.has(node.title))}
-        <Tree nodes={node.sections} level={level + 1} on:sectionclick bind:selectedTitle />
+        {#if TreeComponent}
+          <svelte:component this={TreeComponent} nodes={node.sections} level={level + 1} on:sectionclick bind:selectedTitle />
+        {/if}
       {/if}
     </li>
   {/each}
