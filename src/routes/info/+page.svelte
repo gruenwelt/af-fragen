@@ -3,7 +3,24 @@
 	<meta name="description" content="Info über die app" />
 </svelte:head>
 
-<div class="text-column space-y-6">
+<script>
+	import { onMount } from 'svelte';
+	let isMobile = false;
+
+	onMount(() => {
+		isMobile = window.innerWidth <= 768;
+	});
+</script>
+
+
+<div
+	class="space-y-6 overflow-y-auto pt-8"
+	class:text-column={!isMobile}
+	class:pr-1={isMobile}
+	class:p-1={isMobile}
+	style="scrollbar-width: none; -ms-overflow-style: none;"
+	on:wheel|passive
+>
 
 	<p>
 		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
@@ -25,4 +42,11 @@
 		Alle Inhalte dieser Web-App wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird jedoch keine Gewähr übernommen. Die Nutzung der Inhalte erfolgt auf eigene Verantwortung.
 	</p>
 
+	<div class="h-20"></div>
+
+	<style>
+		div::-webkit-scrollbar {
+			display: none;
+		}
+	</style>
 </div>
