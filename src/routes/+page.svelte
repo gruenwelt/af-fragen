@@ -261,6 +261,7 @@
 							<KatexRenderer latexString={q.question} />
 						</div>
 						{#if q.picture_question}
+							<div class="mb-2"></div>
 							<div class="flex justify-center mb-5">
 								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
 							</div>
@@ -377,6 +378,7 @@
 								<KatexRenderer latexString={q.question} />
 							</div>
 							{#if q.picture_question}
+								<div class="mb-2"></div>
 								<div class="flex justify-center mb-5">
 									<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
 								</div>
