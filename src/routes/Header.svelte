@@ -4,6 +4,12 @@
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 	import { base } from '$app/paths';
+
+let currentSearch = '';
+let currentPath = '';
+
+$: currentSearch = browser ? $page.url.search : '';
+$: currentPath = browser ? $page.url.pathname : '';
 </script>
 
 <header>
@@ -20,16 +26,16 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={browser && $page.url.searchParams.get('class') === '1' ? 'page' : undefined}>
+			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
 				<a href="{base}/?class=1">N</a>
 			</li>
-			<li aria-current={browser && $page.url.searchParams.get('class') === '2' ? 'page' : undefined}>
+			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
 				<a href="{base}/?class=2">E</a>
 			</li>
-			<li aria-current={browser && $page.url.searchParams.get('class') === '3' ? 'page' : undefined}>
+			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
 				<a href="{base}/?class=3">A</a>
 			</li>
-			<li aria-current={browser && !['1','2','3'].includes($page.url.searchParams.get('class') ?? '') ? 'page' : undefined}>
+			<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
 				<a href="{base}/">Alle</a>
 			</li>
 		</ul>
@@ -44,11 +50,11 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={browser && $page.url?.pathname === base + '/' ? 'page' : undefined}>
-				<a href={`${base}/${$page.url.search}`}>Fragen</a>
+			<li aria-current={browser && currentPath === base + '/' ? 'page' : undefined}>
+				<a href={`${base}/${currentSearch}`}>Fragen</a>
 			</li>
-			<li aria-current={browser && $page.url?.pathname === base + '/info' ? 'page' : undefined}>
-				<a href={`${base}/info${$page.url.search}`}>Info</a>
+			<li aria-current={browser && currentPath === base + '/info' ? 'page' : undefined}>
+				<a href={`${base}/info${currentSearch}`}>Info</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
