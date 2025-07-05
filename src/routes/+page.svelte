@@ -103,16 +103,22 @@
 	let isLoading = false;
 
 	$: if (browser && $page.url) {
-		const c = $page.url.searchParams.get('class');
+		const c = $page.url.searchParams.get('class') || 'Alle';
 		isLoading = true;
-		const target = (c === '1' || c === '2' || c === '3')
-			? questions.filter(q => q.class === c)
-			: questions;
+
+		let target: Question[];
+		if (c === '1' || c === '2' || c === '3') {
+			target = questions.filter((q) => q.class === c);
+		} else if (c === 'Alle') {
+			target = questions;
+		} else {
+			target = [];
+		}
 
 		setTimeout(() => {
 			filteredQuestions = target;
 			isLoading = false;
-		}, 300); // slightly longer delay for smoother effect
+		}, 300);
 	}
 
 	// Selected class for tree filtering
@@ -171,6 +177,15 @@
 		};
 
 		checkMobile();
+
+		// ✅ Enforce default class=Alle if none present
+		const currentParams = new URLSearchParams(window.location.search);
+		if (!currentParams.has('class')) {
+			currentParams.set('class', 'Alle');
+			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+			window.history.replaceState({}, '', newUrl);
+		}
+
 		window.addEventListener('resize', checkMobile);
 
 		if (browser && isMobile) {
@@ -218,15 +233,9 @@
 						}
 
 						let first;
-
-						if (currentClass === 'Alle') {
-							first = node.question_numbers[0];
-						} else {
-							first = node.question_numbers.find((qn: string) =>
-								filteredQuestions.some(q => q.number === qn)
-							);
-						}
-
+						first = node.question_numbers.find((qn: string) =>
+							(filteredQuestions.length > 0 ? filteredQuestions : questions).some(q => q.number === qn)
+						);
 						if (first) {
 							scrollToQuestion(first);
 						} else {
@@ -340,15 +349,9 @@
 						}
 
 						let first;
-
-						if (currentClass === 'Alle') {
-							first = node.question_numbers[0];
-						} else {
-							first = node.question_numbers.find((qn: string) =>
-								filteredQuestions.some(q => q.number === qn)
-							);
-						}
-
+						first = node.question_numbers.find((qn: string) =>
+							(filteredQuestions.length > 0 ? filteredQuestions : questions).some(q => q.number === qn)
+						);
 						if (first) {
 							scrollToQuestion(first);
 							// showSidebar = false; // Prevent sidebar from hiding after Tree click

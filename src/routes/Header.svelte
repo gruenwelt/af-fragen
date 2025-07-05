@@ -45,10 +45,10 @@
 		</svg>
 		<ul>
 			<li aria-current={browser && $page.url?.pathname === base + '/' ? 'page' : undefined}>
-				<a href="{base}/">Fragen</a>
+				<a href={`${base}/${$page.url.search}`}>Fragen</a>
 			</li>
 			<li aria-current={browser && $page.url?.pathname === base + '/info' ? 'page' : undefined}>
-				<a href="{base}/info">Info</a>
+				<a href={`${base}/info${$page.url.search}`}>Info</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
