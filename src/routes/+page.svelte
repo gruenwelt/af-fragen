@@ -273,7 +273,7 @@
 						{#if q.picture_question}
 							<div class="mb-2"></div>
 							<div class="flex justify-center mb-5">
-								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-full h-auto" />
 							</div>
 						{:else}
 							<div class="mb-5"></div>
@@ -281,28 +281,28 @@
 						<div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_a}
-									<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
+									<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="w-full h-auto mx-auto" />
 								{:else}
 									<KatexRenderer latexString={q.answer_a} />
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_b}
-									<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
+									<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="w-full h-auto mx-auto" />
 								{:else}
 									<KatexRenderer latexString={q.answer_b} />
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_c}
-									<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
+									<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="w-full h-auto mx-auto" />
 								{:else}
 									<KatexRenderer latexString={q.answer_c} />
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_d}
-									<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
+									<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="w-full h-auto mx-auto" />
 								{:else}
 									<KatexRenderer latexString={q.answer_d} />
 								{/if}
@@ -397,7 +397,7 @@
 							{#if q.picture_question}
 								<div class="mb-2"></div>
 								<div class="flex justify-center mb-5">
-									<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+									<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-full h-auto" />
 								</div>
 							{:else}
 								<div class="mb-5"></div>
@@ -405,34 +405,34 @@
 							<div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_a}
-										<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
+										<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="w-full h-auto mx-auto" />
 									{:else}
 										<KatexRenderer latexString={q.answer_a} />
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_b}
-										<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
+										<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="w-full h-auto mx-auto" />
 									{:else}
 										<KatexRenderer latexString={q.answer_b} />
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_c}
-										<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
+										<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="w-full h-auto mx-auto" />
 									{:else}
 										<KatexRenderer latexString={q.answer_c} />
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_d}
-										<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
+										<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="w-full h-auto mx-auto" />
 									{:else}
 										<KatexRenderer latexString={q.answer_d} />
 									{/if}
 								</div>
 							</div>
-							<footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
+							<footer class="mt-4 text-sm text-gray-500 italic text-center">
 								{q.number} – {q.section1}; {q.section2}; {q.section3}
 							</footer>
 						</article>
