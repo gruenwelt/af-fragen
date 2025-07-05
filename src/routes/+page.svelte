@@ -142,108 +142,249 @@ async function scrollToQuestion(questionId: string) {
   }
 }
 
+// --- Mobile detection and sidebar toggle ---
+let isMobile = false;
+
+onMount(() => {
+  const checkMobile = () => {
+    isMobile = window.innerWidth <= 768;
+  };
+
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+});
+
+let showSidebar = false;
+
 </script>
 
-<!-- Container for sidebar and questions content -->
-<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
-  <!-- Sidebar: Navigation tree -->
-  <nav
-    class="w-[35%] rounded-lg p-4 max-h-[80vh] overflow-y-auto bg-white/70"
-    aria-label="Left sidebar navigation menu"
-  >
-  <Tree
-    nodes={treeData}
-    level={1}
-    on:sectionclick={(e) => {
-      const node = e.detail;
-      const currentClass = $page.url.searchParams.get('class') || 'Alle';
+{#if !isMobile}
+  <div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
+    <!-- Sidebar: Navigation tree -->
+    <nav
+      class="w-[35%] rounded-lg p-4 max-h-[80vh] overflow-y-auto bg-white/70"
+      aria-label="Left sidebar navigation menu"
+    >
+    <Tree
+      nodes={treeData}
+      level={1}
+      on:sectionclick={(e) => {
+        const node = e.detail;
+        const currentClass = $page.url.searchParams.get('class') || 'Alle';
 
-      if (!node.question_numbers || node.question_numbers.length === 0) {
-        return;
-      }
+        if (!node.question_numbers || node.question_numbers.length === 0) {
+          return;
+        }
 
-      let first;
+        let first;
 
-      if (currentClass === 'Alle') {
-        first = node.question_numbers[0];
-      } else {
-        first = node.question_numbers.find((qn: string) =>
-          filteredQuestions.some(q => q.number === qn)
-        );
-      }
+        if (currentClass === 'Alle') {
+          first = node.question_numbers[0];
+        } else {
+          first = node.question_numbers.find((qn: string) =>
+            filteredQuestions.some(q => q.number === qn)
+          );
+        }
 
-      if (first) {
-        scrollToQuestion(first);
-      } else {
-        return;
-      }
-    }}
-  />
-  </nav>
+        if (first) {
+          scrollToQuestion(first);
+        } else {
+          return;
+        }
+      }}
+    />
+    </nav>
 
-  <!-- Questions container -->
-  <section
-    bind:this={questionsContainer}
-    class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto flex-grow overflow-x-hidden"
-    aria-label="Scrollable questions container"
-  >
-    {#if filteredQuestions.length === 0}
-      <!-- Loading animation -->
-      <div class="flex justify-center items-center h-full py-12">
-        <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
-      </div>
-    {:else}
-      {#each filteredQuestions as q}
-        <article
-          data-question-id={q.number}
-          class="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70"
-          aria-label="Question and answers"
-        >
-          <div class="text-center">
-            <KatexRenderer latexString={q.question} />
-          </div>
-          {#if q.picture_question}
-            <div class="flex justify-center mb-5">
-              <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+    <!-- Questions container -->
+    <section
+      bind:this={questionsContainer}
+      class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto flex-grow overflow-x-hidden"
+      aria-label="Scrollable questions container"
+    >
+      {#if filteredQuestions.length === 0}
+        <!-- Loading animation -->
+        <div class="flex justify-center items-center h-full py-12">
+          <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
+        </div>
+      {:else}
+        {#each filteredQuestions as q}
+          <article
+            data-question-id={q.number}
+            class="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70"
+            aria-label="Question and answers"
+          >
+            <div class="text-center">
+              <KatexRenderer latexString={q.question} />
             </div>
-          {:else}
-            <div class="mb-5"></div>
-          {/if}
-          <div class="grid grid-cols-2 gap-3">
-            <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-              {#if q.picture_a}
-                <img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
-              {:else}
-                <KatexRenderer latexString={q.answer_a} />
-              {/if}
+            {#if q.picture_question}
+              <div class="flex justify-center mb-5">
+                <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+              </div>
+            {:else}
+              <div class="mb-5"></div>
+            {/if}
+            <div class="grid grid-cols-2 gap-3">
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_a}
+                  <img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_a} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_b}
+                  <img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_b} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_c}
+                  <img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_c} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_d}
+                  <img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_d} />
+                {/if}
+              </div>
             </div>
-            <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-              {#if q.picture_b}
-                <img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
-              {:else}
-                <KatexRenderer latexString={q.answer_b} />
-              {/if}
-            </div>
-            <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-              {#if q.picture_c}
-                <img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
-              {:else}
-                <KatexRenderer latexString={q.answer_c} />
-              {/if}
-            </div>
-            <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-              {#if q.picture_d}
-                <img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
-              {:else}
-                <KatexRenderer latexString={q.answer_d} />
-              {/if}
-            </div>
-          </div>
-          <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
-            {q.number} – {q.section1}; {q.section2}; {q.section3}
-          </footer>
-        </article>
-      {/each}
+            <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
+              {q.number} – {q.section1}; {q.section2}; {q.section3}
+            </footer>
+          </article>
+        {/each}
+      {/if}
+    </section>
+  </div>
+{:else}
+  <div class="relative max-w-5xl mx-auto p-4 overflow-x-hidden flex-grow">
+    <button
+      class={`fixed top-13 z-50 bg-white/70 px-2 py-1 rounded transition-transform duration-300 transform ${
+        showSidebar ? 'left-[65%] rotate-180' : 'left-0'
+      }`}
+      on:click={() => (showSidebar = !showSidebar)}
+      aria-label="Toggle Sidebar"
+    >
+      ☰
+    </button>
+
+    {#if showSidebar}
+      <div
+        class="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
+        role="button"
+        tabindex="0"
+        on:click={() => (showSidebar = false)}
+        on:keydown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') showSidebar = false;
+        }}
+      ></div>
     {/if}
-  </section>
-</div>
+
+    <div
+      class={`fixed top-[5%] left-0 h-full w-[70%] max-h-[90%] rounded-2xl z-40 p-4 bg-white/70 overflow-y-auto shadow-lg transform transition-transform duration-300 ${
+        showSidebar ? 'translate-x-0' : '-translate-x-full'
+      }`}
+    >
+      <Tree
+        nodes={treeData}
+        level={1}
+        on:sectionclick={(e) => {
+          const node = e.detail;
+          const currentClass = $page.url.searchParams.get('class') || 'Alle';
+
+          if (!node.question_numbers || node.question_numbers.length === 0) {
+            return;
+          }
+
+          let first;
+
+          if (currentClass === 'Alle') {
+            first = node.question_numbers[0];
+          } else {
+            first = node.question_numbers.find((qn: string) =>
+              filteredQuestions.some(q => q.number === qn)
+            );
+          }
+
+          if (first) {
+            scrollToQuestion(first);
+            // showSidebar = false; // Prevent sidebar from hiding after Tree click
+          } else {
+            return;
+          }
+        }}
+      />
+    </div>
+
+    <section
+      bind:this={questionsContainer}
+      class="w-full space-y-6 max-h-[80vh] overflow-y-auto flex-grow overflow-x-hidden"
+      aria-label="Scrollable questions container"
+    >
+      {#if filteredQuestions.length === 0}
+        <!-- Loading animation -->
+        <div class="flex justify-center items-center h-full py-12">
+          <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
+        </div>
+      {:else}
+        {#each filteredQuestions as q}
+          <article
+            data-question-id={q.number}
+            class="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70"
+            aria-label="Question and answers"
+          >
+            <div class="text-center">
+              <KatexRenderer latexString={q.question} />
+            </div>
+            {#if q.picture_question}
+              <div class="flex justify-center mb-5">
+                <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="max-h-48" />
+              </div>
+            {:else}
+              <div class="mb-5"></div>
+            {/if}
+            <div class="grid grid-cols-2 gap-3">
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_a}
+                  <img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_a} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_b}
+                  <img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_b} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_c}
+                  <img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_c} />
+                {/if}
+              </div>
+              <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+                {#if q.picture_d}
+                  <img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="max-h-24 mx-auto" />
+                {:else}
+                  <KatexRenderer latexString={q.answer_d} />
+                {/if}
+              </div>
+            </div>
+            <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
+              {q.number} – {q.section1}; {q.section2}; {q.section3}
+            </footer>
+          </article>
+        {/each}
+      {/if}
+    </section>
+  </div>
+{/if}

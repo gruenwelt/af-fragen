@@ -39,7 +39,7 @@
             dispatch('sectionclick', node);
           }}
         >
-          <span>-</span> <span class="hover:underline">{node.title}</span>
+          <span>-</span> <span>{node.title}</span>
         </button>
       {:else if level === 1}
         <button
