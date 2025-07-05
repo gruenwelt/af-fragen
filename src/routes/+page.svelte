@@ -204,6 +204,9 @@
 	// --- Event Handlers ---
 	// Tree section click handlers are inline in markup, using scrollToQuestion and filteredQuestions
 
+	// --- Highlighted Questions ---
+	let highlightedNumbers: string[] = [];
+
 </script>
 
 {#if isLoading}
@@ -229,8 +232,11 @@
 						const currentClass = $page.url.searchParams.get('class') || 'Alle';
 
 						if (!node.question_numbers || node.question_numbers.length === 0) {
+							highlightedNumbers = [];
 							return;
 						}
+
+						highlightedNumbers = node.question_numbers || [];
 
 						let first;
 						first = node.question_numbers.find((qn: string) =>
@@ -254,7 +260,11 @@
 				{#each filteredQuestions as q}
 					<article
 						data-question-id={q.number}
-						class="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70"
+						class={`border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70 ${
+							highlightedNumbers.includes(q.number)
+								? '[border-color:var(--color-theme-1)]'
+								: 'border-gray-300'
+						}`}
 						aria-label="Question and answers"
 					>
 						<div class="text-center">
@@ -346,8 +356,11 @@
 						const currentClass = $page.url.searchParams.get('class') || 'Alle';
 
 						if (!node.question_numbers || node.question_numbers.length === 0) {
+							highlightedNumbers = [];
 							return;
 						}
+
+						highlightedNumbers = node.question_numbers || [];
 
 						let first;
 						first = node.question_numbers.find((qn: string) =>
@@ -371,7 +384,11 @@
 					{#each filteredQuestions as q}
 						<article
 							data-question-id={q.number}
-							class="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70"
+							class={`border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70 ${
+								highlightedNumbers.includes(q.number)
+									? '[border-color:var(--color-theme-1)]'
+									: 'border-gray-300'
+							}`}
 							aria-label="Question and answers"
 						>
 							<div class="text-center">
