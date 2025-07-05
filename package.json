@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "npm run generate-trees && vite build",
+		"build": "npm run generate-trees && vite build && touch docs/.nojekyll",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"generate-trees": "node scripts/generate_question_trees.js",
-		"deploy": "npm run build && cp -r build/* docs/"
+		"deploy": "npm run build && mkdir -p docs && cp -a build/. docs/ && touch docs/.nojekyll"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

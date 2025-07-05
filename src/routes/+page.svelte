@@ -82,15 +82,20 @@ let questions: Question[] = collectQuestions(data.sections);
 
 // --- Reactive Statements ---
 
-// Filter questions based on class query parameter
-$: filteredQuestions = (() => {
-  if (!browser) return [];
+// Filter questions based on class query parameter (browser-only after hydration)
+let filteredQuestions: Question[] = [];
+
+$: if (browser && $page.url) {
   const c = $page.url.searchParams.get('class');
   if (c === '1' || c === '2' || c === '3') {
-    return questions.filter(q => q.class === c);
+    filteredQuestions = questions.filter(q => q.class === c);
+  } else {
+    filteredQuestions = questions;
   }
-  return questions;
-})();
+}
+
+// Loading state: true if running in browser and filteredQuestions is empty
+$: isLoading = browser && filteredQuestions.length === 0;
 
 // Select the tree data for the left menu based on class query param
 $: selectedClass = browser ? $page.url.searchParams.get('class') || 'Alle' : 'Alle';
@@ -183,8 +188,10 @@ async function scrollToQuestion(questionId: string) {
     aria-label="Scrollable questions container"
   >
     {#if filteredQuestions.length === 0}
-      <!-- Loading state -->
-      <p class="text-center text-gray-500">Ladefragen...</p>
+      <!-- Loading animation -->
+      <div class="flex justify-center items-center h-full py-12">
+        <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
+      </div>
     {:else}
       {#each filteredQuestions as q}
         <article
@@ -233,7 +240,7 @@ async function scrollToQuestion(questionId: string) {
             </div>
           </div>
           <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
-            {q.number} – {q.section1}, {q.section2}, {q.section3}
+            {q.number} – {q.section1}; {q.section2}; {q.section3}
           </footer>
         </article>
       {/each}
