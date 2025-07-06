@@ -1,0 +1,1 @@
+function i(u,n){function l(e){var t,r;if(n==="Alle"||!e.classes||e.classes.includes(n)){const s={...e,sections:((t=e.sections)==null?void 0:t.map(l).filter(Boolean))??[],questions:e.questions??[]};return s.sections.length>0||(((r=e.question_numbers)==null?void 0:r.length)??0)>0?s:null}return null}return u.map(l).filter(Boolean)}export{i as filterTreeByClass};

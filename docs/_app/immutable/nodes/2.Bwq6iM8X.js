@@ -1,0 +1,1 @@
+import{y as n,z as a,E as s,h as p}from"../chunks/D9s-jd2n.js";const c=!0,l=Object.freeze(Object.defineProperty({__proto__:null,prerender:c},Symbol.toStringTag,{value:"Module"}));function u(t,o){var e=n(),r=a(e);s(r,()=>o.children),p(t,e)}export{u as component,l as universal};
