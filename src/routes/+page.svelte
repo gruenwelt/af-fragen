@@ -281,7 +281,7 @@
 						{#if q.picture_question}
 							<div class="mb-2"></div>
 							<div class="flex justify-center mb-5">
-								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-full h-auto" />
+								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-[70%] h-auto mx-auto" />
 							</div>
 						{:else}
 							<div class="mb-5"></div>
@@ -500,7 +500,7 @@
 		</div>
 	{/if}
 {/if}
-<style>
+<style global>
 	html,
 	body {
 		height: 100vh;
