@@ -20,6 +20,7 @@
 
 	// --- Component Imports ---
 	import Tree from '$lib/components/Tree.svelte';
+	import QuestionCard from '$lib/components/QuestionCard.svelte';
 
 	// --- Types ---
 	type Question = {
@@ -262,88 +263,7 @@
 				aria-label="Scrollable questions container"
 			>
 				{#each filteredQuestions as q}
-					<article
-						data-question-id={q.number}
-						class={`border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70 ${
-							highlightedNumbers.includes(q.number)
-								? '[border-color:var(--color-theme-1)]'
-								: 'border-gray-300'
-						}`}
-						aria-label="Question and answers"
-					>
-						{#if typeof q.questionHtml === 'string' && q.questionHtml.includes('katex')}
-							<div class="text-center">
-								{@html q.questionHtml}
-							</div>
-						{:else}
-							<div class="text-center">{q.questionHtml ?? ''}</div>
-						{/if}
-						{#if q.picture_question}
-							<div class="mb-2"></div>
-							<div class="flex justify-center mb-5">
-								<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-[70%] h-auto mx-auto" />
-							</div>
-						{:else}
-							<div class="mb-5"></div>
-						{/if}
-						<div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
-							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-								{#if q.picture_a}
-									<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="mx-auto" />
-								{:else}
-									{#if typeof q.answerAHtml === 'string' && q.answerAHtml.includes('katex')}
-										<div class="text-center">
-											{@html q.answerAHtml}
-										</div>
-									{:else}
-										<div class="text-center">{q.answerAHtml ?? ''}</div>
-									{/if}
-								{/if}
-							</div>
-							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-								{#if q.picture_b}
-									<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="mx-auto" />
-								{:else}
-									{#if typeof q.answerBHtml === 'string' && q.answerBHtml.includes('katex')}
-										<div class="text-center">
-											{@html q.answerBHtml}
-										</div>
-									{:else}
-										<div class="text-center">{q.answerBHtml ?? ''}</div>
-									{/if}
-								{/if}
-							</div>
-							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-								{#if q.picture_c}
-									<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="mx-auto" />
-								{:else}
-									{#if typeof q.answerCHtml === 'string' && q.answerCHtml.includes('katex')}
-										<div class="text-center">
-											{@html q.answerCHtml}
-										</div>
-									{:else}
-										<div class="text-center">{q.answerCHtml ?? ''}</div>
-									{/if}
-								{/if}
-							</div>
-							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-								{#if q.picture_d}
-									<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="mx-auto" />
-								{:else}
-									{#if typeof q.answerDHtml === 'string' && q.answerDHtml.includes('katex')}
-										<div class="text-center">
-											{@html q.answerDHtml}
-										</div>
-									{:else}
-										<div class="text-center">{q.answerDHtml ?? ''}</div>
-									{/if}
-								{/if}
-							</div>
-						</div>
-						<footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center">
-							{q.number} – {q.section1}; {q.section2}; {q.section3}
-						</footer>
-					</article>
+					<QuestionCard {q} {highlightedNumbers} {isLongAnswer} {base} />
 				{/each}
 			</section>
 		</div>
@@ -352,9 +272,9 @@
 	<!-- ✅ Mobile Layout (Toggleable Sidebar + Questions) -->
 	<!-- ============================== -->
 	{:else if mobileReady}
-		<div class="relative max-w-5xl mx-auto p-4 overflow-x-hidden">
+		<div class="relative max-w-5xl mx-auto px-0.0 pt-0.0 pb-0 overflow-x-hidden">
 			<button
-				class={`fixed top-13 z-50 bg-white/70 px-2 py-1 rounded transition-transform duration-300 transform ${
+				class={`fixed top-120 z-50 bg-white/70 px-4 py-3 rounded-full shadow transition-transform duration-300 transform ${
 					showSidebar ? 'left-[65%] rotate-180' : 'left-0'
 				}`}
 				on:click={() => (showSidebar = !showSidebar)}
@@ -409,93 +329,12 @@
 
 			<section
 				bind:this={questionsContainer}
-				class="w-full space-y-6 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh]"
+				class="w-full space-y-3 px-1 pt-1 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh]"
 				aria-label="Scrollable questions container"
 			>
-					{#each filteredQuestions as q}
-						<article
-							data-question-id={q.number}
-							class={`border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200 bg-white/70 ${
-								highlightedNumbers.includes(q.number)
-									? '[border-color:var(--color-theme-1)]'
-									: 'border-gray-300'
-							}`}
-							aria-label="Question and answers"
-						>
-							{#if typeof q.questionHtml === 'string' && q.questionHtml.includes('katex')}
-								<div class="text-center">
-									{@html q.questionHtml}
-								</div>
-							{:else}
-								<div class="text-center">{q.questionHtml ?? ''}</div>
-							{/if}
-							{#if q.picture_question}
-								<div class="mb-2"></div>
-								<div class="flex justify-center mb-5">
-									<img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-full h-auto" />
-								</div>
-							{:else}
-								<div class="mb-5"></div>
-							{/if}
-							<div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
-								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-									{#if q.picture_a}
-										<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="w-full h-auto mx-auto" />
-									{:else}
-										{#if typeof q.answerAHtml === 'string' && q.answerAHtml.includes('katex')}
-											<div class="text-center">
-												{@html q.answerAHtml}
-											</div>
-										{:else}
-											<div class="text-center">{q.answerAHtml ?? ''}</div>
-										{/if}
-									{/if}
-								</div>
-								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-									{#if q.picture_b}
-										<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="w-full h-auto mx-auto" />
-									{:else}
-										{#if typeof q.answerBHtml === 'string' && q.answerBHtml.includes('katex')}
-											<div class="text-center">
-												{@html q.answerBHtml}
-											</div>
-										{:else}
-											<div class="text-center">{q.answerBHtml ?? ''}</div>
-										{/if}
-									{/if}
-								</div>
-								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-									{#if q.picture_c}
-										<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="w-full h-auto mx-auto" />
-									{:else}
-										{#if typeof q.answerCHtml === 'string' && q.answerCHtml.includes('katex')}
-											<div class="text-center">
-												{@html q.answerCHtml}
-											</div>
-										{:else}
-											<div class="text-center">{q.answerCHtml ?? ''}</div>
-										{/if}
-									{/if}
-								</div>
-								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
-									{#if q.picture_d}
-										<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="w-full h-auto mx-auto" />
-									{:else}
-										{#if typeof q.answerDHtml === 'string' && q.answerDHtml.includes('katex')}
-											<div class="text-center">
-												{@html q.answerDHtml}
-											</div>
-										{:else}
-											<div class="text-center">{q.answerDHtml ?? ''}</div>
-										{/if}
-									{/if}
-								</div>
-							</div>
-							<footer class="mt-4 text-sm text-gray-500 italic text-center">
-								{q.number} – {q.section1}; {q.section2}; {q.section3}
-							</footer>
-						</article>
-					{/each}
+				{#each filteredQuestions as q}
+					<QuestionCard {q} {highlightedNumbers} {isLongAnswer} {base} />
+				{/each}
 			</section>
 		</div>
 	{/if}
