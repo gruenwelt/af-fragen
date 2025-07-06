@@ -8,5 +8,17 @@ export default defineConfig({
 		tailwindcss(),
 		sveltekit(),
 		devtoolsJson()
-	]
+	],
+	build: {
+		rollupOptions: {
+		output: {
+			manualChunks: {
+				questionCard: ['src/lib/components/QuestionCard.svelte'],
+				Tree: ['src/lib/components/Tree.svelte'],
+				treeFilter: ['src/lib/utils/treeFilter.ts'],
+				questionLoader: ['src/lib/utils/questionLoader.ts']
+			}
+		}
+		}
+	}
 });

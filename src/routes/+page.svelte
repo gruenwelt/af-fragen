@@ -15,12 +15,21 @@
 	import { browser } from '$app/environment';
 
 	// --- Data Imports ---
-	import data from '$lib/data/fragenkatalog3b_prerendered.json';
-	import fullTree from '$lib/data/tree.json';
+	let data: any;
+import fullTree from '$lib/data/tree.json';
 
 	// --- Component Imports ---
-	import Tree from '$lib/components/Tree.svelte';
-	import QuestionCard from '$lib/components/QuestionCard.svelte';
+	let Tree: typeof import('$lib/components/Tree.svelte').default;
+	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
+
+	onMount(async () => {
+		const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
+			import('$lib/components/Tree.svelte'),
+			import('$lib/components/QuestionCard.svelte')
+		]);
+		Tree = TreeModule;
+		QuestionCard = QuestionCardModule;
+	});
 
 	// --- Types ---
 	type Question = {
@@ -46,48 +55,6 @@
 		section3?: string;
 	};
 
-	// --- Component Setup ---
-
-	/**
-	 * Recursively collects all questions from nested sections, attaching section header titles.
-	 */
-	function collectQuestions(sections: any[], path: string[] = []): Question[] {
-		let questions: Question[] = [];
-		for (const section of sections) {
-			const currentPath = [...path, section.title];
-			if (section.questions) {
-				questions.push(
-					...section.questions.map((q: any) => ({
-						question: q.question,
-						questionHtml: q.questionHtml,
-						answer_a: q.answer_a,
-						answerAHtml: q.answerAHtml,
-						answer_b: q.answer_b,
-						answerBHtml: q.answerBHtml,
-						answer_c: q.answer_c,
-						answerCHtml: q.answerCHtml,
-						answer_d: q.answer_d,
-						answerDHtml: q.answerDHtml,
-						class: q.class,
-						picture_question: q.picture_question,
-						picture_a: q.picture_a,
-						picture_b: q.picture_b,
-						picture_c: q.picture_c,
-						picture_d: q.picture_d,
-						number: q.number,
-						section1: (currentPath[0] || '').replace('Prüfungsfragen im Prüfungsteil: ', ''),
-						section2: currentPath[1] || '',
-						section3: currentPath[2] || ''
-					}))
-				);
-			}
-			if (section.sections) {
-				questions.push(...collectQuestions(section.sections, currentPath));
-			}
-		}
-		return questions;
-	}
-
 	// --- Utility Functions ---
 
 	/**
@@ -105,7 +72,16 @@
 
 	// --- State & Reactive Vars ---
 
-	let questions: Question[] = collectQuestions(data.sections);
+	let questions: Question[] = [];
+
+	onMount(async () => {
+		const [{ collectQuestions }, module] = await Promise.all([
+			import('$lib/utils/questionLoader'),
+			import('$lib/data/fragenkatalog3b_prerendered.json')
+		]);
+		data = module.default;
+		questions = collectQuestions(data.sections);
+	});
 
 	// Filtered questions based on class query param (browser only after hydration)
 	let filteredQuestions: Question[] = [];
@@ -134,25 +110,14 @@
 	$: selectedClass = browser ? $page.url.searchParams.get('class') || 'Alle' : 'Alle';
 
 	// Tree data filtered by selected class
-	$: treeData = (() => {
-		function filterTreeByClass(nodes: any[], selectedClass: string): any[] {
-			if (!nodes) return [];
+	let treeData: any[] = [];
 
-			return nodes
-				.map((node: any) => {
-					if (selectedClass === 'Alle' || (node.classes && node.classes.includes(selectedClass))) {
-						return {
-							...node,
-							sections: filterTreeByClass(node.sections, selectedClass)
-						};
-					}
-					return null;
-				})
-				.filter(Boolean);
-		}
-
-		return filterTreeByClass(fullTree, selectedClass);
-	})();
+	$: if (selectedClass && fullTree) {
+		import('$lib/utils/treeFilter').then(({ filterTreeByClass }) => {
+			const filtered = filterTreeByClass(fullTree, selectedClass);
+			treeData = filtered;
+		});
+	}
 
 	// --- Scroll Logic ---
 
@@ -213,6 +178,23 @@
 	// --- Highlighted Questions ---
 	let highlightedNumbers: string[] = [];
 
+	function handleSectionClick(node: any) {
+		if (!node.question_numbers || node.question_numbers.length === 0) {
+			highlightedNumbers = [];
+			return;
+		}
+
+		highlightedNumbers = node.question_numbers || [];
+
+		const list = filteredQuestions.length > 0 ? filteredQuestions : questions;
+		const first = node.question_numbers.find((qn: string) =>
+			list.some((q) => q.number === qn)
+		);
+
+		if (first) {
+			scrollToQuestion(first);
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -230,30 +212,13 @@
 				class="w-[35%] rounded-lg p-4 max-h-[80vh] overflow-y-auto bg-white/70"
 				aria-label="Left sidebar navigation menu"
 			>
-				<Tree
-					nodes={treeData}
-					level={1}
-					on:sectionclick={(e: CustomEvent<any>) => {
-						const node = e.detail;
-
-						if (!node.question_numbers || node.question_numbers.length === 0) {
-							highlightedNumbers = [];
-							return;
-						}
-
-						highlightedNumbers = node.question_numbers || [];
-
-						let first;
-						first = node.question_numbers.find((qn: string) =>
-							(filteredQuestions.length > 0 ? filteredQuestions : questions).some(q => q.number === qn)
-						);
-						if (first) {
-							scrollToQuestion(first);
-						} else {
-							return;
-						}
-					}}
-				/>
+				{#if Tree}
+					<Tree
+						nodes={treeData}
+						level={1}
+						on:sectionclick={(e: CustomEvent<any>) => handleSectionClick(e.detail)}
+					/>
+				{/if}	
 			</nav>
 
 			<!-- Questions container -->
@@ -262,14 +227,17 @@
 				class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto overflow-x-hidden"
 				aria-label="Scrollable questions container"
 			>
-				{#each filteredQuestions as q}
-					<QuestionCard 
-						{q}
-						isHighlighted={highlightedNumbers.includes(q.number)}
-						{isLongAnswer}
-						{base}
-					/>
-				{/each}
+				{#if QuestionCard}
+					{#each filteredQuestions as q}
+						<svelte:component 
+							this={QuestionCard}
+							{q}
+							isHighlighted={highlightedNumbers.includes(q.number)}
+							{isLongAnswer}
+							{base}
+						/>
+					{/each}
+				{/if}
 			</section>
 		</div>
 
@@ -308,27 +276,7 @@
 				<Tree
 					nodes={treeData}
 					level={1}
-					on:sectionclick={(e: CustomEvent<any>) => {
-						const node = e.detail;
-
-						if (!node.question_numbers || node.question_numbers.length === 0) {
-							highlightedNumbers = [];
-							return;
-						}
-
-						highlightedNumbers = node.question_numbers || [];
-
-						let first;
-						first = node.question_numbers.find((qn: string) =>
-							(filteredQuestions.length > 0 ? filteredQuestions : questions).some(q => q.number === qn)
-						);
-						if (first) {
-							scrollToQuestion(first);
-							// showSidebar = false; // Prevent sidebar from hiding after Tree click
-						} else {
-							return;
-						}
-					}}
+					on:sectionclick={(e: CustomEvent<any>) => handleSectionClick(e.detail)}
 				/>
 			</div>
 
