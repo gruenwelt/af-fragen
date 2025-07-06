@@ -10,26 +10,29 @@
 	// --- External Imports ---
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
-	import katex from 'katex';
 	import 'katex/dist/katex.min.css';
 	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
 
 	// --- Data Imports ---
-	import data from '$lib/data/fragenkatalog3b.json';
+	import data from '$lib/data/fragenkatalog3b_prerendered.json';
 	import fullTree from '$lib/data/tree.json';
 
 	// --- Component Imports ---
 	import Tree from '$lib/components/Tree.svelte';
-	import KatexRenderer from '$lib/components/KatexRenderer.svelte';
 
 	// --- Types ---
 	type Question = {
 		question: string;
+		questionHtml: string;
 		answer_a: string;
+		answerAHtml: string;
 		answer_b: string;
+		answerBHtml: string;
 		answer_c: string;
+		answerCHtml: string;
 		answer_d: string;
+		answerDHtml: string;
 		class: string;
 		number: string;
 		picture_question?: string;
@@ -55,10 +58,15 @@
 				questions.push(
 					...section.questions.map((q: any) => ({
 						question: q.question,
+						questionHtml: q.questionHtml,
 						answer_a: q.answer_a,
+						answerAHtml: q.answerAHtml,
 						answer_b: q.answer_b,
+						answerBHtml: q.answerBHtml,
 						answer_c: q.answer_c,
+						answerCHtml: q.answerCHtml,
 						answer_d: q.answer_d,
+						answerDHtml: q.answerDHtml,
 						class: q.class,
 						picture_question: q.picture_question,
 						picture_a: q.picture_a,
@@ -201,9 +209,6 @@
 
 	let showSidebar = false;
 
-	// --- Event Handlers ---
-	// Tree section click handlers are inline in markup, using scrollToQuestion and filteredQuestions
-
 	// --- Highlighted Questions ---
 	let highlightedNumbers: string[] = [];
 
@@ -229,7 +234,6 @@
 					level={1}
 					on:sectionclick={(e: CustomEvent<any>) => {
 						const node = e.detail;
-						const currentClass = $page.url.searchParams.get('class') || 'Alle';
 
 						if (!node.question_numbers || node.question_numbers.length === 0) {
 							highlightedNumbers = [];
@@ -267,9 +271,13 @@
 						}`}
 						aria-label="Question and answers"
 					>
-						<div class="text-center">
-							<KatexRenderer latexString={q.question} />
-						</div>
+						{#if typeof q.questionHtml === 'string' && q.questionHtml.includes('katex')}
+							<div class="text-center">
+								{@html q.questionHtml}
+							</div>
+						{:else}
+							<div class="text-center">{q.questionHtml ?? ''}</div>
+						{/if}
 						{#if q.picture_question}
 							<div class="mb-2"></div>
 							<div class="flex justify-center mb-5">
@@ -281,30 +289,54 @@
 						<div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_a}
-									<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="w-full h-auto mx-auto" />
+									<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="mx-auto" />
 								{:else}
-									<KatexRenderer latexString={q.answer_a} />
+									{#if typeof q.answerAHtml === 'string' && q.answerAHtml.includes('katex')}
+										<div class="text-center">
+											{@html q.answerAHtml}
+										</div>
+									{:else}
+										<div class="text-center">{q.answerAHtml ?? ''}</div>
+									{/if}
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_b}
-									<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="w-full h-auto mx-auto" />
+									<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="mx-auto" />
 								{:else}
-									<KatexRenderer latexString={q.answer_b} />
+									{#if typeof q.answerBHtml === 'string' && q.answerBHtml.includes('katex')}
+										<div class="text-center">
+											{@html q.answerBHtml}
+										</div>
+									{:else}
+										<div class="text-center">{q.answerBHtml ?? ''}</div>
+									{/if}
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_c}
-									<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="w-full h-auto mx-auto" />
+									<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="mx-auto" />
 								{:else}
-									<KatexRenderer latexString={q.answer_c} />
+									{#if typeof q.answerCHtml === 'string' && q.answerCHtml.includes('katex')}
+										<div class="text-center">
+											{@html q.answerCHtml}
+										</div>
+									{:else}
+										<div class="text-center">{q.answerCHtml ?? ''}</div>
+									{/if}
 								{/if}
 							</div>
 							<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 								{#if q.picture_d}
-									<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="w-full h-auto mx-auto" />
+									<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="mx-auto" />
 								{:else}
-									<KatexRenderer latexString={q.answer_d} />
+									{#if typeof q.answerDHtml === 'string' && q.answerDHtml.includes('katex')}
+										<div class="text-center">
+											{@html q.answerDHtml}
+										</div>
+									{:else}
+										<div class="text-center">{q.answerDHtml ?? ''}</div>
+									{/if}
 								{/if}
 							</div>
 						</div>
@@ -320,7 +352,7 @@
 	<!-- ✅ Mobile Layout (Toggleable Sidebar + Questions) -->
 	<!-- ============================== -->
 	{:else if mobileReady}
-		<div class="relative max-w-5xl mx-auto p-4 overflow-x-hidden flex-grow h-screen overflow-hidden">
+		<div class="relative max-w-5xl mx-auto p-4 overflow-x-hidden">
 			<button
 				class={`fixed top-13 z-50 bg-white/70 px-2 py-1 rounded transition-transform duration-300 transform ${
 					showSidebar ? 'left-[65%] rotate-180' : 'left-0'
@@ -353,7 +385,6 @@
 					level={1}
 					on:sectionclick={(e: CustomEvent<any>) => {
 						const node = e.detail;
-						const currentClass = $page.url.searchParams.get('class') || 'Alle';
 
 						if (!node.question_numbers || node.question_numbers.length === 0) {
 							highlightedNumbers = [];
@@ -376,11 +407,11 @@
 				/>
 			</div>
 
-			<div bind:this={questionsContainer} class="overflow-y-auto max-h-[90vh]">
-				<section
-					class="w-full space-y-6 flex-grow overflow-x-hidden"
-					aria-label="Scrollable questions container"
-				>
+			<section
+				bind:this={questionsContainer}
+				class="w-full space-y-6 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh]"
+				aria-label="Scrollable questions container"
+			>
 					{#each filteredQuestions as q}
 						<article
 							data-question-id={q.number}
@@ -391,9 +422,13 @@
 							}`}
 							aria-label="Question and answers"
 						>
-							<div class="text-center">
-								<KatexRenderer latexString={q.question} />
-							</div>
+							{#if typeof q.questionHtml === 'string' && q.questionHtml.includes('katex')}
+								<div class="text-center">
+									{@html q.questionHtml}
+								</div>
+							{:else}
+								<div class="text-center">{q.questionHtml ?? ''}</div>
+							{/if}
 							{#if q.picture_question}
 								<div class="mb-2"></div>
 								<div class="flex justify-center mb-5">
@@ -407,28 +442,52 @@
 									{#if q.picture_a}
 										<img src={`${base}/svgs/${q.picture_a}.svg`} alt="Bild Antwort A" class="w-full h-auto mx-auto" />
 									{:else}
-										<KatexRenderer latexString={q.answer_a} />
+										{#if typeof q.answerAHtml === 'string' && q.answerAHtml.includes('katex')}
+											<div class="text-center">
+												{@html q.answerAHtml}
+											</div>
+										{:else}
+											<div class="text-center">{q.answerAHtml ?? ''}</div>
+										{/if}
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_b}
 										<img src={`${base}/svgs/${q.picture_b}.svg`} alt="Bild Antwort B" class="w-full h-auto mx-auto" />
 									{:else}
-										<KatexRenderer latexString={q.answer_b} />
+										{#if typeof q.answerBHtml === 'string' && q.answerBHtml.includes('katex')}
+											<div class="text-center">
+												{@html q.answerBHtml}
+											</div>
+										{:else}
+											<div class="text-center">{q.answerBHtml ?? ''}</div>
+										{/if}
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_c}
 										<img src={`${base}/svgs/${q.picture_c}.svg`} alt="Bild Antwort C" class="w-full h-auto mx-auto" />
 									{:else}
-										<KatexRenderer latexString={q.answer_c} />
+										{#if typeof q.answerCHtml === 'string' && q.answerCHtml.includes('katex')}
+											<div class="text-center">
+												{@html q.answerCHtml}
+											</div>
+										{:else}
+											<div class="text-center">{q.answerCHtml ?? ''}</div>
+										{/if}
 									{/if}
 								</div>
 								<div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
 									{#if q.picture_d}
 										<img src={`${base}/svgs/${q.picture_d}.svg`} alt="Bild Antwort D" class="w-full h-auto mx-auto" />
 									{:else}
-										<KatexRenderer latexString={q.answer_d} />
+										{#if typeof q.answerDHtml === 'string' && q.answerDHtml.includes('katex')}
+											<div class="text-center">
+												{@html q.answerDHtml}
+											</div>
+										{:else}
+											<div class="text-center">{q.answerDHtml ?? ''}</div>
+										{/if}
 									{/if}
 								</div>
 							</div>
@@ -437,8 +496,14 @@
 							</footer>
 						</article>
 					{/each}
-				</section>
-			</div>
+			</section>
 		</div>
 	{/if}
 {/if}
+<style>
+	html,
+	body {
+		height: 100vh;
+		overflow: hidden;
+	}
+</style>
