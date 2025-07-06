@@ -18,6 +18,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Allgemeine mathematische Grundkenntnisse und Größen > Allgemeine mathematische Grundkenntnisse",
             "title": "Allgemeine mathematische Grundkenntnisse",
             "total_questions": 3,
             "classes": [
@@ -30,6 +31,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Allgemeine mathematische Grundkenntnisse und Größen > Größen und Einheiten",
             "title": "Größen und Einheiten",
             "total_questions": 45,
             "classes": [
@@ -86,6 +88,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Allgemeine mathematische Grundkenntnisse und Größen > Binäres Zahlensystem",
             "title": "Binäres Zahlensystem",
             "total_questions": 8,
             "classes": [
@@ -114,6 +117,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Leiter, Halbleiter und Isolator",
             "title": "Leiter, Halbleiter und Isolator",
             "total_questions": 13,
             "classes": [
@@ -137,6 +141,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Strom- und Spannungsquellen",
             "title": "Strom- und Spannungsquellen",
             "total_questions": 21,
             "classes": [
@@ -168,6 +173,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Elektrisches Feld",
             "title": "Elektrisches Feld",
             "total_questions": 5,
             "classes": [
@@ -182,6 +188,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Magnetisches Feld",
             "title": "Magnetisches Feld",
             "total_questions": 6,
             "classes": [
@@ -197,6 +204,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Elektromagnetisches Feld",
             "title": "Elektromagnetisches Feld",
             "total_questions": 20,
             "classes": [
@@ -227,6 +235,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Sinusförmige Signale",
             "title": "Sinusförmige Signale",
             "total_questions": 19,
             "classes": [
@@ -257,6 +266,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Nichtsinusförmige Signale",
             "title": "Nichtsinusförmige Signale",
             "total_questions": 9,
             "classes": [
@@ -275,6 +285,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Ohmsches Gesetz",
             "title": "Ohmsches Gesetz",
             "total_questions": 5,
             "classes": [
@@ -289,6 +300,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Leistung",
             "title": "Leistung",
             "total_questions": 20,
             "classes": [
@@ -319,6 +331,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Ladung und Energie",
             "title": "Ladung und Energie",
             "total_questions": 3,
             "classes": [
@@ -331,6 +344,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrizitäts-, Elektromagnetismus- und Funktheorie > Der Stromkreis",
             "title": "Der Stromkreis",
             "total_questions": 4,
             "classes": [
@@ -356,6 +370,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Widerstand",
             "title": "Widerstand",
             "total_questions": 27,
             "classes": [
@@ -393,6 +408,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Kondensator",
             "title": "Kondensator",
             "total_questions": 19,
             "classes": [
@@ -423,6 +439,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Spule",
             "title": "Spule",
             "total_questions": 19,
             "classes": [
@@ -453,6 +470,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Übertrager und Transformatoren",
             "title": "Übertrager und Transformatoren",
             "total_questions": 11,
             "classes": [
@@ -474,6 +492,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Diode",
             "title": "Diode",
             "total_questions": 34,
             "classes": [
@@ -519,6 +538,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Transistor",
             "title": "Transistor",
             "total_questions": 40,
             "classes": [
@@ -570,6 +590,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektrische und elektronische Bauteile > Integrierte Schaltkreise",
             "title": "Integrierte Schaltkreise",
             "total_questions": 4,
             "classes": [
@@ -594,6 +615,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Reihen- und Parallelschaltung von Widerständen, Spulen und Kondensatoren",
             "title": "Reihen- und Parallelschaltung von Widerständen, Spulen und Kondensatoren",
             "total_questions": 39,
             "classes": [
@@ -643,6 +665,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Schwingkreise und Filter",
             "title": "Schwingkreise und Filter",
             "total_questions": 45,
             "classes": [
@@ -698,6 +721,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Strom- und Spannungsversorgung",
             "title": "Strom- und Spannungsversorgung",
             "total_questions": 39,
             "classes": [
@@ -748,6 +772,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Verstärker",
             "title": "Verstärker",
             "total_questions": 36,
             "classes": [
@@ -794,6 +819,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Modulator / Demodulator",
             "title": "Modulator / Demodulator",
             "total_questions": 10,
             "classes": [
@@ -813,6 +839,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Oszillator",
             "title": "Oszillator",
             "total_questions": 28,
             "classes": [
@@ -852,6 +879,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Phasenregelkreise",
             "title": "Phasenregelkreise",
             "total_questions": 5,
             "classes": [
@@ -866,6 +894,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektronische Schaltungen und deren Merkmale > Dämpfungsglieder",
             "title": "Dämpfungsglieder",
             "total_questions": 6,
             "classes": [
@@ -892,6 +921,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Modulations- und Übertragungsverfahren > Modulation allgemein",
             "title": "Modulation allgemein",
             "total_questions": 4,
             "classes": [
@@ -907,6 +937,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Modulations- und Übertragungsverfahren > Amplitudenmodulation AM, SSB, CW",
             "title": "Amplitudenmodulation AM, SSB, CW",
             "total_questions": 33,
             "classes": [
@@ -951,6 +982,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Modulations- und Übertragungsverfahren > Frequenz- und Phasenmodulation",
             "title": "Frequenz- und Phasenmodulation",
             "total_questions": 29,
             "classes": [
@@ -991,6 +1023,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Modulations- und Übertragungsverfahren > Digitale Übertragungsverfahren",
             "title": "Digitale Übertragungsverfahren",
             "total_questions": 42,
             "classes": [
@@ -1055,6 +1088,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Transceiver",
             "title": "Transceiver",
             "total_questions": 18,
             "classes": [
@@ -1082,6 +1116,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Empfänger",
             "title": "Empfänger",
             "total_questions": 23,
             "classes": [
@@ -1116,6 +1151,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Empfängerstufen",
             "title": "Empfängerstufen",
             "total_questions": 53,
             "classes": [
@@ -1180,6 +1216,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Sender und Senderstufen",
             "title": "Sender und Senderstufen",
             "total_questions": 28,
             "classes": [
@@ -1219,6 +1256,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Leistungsverstärker",
             "title": "Leistungsverstärker",
             "total_questions": 33,
             "classes": [
@@ -1262,6 +1300,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Konverter und Transverter",
             "title": "Konverter und Transverter",
             "total_questions": 7,
             "classes": [
@@ -1279,6 +1318,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Digitale Signalverarbeitung",
             "title": "Digitale Signalverarbeitung",
             "total_questions": 40,
             "classes": [
@@ -1329,6 +1369,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Sender und Empfänger > Remote-Station",
             "title": "Remote-Station",
             "total_questions": 10,
             "classes": [
@@ -1359,6 +1400,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Antennen und Übertragungsleitungen > Antennen",
             "title": "Antennen",
             "total_questions": 52,
             "classes": [
@@ -1422,6 +1464,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Antennen und Übertragungsleitungen > Antennenmerkmale",
             "title": "Antennenmerkmale",
             "total_questions": 52,
             "classes": [
@@ -1484,6 +1527,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Antennen und Übertragungsleitungen > Übertragungsleitungen",
             "title": "Übertragungsleitungen",
             "total_questions": 44,
             "classes": [
@@ -1539,6 +1583,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Antennen und Übertragungsleitungen > Anpassung, Transformation, Symmetrierung und Mantelwellen",
             "title": "Anpassung, Transformation, Symmetrierung und Mantelwellen",
             "total_questions": 42,
             "classes": [
@@ -1592,6 +1637,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Antennen und Übertragungsleitungen > Strahlungsleistung (EIRP und ERP)",
             "title": "Strahlungsleistung (EIRP und ERP)",
             "total_questions": 16,
             "classes": [
@@ -1630,6 +1676,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Wellenausbreitung und Ionosphäre > Ionosphäre",
             "title": "Ionosphäre",
             "total_questions": 17,
             "classes": [
@@ -1658,6 +1705,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Wellenausbreitung und Ionosphäre > Kurzwellenausbreitung",
             "title": "Kurzwellenausbreitung",
             "total_questions": 43,
             "classes": [
@@ -1712,6 +1760,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Wellenausbreitung und Ionosphäre > Wellenausbreitung oberhalb 30 MHz",
             "title": "Wellenausbreitung oberhalb 30 MHz",
             "total_questions": 22,
             "classes": [
@@ -1756,6 +1805,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Strom- und Spannungsmessgeräte",
             "title": "Strom- und Spannungsmessgeräte",
             "total_questions": 13,
             "classes": [
@@ -1780,6 +1830,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Vektorieller Netzwerk Analysator (VNA)",
             "title": "Vektorieller Netzwerk Analysator (VNA)",
             "total_questions": 14,
             "classes": [
@@ -1804,6 +1855,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Oszilloskop",
             "title": "Oszilloskop",
             "total_questions": 10,
             "classes": [
@@ -1824,6 +1876,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Stehwellenmessgerät",
             "title": "Stehwellenmessgerät",
             "total_questions": 11,
             "classes": [
@@ -1846,6 +1899,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Frequenzmessung",
             "title": "Frequenzmessung",
             "total_questions": 16,
             "classes": [
@@ -1873,6 +1927,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Messungen und Messinstrumente > Sonstige Messgeräte und Messmittel",
             "title": "Sonstige Messgeräte und Messmittel",
             "total_questions": 16,
             "classes": [
@@ -1910,6 +1965,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Störemissionen, -festigkeit, Schutzanforderungen, Ursachen, Abhilfe > Störungen elektronischer Geräte",
             "title": "Störungen elektronischer Geräte",
             "total_questions": 45,
             "classes": [
@@ -1966,6 +2022,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Störemissionen, -festigkeit, Schutzanforderungen, Ursachen, Abhilfe > Unerwünschte Aussendungen",
             "title": "Unerwünschte Aussendungen",
             "total_questions": 46,
             "classes": [
@@ -2034,6 +2091,7 @@
         ],
         "sections": [
           {
+            "id": "Technische Kenntnisse > Elektromagnetische Verträglichkeit, Anwendung, Personen- und Sachschutz > Störfestigkeit",
             "title": "Störfestigkeit",
             "total_questions": 2,
             "classes": [
@@ -2045,6 +2103,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektromagnetische Verträglichkeit, Anwendung, Personen- und Sachschutz > Schutz von Personen",
             "title": "Schutz von Personen",
             "total_questions": 24,
             "classes": [
@@ -2080,6 +2139,7 @@
             ]
           },
           {
+            "id": "Technische Kenntnisse > Elektromagnetische Verträglichkeit, Anwendung, Personen- und Sachschutz > Sicherheit",
             "title": "Sicherheit",
             "total_questions": 26,
             "classes": [
@@ -2135,6 +2195,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Internationales Buchstabieralphabet > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 10,
             "classes": [
@@ -2163,6 +2224,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Betriebliche Abkürzungen und Q-Gruppen > Betriebliche Abkürzungen",
             "title": "Betriebliche Abkürzungen",
             "total_questions": 10,
             "classes": [
@@ -2182,6 +2244,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Betriebliche Abkürzungen und Q-Gruppen > Q-Gruppen",
             "title": "Q-Gruppen",
             "total_questions": 6,
             "classes": [
@@ -2206,6 +2269,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Frequenzbereiche > Frequenzbereiche",
             "title": "Frequenzbereiche",
             "total_questions": 6,
             "classes": [
@@ -2221,6 +2285,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Frequenzbereiche > IARU-Bandpläne",
             "title": "IARU-Bandpläne",
             "total_questions": 22,
             "classes": [
@@ -2261,6 +2326,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Rufzeichen und Landeskenner > Rufzeichen",
             "title": "Rufzeichen",
             "total_questions": 9,
             "classes": [
@@ -2279,6 +2345,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Rufzeichen und Landeskenner > Rufzeichenzusätze",
             "title": "Rufzeichenzusätze",
             "total_questions": 14,
             "classes": [
@@ -2302,6 +2369,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Rufzeichen und Landeskenner > Landeskenner",
             "title": "Landeskenner",
             "total_questions": 18,
             "classes": [
@@ -2338,6 +2406,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Abwicklung des Amateurfunkverkehrs > Betriebsabwicklung",
             "title": "Betriebsabwicklung",
             "total_questions": 18,
             "classes": [
@@ -2365,6 +2434,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Abwicklung des Amateurfunkverkehrs > Signalbeurteilung",
             "title": "Signalbeurteilung",
             "total_questions": 10,
             "classes": [
@@ -2384,6 +2454,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Abwicklung des Amateurfunkverkehrs > Contest, Pile-Up, DX-Pedition und Fuchsjagd",
             "title": "Contest, Pile-Up, DX-Pedition und Fuchsjagd",
             "total_questions": 13,
             "classes": [
@@ -2406,6 +2477,7 @@
             ]
           },
           {
+            "id": "Betriebliche Kenntnisse > Abwicklung des Amateurfunkverkehrs > Relaisfunkstellen, Baken, Satelliten und Transponder",
             "title": "Relaisfunkstellen, Baken, Satelliten und Transponder",
             "total_questions": 16,
             "classes": [
@@ -2440,6 +2512,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Notfunkverkehr und Nachrichtenverkehr bei Naturkatastrophen > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 9,
             "classes": [
@@ -2467,6 +2540,7 @@
         ],
         "sections": [
           {
+            "id": "Betriebliche Kenntnisse > Stationstagebuch und QSL-Karten > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 11,
             "classes": [
@@ -2505,6 +2579,7 @@
         ],
         "sections": [
           {
+            "id": "Kenntnisse von Vorschriften > Radio Regulations (ITU RR) > Definition des Amateurfunkdienstes und des Amateurfunkdienstes über Satelliten",
             "title": "Definition des Amateurfunkdienstes und des Amateurfunkdienstes über Satelliten",
             "total_questions": 4,
             "classes": [
@@ -2518,6 +2593,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Radio Regulations (ITU RR) > Definition der Amateurfunkstelle",
             "title": "Definition der Amateurfunkstelle",
             "total_questions": 2,
             "classes": [
@@ -2529,6 +2605,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Radio Regulations (ITU RR) > Artikel 25",
             "title": "Artikel 25",
             "total_questions": 4,
             "classes": [
@@ -2542,6 +2619,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Radio Regulations (ITU RR) > Weitere Regelungen",
             "title": "Weitere Regelungen",
             "total_questions": 7,
             "classes": [
@@ -2567,6 +2645,7 @@
         ],
         "sections": [
           {
+            "id": "Kenntnisse von Vorschriften > Regelungen der CEPT (Europäische Konferenz der Verwaltungen für Post und Telekommunikation) > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 14,
             "classes": [
@@ -2599,6 +2678,7 @@
         ],
         "sections": [
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkgesetz (AFuG) > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 25,
             "classes": [
@@ -2642,6 +2722,7 @@
         ],
         "sections": [
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Allgemeines",
             "title": "Allgemeines",
             "total_questions": 19,
             "classes": [
@@ -2670,6 +2751,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Rufzeichen und Rufzeichenanwendung",
             "title": "Rufzeichen und Rufzeichenanwendung",
             "total_questions": 8,
             "classes": [
@@ -2687,6 +2769,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Ausbildungsfunkbetrieb",
             "title": "Ausbildungsfunkbetrieb",
             "total_questions": 6,
             "classes": [
@@ -2702,6 +2785,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Klubstationen",
             "title": "Klubstationen",
             "total_questions": 8,
             "classes": [
@@ -2719,6 +2803,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Relaisfunkstellen und Funkbaken",
             "title": "Relaisfunkstellen und Funkbaken",
             "total_questions": 4,
             "classes": [
@@ -2732,6 +2817,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Remote-Stationen",
             "title": "Remote-Stationen",
             "total_questions": 9,
             "classes": [
@@ -2750,6 +2836,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Amateurfunkverordnung (AFuV) > Frequenzbereiche und Frequenznutzungsparameter",
             "title": "Frequenzbereiche und Frequenznutzungsparameter",
             "total_questions": 43,
             "classes": [
@@ -2811,6 +2898,7 @@
         ],
         "sections": [
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Telekommunikationsgesetz (TKG)",
             "title": "Telekommunikationsgesetz (TKG)",
             "total_questions": 3,
             "classes": [
@@ -2823,6 +2911,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Telekommunikation-Telemedien-Datenschutz-Gesetz (TTDSG)",
             "title": "Telekommunikation-Telemedien-Datenschutz-Gesetz (TTDSG)",
             "total_questions": 4,
             "classes": [
@@ -2836,6 +2925,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Gesetz über die elektromagnetische Verträglichkeit von Geräten (EMVG), Störfälle",
             "title": "Gesetz über die elektromagnetische Verträglichkeit von Geräten (EMVG), Störfälle",
             "total_questions": 9,
             "classes": [
@@ -2854,6 +2944,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Gesetz über die Bereitstellung von Funkanlagen auf dem Markt (FuAG)",
             "title": "Gesetz über die Bereitstellung von Funkanlagen auf dem Markt (FuAG)",
             "total_questions": 5,
             "classes": [
@@ -2868,6 +2959,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > EMVU (elektromagnetische Umweltverträglichkeit) / BEMFV",
             "title": "EMVU (elektromagnetische Umweltverträglichkeit) / BEMFV",
             "total_questions": 19,
             "classes": [
@@ -2896,6 +2988,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Sicherheitsvorschriften",
             "title": "Sicherheitsvorschriften",
             "total_questions": 4,
             "classes": [
@@ -2909,6 +3002,7 @@
             ]
           },
           {
+            "id": "Kenntnisse von Vorschriften > Weitere Gesetze, Vorschriften und Bestimmungen > Sonstiges",
             "title": "Sonstiges",
             "total_questions": 7,
             "classes": [

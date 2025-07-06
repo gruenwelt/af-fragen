@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SvelteComponentTyped } from 'svelte';
   import { createEventDispatcher } from 'svelte';
-  type TreeProps = { nodes?: any[]; level?: number; selectedTitle?: string | null };
+  type TreeProps = { nodes?: any[]; level?: number; selectedId?: string | null };
   let TreeComponent: (new (...args: any) => SvelteComponentTyped<TreeProps>) | null = null;
   $: if (!TreeComponent) {
     import('./Tree.svelte').then((mod) => {
@@ -12,7 +12,7 @@
   // Props
   export let nodes: any[] = [];
   export let level = 1;
-  export let selectedTitle: string | null = null;
+  export let selectedId: string | null = null;
 
   // Event dispatcher to notify parent of section clicks
   const dispatch = createEventDispatcher();
@@ -48,10 +48,10 @@
         <button
           type="button"
           class={`text-left w-full cursor-pointer hover:text-[color:var(--color-theme-1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-theme-1)] ${
-            selectedTitle === node.title ? 'text-[color:var(--color-theme-1)]' : ''
+            selectedId === node.id ? 'text-[color:var(--color-theme-1)]' : ''
           }`}
           on:click={() => {
-            selectedTitle = node.title;
+            selectedId = node.id;
             dispatch('sectionclick', node);
           }}
         >
@@ -63,7 +63,7 @@
           type="button"
           class={`flex items-center gap-1 text-left w-full cursor-pointer hover:text-[color:var(--color-theme-1)] focus:outline-none`}
           on:click={() => {
-            selectedTitle = null;
+            selectedId = null;
             toggleCollapse(node.title);
           }}
         >
@@ -78,7 +78,7 @@
       <!-- Recurse into sub-sections -->
       {#if node.sections && level < 3 && (level !== 1 || !collapsedSections.has(node.title))}
         {#if TreeComponent}
-          <svelte:component this={TreeComponent} nodes={node.sections} level={level + 1} on:sectionclick bind:selectedTitle />
+          <svelte:component this={TreeComponent} nodes={node.sections} level={level + 1} on:sectionclick bind:selectedId />
         {/if}
       {/if}
     </li>

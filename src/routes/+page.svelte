@@ -17,7 +17,7 @@
 
 	// --- Data Imports ---
 	import data from '$lib/data/fragenkatalog3b.json';
-	import fullTree from '$lib/data/tree_combined.json';
+	import fullTree from '$lib/data/tree.json';
 
 	// --- Component Imports ---
 	import Tree from '$lib/components/Tree.svelte';

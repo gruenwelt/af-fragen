@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const sourceFile = path.resolve(__dirname, "../src/lib/data/fragenkatalog3b.json");
-const outputFile = path.resolve(__dirname, "../src/lib/data/tree_combined.json");
+const outputFile = path.resolve(__dirname, "../src/lib/data/tree.json");
 
 function loadData() {
   const jsonData = fs.readFileSync(sourceFile, "utf8");
@@ -22,7 +22,7 @@ function getClasses(questions) {
   return Array.from(classesSet);
 }
 
-function buildTreeCombined(sections) {
+function buildTree(sections) {
   const tree = [];
   for (const level1 of sections) {
     const prefix = "Prüfungsfragen im Prüfungsteil: ";
@@ -51,6 +51,7 @@ function buildTreeCombined(sections) {
         const classes = getClasses(questions);
 
         const level3Node = {
+          id: `${level1Title} > ${level2.title} > ${level3.title}`,
           title: level3.title,
           total_questions: questions.length,
           classes: classes,
@@ -81,9 +82,9 @@ function saveJSON(filePath, data) {
 
 function main() {
   const data = loadData();
-  const combinedTree = buildTreeCombined(data.sections);
-  saveJSON(outputFile, combinedTree);
-  console.log("Combined tree JSON file generated.");
+  const Tree = buildTree(data.sections);
+  saveJSON(outputFile, Tree);
+  console.log("Tree JSON file generated.");
 }
 
 main();

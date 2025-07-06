@@ -5,14 +5,14 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "npm run generate-trees && vite build && touch docs/.nojekyll",
+		"build": "npm run generate-tree && vite build && touch docs/.nojekyll",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"generate-trees": "node scripts/generate_question_trees.js",
+		"generate-tree": "node scripts/generate_question_tree.js",
 		"deploy": "npm run build && mkdir -p docs && cp -a build/. docs/ && touch docs/.nojekyll"
 	},
 	"devDependencies": {
