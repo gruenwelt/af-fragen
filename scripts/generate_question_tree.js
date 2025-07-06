@@ -84,7 +84,7 @@ function main() {
   const data = loadData();
   const Tree = buildTree(data.sections);
   saveJSON(outputFile, Tree);
-  console.log("Tree JSON file generated.");
+  console.log(`✅ Tree JSON file generated and saved to ${outputFile}`);
 }
 
 main();

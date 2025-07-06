@@ -82,7 +82,7 @@ function run() {
 	const data = JSON.parse(raw);
 	const rendered = renderAllQuestions(data);
 	fs.writeFileSync(outputPath, JSON.stringify(rendered, null, 2), 'utf-8');
-	console.log(`✅ Pre-rendered HTML saved to ${outputPath}`);
+	console.log(`✅ Pre-rendered HTML generated and saved to ${outputPath}`);
 }
 
 run();
