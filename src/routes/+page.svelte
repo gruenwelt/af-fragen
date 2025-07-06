@@ -263,7 +263,12 @@
 				aria-label="Scrollable questions container"
 			>
 				{#each filteredQuestions as q}
-					<QuestionCard {q} {highlightedNumbers} {isLongAnswer} {base} />
+					<QuestionCard 
+						{q}
+						isHighlighted={highlightedNumbers.includes(q.number)}
+						{isLongAnswer}
+						{base}
+					/>
 				{/each}
 			</section>
 		</div>
@@ -333,7 +338,12 @@
 				aria-label="Scrollable questions container"
 			>
 				{#each filteredQuestions as q}
-					<QuestionCard {q} {highlightedNumbers} {isLongAnswer} {base} />
+					<QuestionCard 
+						{q}
+						isHighlighted={highlightedNumbers.includes(q.number)}
+						{isLongAnswer}
+						{base}
+					/>
 				{/each}
 			</section>
 		</div>

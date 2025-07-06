@@ -1,16 +1,23 @@
-
-
 <script lang="ts">
+  import { browser } from '$app/environment';
+
   export let q: any;
-  export let highlightedNumbers: string[];
   export let isLongAnswer: (q: any) => boolean;
   export let base: string;
+  export let isHighlighted: boolean = false;
+
+  let isDesktop = true;
+
+  if (browser) {
+    isDesktop = window.innerWidth > 768;
+  }
 </script>
 
 <article
-  class="bg-white shadow-md rounded-lg p-4 border border-gray-200"
   data-question-id={q.number}
-  class:border-blue-400={highlightedNumbers.includes(q.number)}
+  class={`bg-white shadow-md rounded-lg p-4 border ${
+    isHighlighted && isDesktop ? 'border-[color:var(--color-theme-1)]' : 'border-gray-200'
+  }`}
 >
   {#if q.picture_question}
     <div class="mb-2"></div>
@@ -26,6 +33,8 @@
   {:else}
     <div class="text-center">{q.questionHtml ?? ''}</div>
   {/if}
+
+  <div class="h-4"></div>
 
   <div class={isLongAnswer(q) ? "flex flex-col gap-3" : "grid grid-cols-2 gap-3"}>
     {#each ['a', 'b', 'c', 'd'] as key}

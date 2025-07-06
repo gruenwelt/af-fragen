@@ -61,7 +61,7 @@
         <!-- Top-level collapsible section (Level 1) -->
         <button
           type="button"
-          class={`flex items-center gap-1 text-left w-full cursor-pointer hover:text-[color:var(--color-theme-1)] focus:outline-none`}
+          class="flex items-center gap-1 text-left w-full cursor-pointer focus:outline-none"
           on:click={() => {
             selectedId = null;
             toggleCollapse(node.title);
