@@ -5,6 +5,7 @@
 	import github from '$lib/images/github.svg';
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
+    import { sessionStarted } from '$lib/stores/session';
 
 	let isDesktop: boolean | undefined = undefined;
 let showPopup = true;
@@ -25,6 +26,7 @@ let showPopup = true;
 
 	$: currentSearch = browser ? $page.url.search : '';
 	$: currentPath = browser ? $page.url.pathname : '';
+	$: $sessionStarted;
 </script>
 
 {#if isDesktop === undefined}
@@ -45,16 +47,32 @@ let showPopup = true;
 		</svg>
 		<ul>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
-				<a href={`${currentPath}?class=1`}>N</a>
+				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '1'}
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
+				{:else}
+					<a href={`${currentPath}?class=1`}>N</a>
+				{/if}
 			</li>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
-				<a href={`${currentPath}?class=2`}>E</a>
+				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '2'}
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
+				{:else}
+					<a href={`${currentPath}?class=2`}>E</a>
+				{/if}
 			</li>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
-				<a href={`${currentPath}?class=3`}>A</a>
+				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '3'}
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
+				{:else}
+					<a href={`${currentPath}?class=3`}>A</a>
+				{/if}
 			</li>
 			<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
-				<a href={`${currentPath}`}>Alle</a>
+				{#if $sessionStarted && browser && ['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '')}
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
+				{:else}
+					<a href={`${currentPath}`}>Alle</a>
+				{/if}
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -133,16 +151,32 @@ let showPopup = true;
 					</svg>
 					<ul>
 						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
-							<a href={`${currentPath}?class=1`}>N</a>
+							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '1'}
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
+							{:else}
+								<a href={`${currentPath}?class=1`}>N</a>
+							{/if}
 						</li>
 						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
-							<a href={`${currentPath}?class=2`}>E</a>
+							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '2'}
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
+							{:else}
+								<a href={`${currentPath}?class=2`}>E</a>
+							{/if}
 						</li>
 						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
-							<a href={`${currentPath}?class=3`}>A</a>
+							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '3'}
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
+							{:else}
+								<a href={`${currentPath}?class=3`}>A</a>
+							{/if}
 						</li>
 						<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
-							<a href={`${currentPath}`}>Alle</a>
+							{#if $sessionStarted && browser && ['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '')}
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
+							{:else}
+								<a href={`${currentPath}`}>Alle</a>
+							{/if}
 						</li>
 					</ul>
 					<svg viewBox="0 0 2 3" aria-hidden="true">

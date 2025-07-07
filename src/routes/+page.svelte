@@ -7,9 +7,7 @@
 </svelte:head>
 
 <script lang="ts">
-// ==============================
 // Utility functions for dynamic answer/picture keys
-// ==============================
 function getAnswerHtml(q: Question, key: string): string {
   const map: Record<string, keyof Question> = {
     a: 'answerAHtml',
@@ -31,12 +29,13 @@ function getPictureKey(q: Question, key: string): string | undefined {
 }
 // Imports
 // ==============================
-import { onMount } from 'svelte';
+import { onMount, tick } from 'svelte';
 import QuestionCard from '$lib/components/QuestionCard.svelte';
 import 'katex/dist/katex.min.css';
 import { browser } from '$app/environment';
 import { get } from 'svelte/store';
 import { base } from '$app/paths';
+import { sessionStarted } from '$lib/stores/session';
 // Use questions from layout data
 
 // ==============================
@@ -90,10 +89,9 @@ function extractQuestions(tree: any): Question[] {
 	return result;
 }
 import { page } from '$app/stores';
-// Get questions from layout data
-// @ts-ignore
-const questions = $page.data?.fragenkatalog;
-const allQuestions: Question[] = extractQuestions(questions ?? {});
+// Questions and allQuestions will be initialized reactively before session starts
+let questions: any = null;
+let allQuestions: Question[] = [];
 
 const answerKeys = { a: 'answer_a', b: 'answer_b', c: 'answer_c', d: 'answer_d' } as const;
 const answerHtmlKeys = { a: 'answerAHtml', b: 'answerBHtml', c: 'answerCHtml', d: 'answerDHtml' } as const;
@@ -108,7 +106,6 @@ let isLoading = false;
 let selectedClass: string = 'Alle';
 let questionsContainer: HTMLElement | null = null;
 let showSidebar = false;
-let sessionStarted = false;
 let sessionEnded = false;
 let reviewingWrongAnswers = false;
 let sessionAnswers: SessionAnswer[] = [];
@@ -176,13 +173,6 @@ let setSelected = (index: number) => {
     }
   }
 
-  console.log("📥 Answer recorded:", {
-    question: q.number,
-    selectedIndex: index,
-    isCorrect,
-    shuffled: shuffledAnswers.map(a => a.index)
-  });
-
   if (browser) {
     sessionStorage.setItem(`answer-${q.number}`, index.toString());
   }
@@ -192,40 +182,33 @@ let setSelected = (index: number) => {
 // ==============================
 // Lifecycle
 // ==============================
-onMount(() => {
-	console.log("MOUNTED");
-	const currentParams = new URLSearchParams(window.location.search);
-	if (!currentParams.has('class')) {
-		currentParams.set('class', 'Alle');
-		const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-		window.history.replaceState({}, '', newUrl);
-	}
-	if (browser && get(page).url) {
-		const c = get(page).url.searchParams.get('class') || 'Alle';
-		isLoading = true;
-		let target: Question[];
-		if (c === '1' || c === '2' || c === '3') {
-			target = allQuestions.filter((q) => q.class === c);
-		} else if (c === 'Alle') {
-			target = allQuestions;
-		} else {
-			target = [];
-		}
-		setTimeout(() => {
-			filteredQuestions = target;
-			isLoading = false;
-		}, 300);
-	}
-});
+// Update filteredQuestions reactively based on selectedClass (from query param)
+$: if (browser && allQuestions.length > 0) {
+  // Ensure ?class param is present
+  if (window && window.location && window.location.search !== undefined) {
+    const currentParams = new URLSearchParams(window.location.search);
+    if (!currentParams.has('class')) {
+      currentParams.set('class', 'Alle');
+      const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }
+  // Now, update filteredQuestions whenever selectedClass changes
+  isLoading = true;
+  let target: Question[];
+  if (selectedClass === '1' || selectedClass === '2' || selectedClass === '3') {
+    target = allQuestions.filter((q) => q.class === selectedClass);
+  } else if (selectedClass === 'Alle') {
+    target = allQuestions;
+  } else {
+    target = [];
+  }
+  setTimeout(() => {
+    filteredQuestions = target;
+    isLoading = false;
+  }, 300);
+}
 
-onMount(() => {
-	if (browser && filteredQuestions.length > 0) {
-		const saved = sessionStorage.getItem(`answer-${filteredQuestions[currentIndex].number}`);
-		if (saved !== null) {
-			selectedAnswerIndex = parseInt(saved);
-		}
-	}
-});
 
 // ==============================
 // Reactivity
@@ -244,10 +227,8 @@ $: answerLayoutClass =
 // Show correct highlight when an answer is selected
 $: showCorrect = selectedAnswerIndex !== null;
 
-// Shuffle questions for the session
-$: limitedQuestions = [...filteredQuestions]
-	.sort(() => Math.random() - 0.5)
-	.slice(0, questionLimit);
+// limitedQuestions will be set when session starts or resets
+let limitedQuestions: Question[] = [];
 
 // Use all session answers for wrong answer review, not just those in limitedQuestions
 $: relevantSessionAnswers = sessionAnswers;
@@ -275,14 +256,8 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 
 // Debug logging for session end and review
-$: if (sessionEnded) {
-	console.log("📌 Session Ended");
-	console.log("✅ sessionAnswers:", sessionAnswers);
-	console.log("❌ wrongQuestions:", wrongQuestions);
-	console.log("📦 limitedQuestions:", limitedQuestions.map(q => q.number));
-	console.log("🔑 comparing against:", wrongQuestions.map(a => a.questionNumber));
-}
 </script>
+
 
 {#if isLoading}
   <div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
@@ -290,7 +265,7 @@ $: if (sessionEnded) {
   </div>
 {:else}
 
-  {#if !sessionStarted}
+  {#if !$sessionStarted}
     <div class="w-screen flex justify-center items-center min-h-screen">
       <div class="flex flex-col items-center text-center gap-6">
         <div class="flex gap-4">
@@ -310,7 +285,28 @@ $: if (sessionEnded) {
         <button
           class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow relative cursor-pointer"
           style="border-radius: 9999px 9999px 9999px 9999px;"
-          on:click={() => { sessionStarted = true; }}
+          on:click={async () => {
+            // Use fresh selectedClass from page store to avoid stale closure
+            const selectedClassNow = get(page).url.searchParams.get('class') || 'Alle';
+            await tick();
+            if (!questions) {
+              // @ts-ignore
+              questions = $page.data?.fragenkatalog;
+              allQuestions = extractQuestions(questions ?? {});
+            }
+
+            let target: Question[];
+            if (selectedClassNow === '1' || selectedClassNow === '2' || selectedClassNow === '3') {
+              target = allQuestions.filter((q) => q.class === selectedClassNow);
+            } else {
+              target = allQuestions;
+            }
+
+            filteredQuestions = target;
+            limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+            sessionAnswers = [];
+            sessionStarted.set(true);
+          }}
         >
           Session starten
         </button>
@@ -339,14 +335,16 @@ $: if (sessionEnded) {
         </div>
         <button
           class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow cursor-pointer"
-          on:click={() => {
+          on:click={async () => {
             sessionEnded = false;
             sessionAnswers = [];
             currentIndex = 0;
             wrongQuestions = [];
             reviewingWrongAnswers = false;
             selectedAnswerIndex = null;
+            await tick();
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+            sessionStarted.set(false);
           }}
         >
           Neue session starten
@@ -442,7 +440,16 @@ $: if (sessionEnded) {
             <div class="flex-1 flex justify-end items-center w-full">
               <button
                 class="px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
-                on:click={() => sessionEnded = true}
+                on:click={() => {
+                  sessionEnded = false;
+                  sessionAnswers = [];
+                  currentIndex = 0;
+                  wrongQuestions = [];
+                  reviewingWrongAnswers = false;
+                  selectedAnswerIndex = null;
+                  limitedQuestions = [];
+                  sessionStarted.set(false);
+                }}
               >
                 X
               </button>
@@ -553,7 +560,16 @@ $: if (sessionEnded) {
             <div class="flex-1 flex justify-end items-center w-full">
               <button
                 class="px-2 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-xs"
-                on:click={() => sessionEnded = true}
+                on:click={() => {
+                  sessionEnded = false;
+                  sessionAnswers = [];
+                  currentIndex = 0;
+                  wrongQuestions = [];
+                  reviewingWrongAnswers = false;
+                  selectedAnswerIndex = null;
+                  limitedQuestions = [];
+                  sessionStarted.set(false);
+                }}
               >
                 X
               </button>
@@ -580,6 +596,8 @@ $: if (sessionEnded) {
     {/if}
   {/if}
 {/if}
+
+
 <style global>
 	html,
 	body {
