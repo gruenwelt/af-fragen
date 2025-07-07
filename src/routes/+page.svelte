@@ -118,6 +118,7 @@ let shuffledAnswers: ShuffledAnswer[] = [];
 export let selectedAnswerIndex: number | null = null;
 const shuffledMap: Record<string, ShuffledAnswer[]> = {};
 let wrongQuestions: SessionAnswer[] = [];
+let winPercentage = 0;
 
 // ==============================
 // Functions
@@ -166,6 +167,10 @@ let setSelected = (index: number) => {
   if (!alreadyAnswered) {
     const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
     sessionAnswers.push(answer);
+    // Force immediate update of winPercentage after new answer is selected
+    winPercentage = Math.round(
+      (sessionAnswers.filter((a) => a.isCorrect).length / sessionAnswers.length) * 100
+    );
     if (isCorrect) {
       winCount++;
     } else {
@@ -233,8 +238,12 @@ let limitedQuestions: Question[] = [];
 // Use all session answers for wrong answer review, not just those in limitedQuestions
 $: relevantSessionAnswers = sessionAnswers;
 
-// Win percentage
-$: winPercentage = sessionAnswers.length > 0 ? Math.round((winCount / sessionAnswers.length) * 100) : 0;
+// Win percentage based only on answered questions
+$: {
+  const totalShown = sessionAnswers.length;
+  const correct = sessionAnswers.filter((a) => a.isCorrect).length;
+  winPercentage = totalShown > 0 ? Math.round((correct / totalShown) * 100) : 0;
+}
 
 // Shuffle answers whenever question changes, but keep shuffle per question
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
