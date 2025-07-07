@@ -423,7 +423,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           </button>
                         {/each}
                       </div>
-                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-nowrap overflow-auto">
+                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-normal overflow-auto">
                         {limitedQuestions[currentIndex].number} – {limitedQuestions[currentIndex].section1}; {limitedQuestions[currentIndex].section2}; {limitedQuestions[currentIndex].section3}
                       </footer>
                       </article>
@@ -546,7 +546,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           </button>
                         {/each}
                       </div>
-                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-nowrap overflow-auto">
+                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-normal overflow-auto">
                         {limitedQuestions[currentIndex].number} – {limitedQuestions[currentIndex].section1}; {limitedQuestions[currentIndex].section2}; {limitedQuestions[currentIndex].section3}
                       </footer>
                       </article>
