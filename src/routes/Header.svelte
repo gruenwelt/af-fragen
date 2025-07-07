@@ -6,7 +6,7 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	let isDesktop = true;
+	let isDesktop: boolean | undefined = undefined;
 	let showPopup = false;
 
 	onMount(() => {
@@ -27,7 +27,9 @@
 	$: currentPath = browser ? $page.url.pathname : '';
 </script>
 
-{#if isDesktop}
+{#if isDesktop === undefined}
+	<!-- No header until screen size is known -->
+{:else if isDesktop}
 <header>
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
