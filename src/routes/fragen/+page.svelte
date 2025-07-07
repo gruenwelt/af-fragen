@@ -80,7 +80,7 @@
 	let isLoading = false;
 
 	$: if (browser && $page.url) {
-		const c = $page.url.searchParams.get('class') || 'Alle';
+		const c = $page.url.searchParams.get('class') ?? '1';
 		isLoading = true;
 
 		let target: Question[];
@@ -99,7 +99,7 @@
 	}
 
 	// Selected class for tree filtering
-	$: selectedClass = browser ? $page.url.searchParams.get('class') || 'Alle' : 'Alle';
+	$: selectedClass = browser ? $page.url.searchParams.get('class') ?? '1' : '1';
 
 	// Tree data filtered by selected class
 	let treeData: any[] = [];
@@ -144,10 +144,10 @@
 
 		checkMobile();
 
-		// ✅ Enforce default class=Alle if none present
+		// ✅ Enforce default class=1 if none present
 		const currentParams = new URLSearchParams(window.location.search);
 		if (!currentParams.has('class')) {
-			currentParams.set('class', 'Alle');
+			currentParams.set('class', '1');
 			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 			window.history.replaceState({}, '', newUrl);
 		}

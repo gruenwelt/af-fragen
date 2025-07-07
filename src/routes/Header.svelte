@@ -23,9 +23,11 @@ let showPopup = true;
 
 	let currentSearch = '';
 	let currentPath = '';
+  let selectedClass = '';
 
 	$: currentSearch = browser ? $page.url.search : '';
 	$: currentPath = browser ? $page.url.pathname : '';
+  $: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? '1' : '1';
 	$: $sessionStarted;
 </script>
 
@@ -46,32 +48,32 @@ let showPopup = true;
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
-				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '1'}
+			<li aria-current={selectedClass === '1' ? 'page' : undefined}>
+				{#if $sessionStarted && selectedClass !== '1'}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 				{:else}
 					<a href={`${currentPath}?class=1`}>N</a>
 				{/if}
 			</li>
-			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
-				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '2'}
+			<li aria-current={selectedClass === '2' ? 'page' : undefined}>
+				{#if $sessionStarted && selectedClass !== '2'}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 				{:else}
 					<a href={`${currentPath}?class=2`}>E</a>
 				{/if}
 			</li>
-			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
-				{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '3'}
+			<li aria-current={selectedClass === '3' ? 'page' : undefined}>
+				{#if $sessionStarted && selectedClass !== '3'}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 				{:else}
 					<a href={`${currentPath}?class=3`}>A</a>
 				{/if}
 			</li>
-			<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
-				{#if $sessionStarted && browser && ['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '')}
+			<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
+				{#if $sessionStarted && selectedClass !== 'Alle'}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 				{:else}
-					<a href={`${currentPath}`}>Alle</a>
+					<a href={`${currentPath}?class=Alle`}>Alle</a>
 				{/if}
 			</li>
 		</ul>
@@ -150,32 +152,32 @@ let showPopup = true;
 						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 					</svg>
 					<ul>
-						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
-							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '1'}
+						<li aria-current={selectedClass === '1' ? 'page' : undefined}>
+							{#if $sessionStarted && selectedClass !== '1'}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 							{:else}
 								<a href={`${currentPath}?class=1`}>N</a>
 							{/if}
 						</li>
-						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
-							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '2'}
+						<li aria-current={selectedClass === '2' ? 'page' : undefined}>
+							{#if $sessionStarted && selectedClass !== '2'}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 							{:else}
 								<a href={`${currentPath}?class=2`}>E</a>
 							{/if}
 						</li>
-						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
-							{#if $sessionStarted && browser && new URLSearchParams(currentSearch).get('class') !== '3'}
+						<li aria-current={selectedClass === '3' ? 'page' : undefined}>
+							{#if $sessionStarted && selectedClass !== '3'}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 							{:else}
 								<a href={`${currentPath}?class=3`}>A</a>
 							{/if}
 						</li>
-						<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
-							{#if $sessionStarted && browser && ['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '')}
+						<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
+							{#if $sessionStarted && selectedClass !== 'Alle'}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 							{:else}
-								<a href={`${currentPath}`}>Alle</a>
+								<a href={`${currentPath}?class=Alle`}>Alle</a>
 							{/if}
 						</li>
 					</ul>

@@ -193,7 +193,7 @@ $: if (browser && allQuestions.length > 0) {
   if (window && window.location && window.location.search !== undefined) {
     const currentParams = new URLSearchParams(window.location.search);
     if (!currentParams.has('class')) {
-      currentParams.set('class', 'Alle');
+      currentParams.set('class', '1');
       const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
       window.history.replaceState({}, '', newUrl);
     }
@@ -219,7 +219,7 @@ $: if (browser && allQuestions.length > 0) {
 // Reactivity
 // ==============================
 // Selected class from query params (reactive)
-$: selectedClass = browser ? get(page).url.searchParams.get('class') || 'Alle' : 'Alle';
+$: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
 
 // Layout class for answers
 $: answerLayoutClass =
@@ -296,7 +296,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
           style="border-radius: 9999px 9999px 9999px 9999px;"
           on:click={async () => {
             // Use fresh selectedClass from page store to avoid stale closure
-            const selectedClassNow = get(page).url.searchParams.get('class') || 'Alle';
+            const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
             await tick();
             if (!questions) {
               // @ts-ignore
