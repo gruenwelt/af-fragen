@@ -102,7 +102,7 @@ const pictureKeys = { a: 'picture_a', b: 'picture_b', c: 'picture_c', d: 'pictur
 // ==============================
 // State
 // ==============================
-const questionLimits = [30, 100, 200];
+const questionLimits = [25, 100, 200];
 let filteredQuestions: Question[] = [];
 let isLoading = false;
 let selectedClass: string = 'Alle';
