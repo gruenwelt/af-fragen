@@ -116,7 +116,7 @@ $: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
 let questionLimit = 25;
 let shuffledAnswers: ShuffledAnswer[] = [];
 export let selectedAnswerIndex: number | null = null;
-const shuffledMap: Record<string, ShuffledAnswer[]> = {};
+let shuffledMap: Record<string, ShuffledAnswer[]> = {};
 let wrongQuestions: SessionAnswer[] = [];
 let winPercentage = 0;
 
@@ -314,6 +314,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             filteredQuestions = target;
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
             sessionAnswers = [];
+            shuffledMap = {};
             sessionStarted.set(true);
           }}
         >
@@ -352,6 +353,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             reviewingWrongAnswers = false;
             selectedAnswerIndex = null;
             await tick();
+            shuffledMap = {};
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
             sessionStarted.set(false);
           }}
