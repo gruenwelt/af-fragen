@@ -406,13 +406,13 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
         </section>
         {#if limitedQuestions.length > 0}
           <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-1 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
-            <div class="flex-1 flex justify-start items-center text-sm text-gray-600 ml-2 w-full">
+            <div class="w-[25%] flex justify-start items-center text-sm text-gray-600 ml-1">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="flex-1 flex justify-center items-center text-sm text-green-600 w-full">
+            <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate">
               Erfolgsquote: {winCount} ({winPercentage}%)
             </div>
-            <div class="flex-1 flex justify-end items-center w-full">
+            <div class="w-[25%] flex justify-end items-center">
               <button
                 class="px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
                 on:click={() => {
@@ -526,13 +526,13 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
         </section>
         {#if limitedQuestions.length > 0}
           <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-2 py-1 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
-            <div class="flex-1 flex justify-start items-center text-xs text-gray-600 ml-1 w-full">
+            <div class="w-[25%] flex justify-start items-center text-xs text-gray-600 ml-1">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="flex-1 flex justify-center items-center text-xs text-green-600 w-full">
+            <div class="w-[50%] flex justify-center items-center text-xs text-green-600 whitespace-nowrap truncate">
               Erfolgsquote: {winCount} ({winPercentage}%)
             </div>
-            <div class="flex-1 flex justify-end items-center w-full">
+            <div class="w-[25%] flex justify-end items-center">
               <button
                 class="px-2 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-xs"
                 on:click={() => {
