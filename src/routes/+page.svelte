@@ -7,292 +7,592 @@
 </svelte:head>
 
 <script lang="ts">
-	// --- External Imports ---
-	import { onMount, tick } from 'svelte';
-	import { page } from '$app/stores';
-	import 'katex/dist/katex.min.css';
-	import { base } from '$app/paths';
-	import { browser } from '$app/environment';
-	import { collectQuestions } from '$lib/utils/questionLoader';
+// ==============================
+// Utility functions for dynamic answer/picture keys
+// ==============================
+function getAnswerHtml(q: Question, key: string): string {
+  const map: Record<string, keyof Question> = {
+    a: 'answerAHtml',
+    b: 'answerBHtml',
+    c: 'answerCHtml',
+    d: 'answerDHtml',
+  };
+  return q[map[key]] || '';
+}
 
-	import fullTree from '$lib/data/tree.json';
+function getPictureKey(q: Question, key: string): string | undefined {
+  const map: Record<string, keyof Question> = {
+    a: 'picture_a',
+    b: 'picture_b',
+    c: 'picture_c',
+    d: 'picture_d',
+  };
+  return q[map[key]];
+}
+// Imports
+// ==============================
+import { onMount } from 'svelte';
+import QuestionCard from '$lib/components/QuestionCard.svelte';
+import 'katex/dist/katex.min.css';
+import { browser } from '$app/environment';
+import { get } from 'svelte/store';
+import { base } from '$app/paths';
+// Use questions from layout data
 
-	// --- Component Imports ---
-	let Tree: typeof import('$lib/components/Tree.svelte').default;
-	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
+// ==============================
+// Types
+// ==============================
+type Question = {
+	question: string;
+	questionHtml: string;
+	answer_a: string;
+	answerAHtml: string;
+	answer_b: string;
+	answerBHtml: string;
+	answer_c: string;
+	answerCHtml: string;
+	answer_d: string;
+	answerDHtml: string;
+	class: string;
+	number: string;
+	picture_question?: string;
+	picture_a?: string;
+	picture_b?: string;
+	picture_c?: string;
+	picture_d?: string;
+	section1?: string;
+	section2?: string;
+	section3?: string;
+};
 
-	onMount(async () => {
-		const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
-			import('$lib/components/Tree.svelte'),
-			import('$lib/components/QuestionCard.svelte')
-		]);
-		Tree = TreeModule;
-		QuestionCard = QuestionCardModule;
-	});
+type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect: boolean };
+type ShuffledAnswer = { text: string; html: string; index: number };
 
-	// --- Types ---
-	type Question = {
-		question: string;
-		questionHtml: string;
-		answer_a: string;
-		answerAHtml: string;
-		answer_b: string;
-		answerBHtml: string;
-		answer_c: string;
-		answerCHtml: string;
-		answer_d: string;
-		answerDHtml: string;
-		class: string;
-		number: string;
-		picture_question?: string;
-		picture_a?: string;
-		picture_b?: string;
-		picture_c?: string;
-		picture_d?: string;
-		section1?: string;
-		section2?: string;
-		section3?: string;
-	};
-
-	// --- Utility Functions ---
-
-	/**
-	 * Determines if a question has any long answers (by length or images).
-	 * Uses 2×2 layout for images on desktop, 4×1 on mobile.
-	 */
-	function isLongAnswer(q: Question): boolean {
-		const threshold = isMobile ? 12 : 60;
-		const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
-			(a) => a.length > threshold
-		);
-		const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
-		return hasLongText || (isMobile && hasImages);
+// ==============================
+// Data & Derived Data
+// ==============================
+function extractQuestions(tree: any): Question[] {
+	const result: Question[] = [];
+	for (const s1 of tree.sections || []) {
+		for (const s2 of s1.sections || []) {
+			for (const s3 of s2.sections || []) {
+				if (Array.isArray(s3.questions)) {
+					result.push(...s3.questions.map((q: any) => ({
+						...q,
+						section1: s1.title,
+						section2: s2.title,
+						section3: s3.title
+					})));
+				}
+			}
+		}
 	}
+	return result;
+}
+import { page } from '$app/stores';
+// Get questions from layout data
+// @ts-ignore
+const questions = $page.data?.fragenkatalog;
+const allQuestions: Question[] = extractQuestions(questions ?? {});
 
-	// --- State & Reactive Vars ---
+const answerKeys = { a: 'answer_a', b: 'answer_b', c: 'answer_c', d: 'answer_d' } as const;
+const answerHtmlKeys = { a: 'answerAHtml', b: 'answerBHtml', c: 'answerCHtml', d: 'answerDHtml' } as const;
+const pictureKeys = { a: 'picture_a', b: 'picture_b', c: 'picture_c', d: 'picture_d' } as const;
 
-	const questions: Question[] = $page.data?.fragenkatalog?.sections
-		? collectQuestions($page.data.fragenkatalog.sections)
-		: [];
+// ==============================
+// State
+// ==============================
+const questionLimits = [25, 100, 200];
+let filteredQuestions: Question[] = [];
+let isLoading = false;
+let selectedClass: string = 'Alle';
+let questionsContainer: HTMLElement | null = null;
+let showSidebar = false;
+let sessionStarted = false;
+let sessionEnded = false;
+let reviewingWrongAnswers = false;
+let sessionAnswers: SessionAnswer[] = [];
+let currentIndex = 0;
 
-	// Filtered questions based on class query param (browser only after hydration)
-	let filteredQuestions: Question[] = [];
-	let isLoading = false;
+// Make winCount reactive to sessionAnswers
+$: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
+let questionLimit = 25;
+let shuffledAnswers: ShuffledAnswer[] = [];
+export let selectedAnswerIndex: number | null = null;
+const shuffledMap: Record<string, ShuffledAnswer[]> = {};
+let wrongQuestions: SessionAnswer[] = [];
 
-	$: if (browser && $page.url) {
-		const c = $page.url.searchParams.get('class') || 'Alle';
+// ==============================
+// Functions
+// ==============================
+function isLongAnswer(q: Question): boolean {
+  // Use a dynamic threshold based on isMobile
+  const threshold = isMobile ? 12 : 60;
+  const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
+    (a) => a.length > threshold
+  );
+  const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
+  return hasLongText && !hasImages;
+}
+// ==============================
+// Mobile detection state
+// ==============================
+let isMobile = false;
+
+onMount(() => {
+  const checkMobile = () => {
+    isMobile = window.innerWidth <= 768;
+  };
+
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+});
+
+function isCorrectAnswer(q: Question, key: string) {
+	const i = ['a', 'b', 'c', 'd'].indexOf(key);
+	return showCorrect && shuffledAnswers[i]?.index === 0;
+}
+
+function isSelected(i: number) {
+	return selectedAnswerIndex === i;
+}
+
+let setSelected = (index: number) => {
+  const q = limitedQuestions[currentIndex];
+  if (!q) return;
+
+  selectedAnswerIndex = index;
+  const isCorrect = shuffledAnswers[index]?.index === 0;
+
+  const alreadyAnswered = sessionAnswers.find((a) => a.questionNumber === q.number);
+  if (!alreadyAnswered) {
+    const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
+    sessionAnswers.push(answer);
+    if (isCorrect) {
+      winCount++;
+    } else {
+      wrongQuestions.push(answer);
+    }
+  }
+
+  console.log("📥 Answer recorded:", {
+    question: q.number,
+    selectedIndex: index,
+    isCorrect,
+    shuffled: shuffledAnswers.map(a => a.index)
+  });
+
+  if (browser) {
+    sessionStorage.setItem(`answer-${q.number}`, index.toString());
+  }
+  // selectedAnswerIndex = null; // REMOVED: keep selected answer for highlighting
+};
+
+// ==============================
+// Lifecycle
+// ==============================
+onMount(() => {
+	console.log("MOUNTED");
+	const currentParams = new URLSearchParams(window.location.search);
+	if (!currentParams.has('class')) {
+		currentParams.set('class', 'Alle');
+		const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+		window.history.replaceState({}, '', newUrl);
+	}
+	if (browser && get(page).url) {
+		const c = get(page).url.searchParams.get('class') || 'Alle';
 		isLoading = true;
-
 		let target: Question[];
 		if (c === '1' || c === '2' || c === '3') {
-			target = questions.filter((q) => q.class === c);
+			target = allQuestions.filter((q) => q.class === c);
 		} else if (c === 'Alle') {
-			target = questions;
+			target = allQuestions;
 		} else {
 			target = [];
 		}
-
 		setTimeout(() => {
 			filteredQuestions = target;
 			isLoading = false;
 		}, 300);
 	}
+});
 
-	// Selected class for tree filtering
-	$: selectedClass = browser ? $page.url.searchParams.get('class') || 'Alle' : 'Alle';
-
-	// Tree data filtered by selected class
-	let treeData: any[] = [];
-
-	$: if (selectedClass && fullTree) {
-		import('$lib/utils/treeFilter').then(({ filterTreeByClass }) => {
-			const filtered = filterTreeByClass(fullTree, selectedClass);
-			treeData = filtered;
-		});
-	}
-
-	// --- Scroll Logic ---
-
-	let questionsContainer: HTMLElement | null = null;
-
-	async function scrollToQuestion(questionId: string) {
-		if (!questionId) return;
-
-		const index = filteredQuestions.findIndex(q => q.number === questionId);
-		if (index === -1) return;
-
-		await tick();
-		const container = questionsContainer;
-		const target = container?.querySelector(`[data-question-id="${questionId}"]`);
-		if (target && container) {
-			const containerTop = container.getBoundingClientRect().top;
-			const targetTop = target.getBoundingClientRect().top;
-			const scrollOffset = targetTop - containerTop + container.scrollTop;
-			container.scrollTo({ top: scrollOffset, behavior: 'smooth' });
+onMount(() => {
+	if (browser && filteredQuestions.length > 0) {
+		const saved = sessionStorage.getItem(`answer-${filteredQuestions[currentIndex].number}`);
+		if (saved !== null) {
+			selectedAnswerIndex = parseInt(saved);
 		}
 	}
+});
 
-	// --- Lifecycle ---
+// ==============================
+// Reactivity
+// ==============================
+// Selected class from query params (reactive)
+$: selectedClass = browser ? get(page).url.searchParams.get('class') || 'Alle' : 'Alle';
 
-	let isMobile = false;
-	let mobileReady = false;
+// Layout class for answers
+$: answerLayoutClass =
+  limitedQuestions[currentIndex]
+    ? isLongAnswer(limitedQuestions[currentIndex])
+      ? 'flex flex-col gap-3'
+      : 'grid grid-cols-2 gap-3'
+    : 'grid grid-cols-2 gap-3';
 
-	onMount(() => {
-		const checkMobile = () => {
-			isMobile = window.innerWidth <= 768;
-		};
+// Show correct highlight when an answer is selected
+$: showCorrect = selectedAnswerIndex !== null;
 
-		checkMobile();
+// Shuffle questions for the session
+$: limitedQuestions = [...filteredQuestions]
+	.sort(() => Math.random() - 0.5)
+	.slice(0, questionLimit);
 
-		// ✅ Enforce default class=Alle if none present
-		const currentParams = new URLSearchParams(window.location.search);
-		if (!currentParams.has('class')) {
-			currentParams.set('class', 'Alle');
-			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-			window.history.replaceState({}, '', newUrl);
-		}
+// Use all session answers for wrong answer review, not just those in limitedQuestions
+$: relevantSessionAnswers = sessionAnswers;
 
-		window.addEventListener('resize', checkMobile);
+// Win percentage
+$: winPercentage = sessionAnswers.length > 0 ? Math.round((winCount / sessionAnswers.length) * 100) : 0;
 
-		if (browser && isMobile) {
-			setTimeout(() => {
-				mobileReady = true;
-			}, 100); // simulate delay to ensure DOM is mounted
-		} else {
-			mobileReady = true;
-		}
+// Shuffle answers whenever question changes, but keep shuffle per question
+$: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
+  selectedAnswerIndex = null;
+  const q = limitedQuestions[currentIndex];
+  if (!shuffledMap[q.number]) {
+    const answers = [
+      { text: q.answer_a, html: q.answerAHtml, index: 0 },
+      { text: q.answer_b, html: q.answerBHtml, index: 1 },
+      { text: q.answer_c, html: q.answerCHtml, index: 2 },
+      { text: q.answer_d, html: q.answerDHtml, index: 3 }
+    ];
+    shuffledMap[q.number] = [...answers].sort(() => Math.random() - 0.5);
+  }
+  shuffledAnswers = shuffledMap[q.number];
+}
 
-		return () => window.removeEventListener('resize', checkMobile);
-	});
+// Index of correct answer in shuffledAnswers
+$: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 
-	let showSidebar = false;
-
-	// --- Highlighted Questions ---
-	let highlightedNumbers: string[] = [];
-
-	function handleSectionClick(node: any) {
-		if (!node.question_numbers || node.question_numbers.length === 0) {
-			highlightedNumbers = [];
-			return;
-		}
-
-		highlightedNumbers = node.question_numbers || [];
-
-		const list = filteredQuestions.length > 0 ? filteredQuestions : questions;
-		const first = node.question_numbers.find((qn: string) =>
-			list.some((q) => q.number === qn)
-		);
-
-		if (first) {
-			scrollToQuestion(first);
-		}
-	}
+// Debug logging for session end and review
+$: if (sessionEnded) {
+	console.log("📌 Session Ended");
+	console.log("✅ sessionAnswers:", sessionAnswers);
+	console.log("❌ wrongQuestions:", wrongQuestions);
+	console.log("📦 limitedQuestions:", limitedQuestions.map(q => q.number));
+	console.log("🔑 comparing against:", wrongQuestions.map(a => a.questionNumber));
+}
 </script>
 
 {#if isLoading}
-	<div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-		<div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
-	</div>
+  <div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+    <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
+  </div>
 {:else}
-	<!-- ============================== -->
-	<!-- ✅ Desktop Layout (Sidebar + Questions) -->
-	<!-- ============================== -->
-	{#if !isMobile && mobileReady}
-		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
-			<!-- Sidebar: Navigation tree -->
-			<nav
-				class="w-[35%] rounded-lg p-4 max-h-[80vh] overflow-y-auto bg-white/70"
-				aria-label="Left sidebar navigation menu"
-			>
-				{#if Tree}
-					<Tree
-						nodes={treeData}
-						level={1}
-						on:sectionclick={(e: CustomEvent<any>) => handleSectionClick(e.detail)}
-					/>
-				{/if}	
-			</nav>
 
-			<!-- Questions container -->
-			<section
-				bind:this={questionsContainer}
-				class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto overflow-x-hidden"
-				aria-label="Scrollable questions container"
-			>
-				{#if QuestionCard}
-					{#each filteredQuestions as q}
-						<svelte:component 
-							this={QuestionCard}
-							{q}
-							isHighlighted={highlightedNumbers.includes(q.number)}
-							{isLongAnswer}
-							{base}
-						/>
-					{/each}
-				{/if}
-			</section>
-		</div>
-
-	<!-- ============================== -->
-	<!-- ✅ Mobile Layout (Toggleable Sidebar + Questions) -->
-	<!-- ============================== -->
-	{:else if mobileReady}
-		<div class="relative max-w-5xl mx-auto px-0.0 pt-0.0 pb-0 overflow-x-hidden">
-			<button
-				class={`fixed top-120 z-50 bg-white/70 px-4 py-3 rounded-full shadow transition-transform duration-300 transform ${
-				showSidebar ? 'left-[65%] rotate-180' : 'left-0'
-				}`}
-				on:click={() => (showSidebar = !showSidebar)}
-				aria-label="Toggle Sidebar"
-			>
-				☰
-			</button>
-
-			{#if showSidebar}
-				<div
-					class="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
-					role="button"
-					tabindex="0"
-					on:click={() => (showSidebar = false)}
-					on:keydown={(e: KeyboardEvent) => {
-						if (e.key === 'Enter' || e.key === ' ') showSidebar = false;
-					}}
-				></div>
-			{/if}
-
-			<div
-				class={`fixed top-[5%] left-0 h-full w-[70%] max-h-[90%] rounded-2xl z-40 p-4 bg-white/70 overflow-y-auto shadow-lg transform transition-transform duration-300 ${
-					showSidebar ? 'translate-x-0' : '-translate-x-full'
-				}`}
-			>
-				<Tree
-					nodes={treeData}
-					level={1}
-					on:sectionclick={(e: CustomEvent<any>) => handleSectionClick(e.detail)}
-				/>
-			</div>
-
-			<section
-				bind:this={questionsContainer}
-				class="w-full space-y-3 px-1 pt-1 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh]"
-				aria-label="Scrollable questions container"
-			>
-				{#each filteredQuestions as q}
-					<QuestionCard 
-						{q}
-						isHighlighted={highlightedNumbers.includes(q.number)}
-						{isLongAnswer}
-						{base}
-					/>
-				{/each}
-			</section>
-		</div>
-	{/if}
+  {#if !sessionStarted}
+    <div class="w-screen flex justify-center items-center min-h-screen">
+      <div class="flex flex-col items-center text-center gap-6">
+        <div class="flex gap-4">
+          {#each questionLimits as limit}
+            <button
+              class="w-16 h-10 rounded-full text-sm font-medium shadow transition-all cursor-pointer"
+              class:bg-[color:var(--color-theme-1)]={questionLimit === limit}
+              class:text-white={questionLimit === limit}
+              class:bg-white={questionLimit !== limit}
+              class:text-black={questionLimit !== limit}
+              on:click={() => questionLimit = limit}
+            >
+              {limit}
+            </button>
+          {/each}
+        </div>
+        <button
+          class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow relative cursor-pointer"
+          style="border-radius: 9999px 9999px 9999px 9999px;"
+          on:click={() => { sessionStarted = true; }}
+        >
+          Session starten
+        </button>
+      </div>
+    </div>
+  {:else if sessionEnded}
+    <div class="w-screen flex justify-center items-center min-h-screen">
+      <div class="flex flex-col items-center text-center gap-6">
+        <h2 class="text-xl font-semibold">Session beendet</h2>
+        <p class="text-green-700 text-lg">
+          Richtig beantwortet: {winCount} von {sessionAnswers.length} ({winPercentage}%)
+        </p>
+        <div class="flex gap-4">
+          {#each questionLimits as limit}
+            <button
+              class="w-16 h-10 rounded-full text-sm font-medium shadow transition-all cursor-pointer"
+              class:bg-[color:var(--color-theme-1)]={questionLimit === limit}
+              class:text-white={questionLimit === limit}
+              class:bg-white={questionLimit !== limit}
+              class:text-black={questionLimit !== limit}
+              on:click={() => questionLimit = limit}
+            >
+              {limit}
+            </button>
+          {/each}
+        </div>
+        <button
+          class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow cursor-pointer"
+          on:click={() => {
+            sessionEnded = false;
+            sessionAnswers = [];
+            currentIndex = 0;
+            wrongQuestions = [];
+            reviewingWrongAnswers = false;
+            selectedAnswerIndex = null;
+            limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+          }}
+        >
+          Neue session starten
+        </button>
+      </div>
+    </div>
+  {:else if sessionStarted && !sessionEnded}
+    <!-- ============================== -->
+    <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
+    <!-- ============================== -->
+    {#if !isMobile}
+      <div class="flex flex-col max-w-2xl mx-auto min-h-screen px-0.0">
+        <section
+          bind:this={questionsContainer}
+          class="w-full flex justify-center items-start pt-[30px] px-4"
+          aria-label="Scrollable questions container"
+        >
+          {#if limitedQuestions.length > 0}
+            <div class="w-[42rem] pb-[200px] flex">
+              <div class="flex-grow">
+                {#key currentIndex}
+                  {#if limitedQuestions[currentIndex]}
+                    <div class="relative">
+                      <article
+                        data-question-id={limitedQuestions[currentIndex].number}
+                        class="bg-white shadow-md rounded-lg p-4 border border-gray-200"
+                      >
+                      {#if limitedQuestions[currentIndex].picture_question}
+                        <div class="mb-2"></div>
+                        <div class="flex justify-center mb-5">
+                          <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
+                            alt="Bild zur Frage"
+                            class="w-auto h-auto max-h-[300px] mx-auto"
+                          />
+                        </div>
+                      {/if}
+                      {#if typeof limitedQuestions[currentIndex].questionHtml === 'string' && limitedQuestions[currentIndex].questionHtml.includes('katex')}
+                        <div class="text-center">
+                          {@html limitedQuestions[currentIndex].questionHtml}
+                        </div>
+                      {:else}
+                        <div class="text-center">
+                          {@html limitedQuestions[currentIndex].questionHtml ?? ''}
+                        </div>
+                      {/if}
+                      <div class="h-4"></div>
+                      <div class={answerLayoutClass}>
+                        {#each shuffledAnswers as answer, i (answer.index)}
+                          <button
+                            type="button"
+                            class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
+                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
+                            class:border-green-500={selectedAnswerIndex !== null && i === correctIndex}
+                            on:click={() => selectedAnswerIndex === null && setSelected(i)}
+                            data-answer-index={i}
+                          >
+                            {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
+                              <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                                alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
+                                class="w-auto h-auto max-h-[300px] mx-auto"
+                              />
+                            {:else if answer.html?.includes('katex')}
+                              <div class="text-center">
+                                {@html answer.html}
+                              </div>
+                            {:else}
+                              <div class="text-center">
+                                {@html answer.html ?? ''}
+                              </div>
+                            {/if}
+                          </button>
+                        {/each}
+                      </div>
+                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-nowrap overflow-auto">
+                        {limitedQuestions[currentIndex].number} – {limitedQuestions[currentIndex].section1}; {limitedQuestions[currentIndex].section2}; {limitedQuestions[currentIndex].section3}
+                      </footer>
+                      </article>
+                    </div>
+                  {/if}
+                {/key}
+              </div>
+            </div>
+          {/if}
+        </section>
+        {#if limitedQuestions.length > 0}
+          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow flex items-center gap-4 z-50">
+            <div class="flex items-center text-sm text-gray-600">
+              {currentIndex + 1} / {limitedQuestions.length}
+            </div>
+            <div class="flex items-center text-sm text-green-600 ml-4">
+              Siege: {winCount} ({winPercentage}%)
+            </div>
+            <button
+              class="ml-4 px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
+              on:click={() => sessionEnded = true}
+            >
+              X
+            </button>
+          </div>
+          <!-- Fixed Previous Button -->
+          <button
+            class="fixed left-4 top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+            on:click={() => currentIndex = Math.max(0, currentIndex - 1)}
+            disabled={currentIndex === 0}
+          >
+            ←
+          </button>
+          <!-- Fixed Next Button -->
+          <button
+            class="fixed right-4 top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+            on:click={() => currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1)}
+            disabled={currentIndex >= limitedQuestions.length - 1}
+          >
+            →
+          </button>
+        {/if}
+      </div>
+    {:else}
+      <div class="flex flex-col max-w-full mx-auto min-h-screen px-1 pt-1">
+        <section
+          bind:this={questionsContainer}
+          class="w-full flex justify-center items-start pt-[4px] px-[2px]"
+          aria-label="Scrollable questions container"
+        >
+          {#if limitedQuestions.length > 0}
+            <div class="w-full pb-[80px] flex justify-center">
+              <div class="w-full max-w-2xl">
+                <div class="flex-grow">
+                {#key currentIndex}
+                  {#if limitedQuestions[currentIndex]}
+                    <div class="relative">
+                      <article
+                        data-question-id={limitedQuestions[currentIndex].number}
+                        class="bg-white shadow-md rounded-lg p-4 border border-gray-200"
+                      >
+                      {#if limitedQuestions[currentIndex].picture_question}
+                        <div class="mb-1"></div>
+                        <div class="flex justify-center mb-3">
+                          <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
+                            alt="Bild zur Frage"
+                            class="w-auto h-auto max-h-[160px] mx-auto"
+                          />
+                        </div>
+                      {/if}
+                      {#if typeof limitedQuestions[currentIndex].questionHtml === 'string' && limitedQuestions[currentIndex].questionHtml.includes('katex')}
+                        <div class="text-center">
+                          {@html limitedQuestions[currentIndex].questionHtml}
+                        </div>
+                      {:else}
+                        <div class="text-center">
+                          {@html limitedQuestions[currentIndex].questionHtml ?? ''}
+                        </div>
+                      {/if}
+                      <div class="h-2"></div>
+                      <div class={answerLayoutClass}>
+                        {#each shuffledAnswers as answer, i (answer.index)}
+                          <button
+                            type="button"
+                            class="border border-gray-300 rounded-lg p-2 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
+                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
+                            class:border-green-500={selectedAnswerIndex !== null && i === correctIndex}
+                            on:click={() => selectedAnswerIndex === null && setSelected(i)}
+                            data-answer-index={i}
+                          >
+                            {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
+                              <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                                alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
+                                class="w-auto h-auto max-h-[100px] mx-auto"
+                              />
+                            {:else if answer.html?.includes('katex')}
+                              <div class="text-center">
+                                {@html answer.html}
+                              </div>
+                            {:else}
+                              <div class="text-center">
+                                {@html answer.html ?? ''}
+                              </div>
+                            {/if}
+                          </button>
+                        {/each}
+                      </div>
+                      <footer class="mt-4 text-[0.6rem] text-gray-500 italic text-center whitespace-nowrap overflow-auto">
+                        {limitedQuestions[currentIndex].number} – {limitedQuestions[currentIndex].section1}; {limitedQuestions[currentIndex].section2}; {limitedQuestions[currentIndex].section3}
+                      </footer>
+                      </article>
+                    </div>
+                  {/if}
+                {/key}
+                </div>
+              </div>
+            </div>
+          {/if}
+        </section>
+        {#if limitedQuestions.length > 0}
+          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-2 py-2 rounded-full shadow flex items-center gap-2 z-50">
+            <div class="flex items-center text-sm text-gray-600">
+              {currentIndex + 1} / {limitedQuestions.length}
+            </div>
+            <div class="flex items-center text-green-600 ml-2 text-sm">
+              Siege: {winCount} ({winPercentage}%)
+            </div>
+            <button
+              class="ml-0 px-2 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-sm"
+              on:click={() => sessionEnded = true}
+            >
+              X
+            </button>
+          </div>
+          <!-- Fixed Previous Button -->
+          <button
+            class="fixed left-2 top-120 transform -translate-y-1/2 w-16 h-16 rounded-full bg-white shadow-lg z-50 text-3xl cursor-pointer"
+            on:click={() => currentIndex = Math.max(0, currentIndex - 1)}
+            disabled={currentIndex === 0}
+          >
+            ←
+          </button>
+          <!-- Fixed Next Button -->
+          <button
+            class="fixed right-2 top-120 transform -translate-y-1/2 w-16 h-16 rounded-full bg-white shadow-lg z-50 text-3xl cursor-pointer"
+            on:click={() => currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1)}
+            disabled={currentIndex >= limitedQuestions.length - 1}
+          >
+            →
+          </button>
+        {/if}
+      </div>
+    {/if}
+  {/if}
 {/if}
 <style global>
 	html,
 	body {
-		height: 100vh;
-		overflow: hidden;
+		height: 100%;
+		overflow-y: auto;
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	@media (max-width: 768px) {
+		html,
+		body {
+			overflow: hidden;
+		}
 	}
 </style>
