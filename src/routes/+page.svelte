@@ -146,6 +146,26 @@ onMount(() => {
 
   checkMobile();
   window.addEventListener('resize', checkMobile);
+
+  // Restore session state from sessionStorage if available
+  if (browser) {
+    const started = sessionStorage.getItem('af-session-started') === 'true';
+    if (started) {
+      try {
+        const restoredAnswers = JSON.parse(sessionStorage.getItem('af-session-answers') || '[]');
+        const restoredQuestions = JSON.parse(sessionStorage.getItem('af-limited-questions') || '[]');
+        const restoredIndex = parseInt(sessionStorage.getItem('af-current-index') || '0');
+
+        sessionAnswers = restoredAnswers;
+        limitedQuestions = restoredQuestions;
+        currentIndex = isNaN(restoredIndex) ? 0 : restoredIndex;
+        sessionStarted.set(true);
+      } catch (e) {
+        console.warn('Failed to restore session', e);
+      }
+    }
+  }
+
   setTimeout(() => {
     headerReady = true;
   }, 0);
@@ -172,6 +192,11 @@ let setSelected = (index: number) => {
   if (!alreadyAnswered) {
     const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
     sessionAnswers.push(answer);
+    // Persist session state to sessionStorage
+    sessionStorage.setItem('af-session-started', 'true');
+    sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+    sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
+    sessionStorage.setItem('af-current-index', currentIndex.toString());
     // Force immediate update of winPercentage after new answer is selected
     winPercentage = Math.round(
       (sessionAnswers.filter((a) => a.isCorrect).length / sessionAnswers.length) * 100
@@ -319,6 +344,11 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
             sessionAnswers = [];
             shuffledMap = {};
+            // Persist session state to sessionStorage before session starts
+            sessionStorage.setItem('af-session-started', 'true');
+            sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+            sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
+            sessionStorage.setItem('af-current-index', currentIndex.toString());
             sessionStarted.set(true);
           }}
         >
@@ -423,6 +453,10 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                   reviewingWrongAnswers = false;
                   selectedAnswerIndex = null;
                   limitedQuestions = [];
+                  sessionStorage.removeItem('af-session-started');
+                  sessionStorage.removeItem('af-session-answers');
+                  sessionStorage.removeItem('af-limited-questions');
+                  sessionStorage.removeItem('af-current-index');
                   sessionStarted.set(false);
                 }}
               >
@@ -543,6 +577,10 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                   reviewingWrongAnswers = false;
                   selectedAnswerIndex = null;
                   limitedQuestions = [];
+                  sessionStorage.removeItem('af-session-started');
+                  sessionStorage.removeItem('af-session-answers');
+                  sessionStorage.removeItem('af-limited-questions');
+                  sessionStorage.removeItem('af-current-index');
                   sessionStarted.set(false);
                 }}
               >
