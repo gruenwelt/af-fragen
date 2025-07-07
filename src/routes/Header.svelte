@@ -111,10 +111,10 @@
 						</button>
 					</li>
 					<li aria-current={browser && currentPath === base + '/' ? 'page' : undefined}>
-						<a href={`${base}/${currentSearch}`}>Fragen</a>
+						<a href={`${base}/${currentSearch}`}>Üben</a>
 					</li>
-					<li aria-current={browser && currentPath === base + '/ueben' ? 'page' : undefined}>
-						<a href={`${base}/ueben${currentSearch}`}>Üben</a>
+					<li aria-current={browser && currentPath === base + '/fragen' ? 'page' : undefined}>
+						<a href={`${base}/fragen${currentSearch}`}>Fragen</a>
 					</li>	
 					<li aria-current={browser && currentPath === base + '/info' ? 'page' : undefined}>
 						<a href={`${base}/info${currentSearch}`}>Info</a>
