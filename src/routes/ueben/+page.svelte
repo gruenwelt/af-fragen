@@ -542,7 +542,7 @@ $: if (sessionEnded) {
             <div class="flex items-center text-sm text-gray-600">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="flex items-center text-sm text-green-600 ml-2 text-sm">
+            <div class="flex items-center text-green-600 ml-2 text-sm">
               Siege: {winCount} ({winPercentage}%)
             </div>
             <button
