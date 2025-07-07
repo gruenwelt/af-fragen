@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 
 	let isDesktop: boolean | undefined = undefined;
-	let showPopup = false;
+let showPopup = true;
 
 	onMount(() => {
 		if (browser) {
