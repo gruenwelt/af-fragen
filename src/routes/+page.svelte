@@ -322,46 +322,6 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
         </button>
       </div>
     </div>
-  {:else if sessionEnded}
-    <div class="w-screen flex justify-center items-center min-h-screen">
-      <div class="flex flex-col items-center text-center gap-6">
-        <h2 class="text-xl font-semibold">Session beendet</h2>
-        <p class="text-green-700 text-lg">
-          Richtig beantwortet: {winCount} von {sessionAnswers.length} ({winPercentage}%)
-        </p>
-        <div class="flex gap-4">
-          {#each questionLimits as limit}
-            <button
-              class="w-16 h-10 rounded-full text-sm font-medium shadow transition-all cursor-pointer"
-              class:bg-[color:var(--color-theme-1)]={questionLimit === limit}
-              class:text-white={questionLimit === limit}
-              class:bg-white={questionLimit !== limit}
-              class:text-black={questionLimit !== limit}
-              on:click={() => questionLimit = limit}
-            >
-              {limit}
-            </button>
-          {/each}
-        </div>
-        <button
-          class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow cursor-pointer"
-          on:click={async () => {
-            sessionEnded = false;
-            sessionAnswers = [];
-            currentIndex = 0;
-            wrongQuestions = [];
-            reviewingWrongAnswers = false;
-            selectedAnswerIndex = null;
-            await tick();
-            shuffledMap = {};
-            limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
-            sessionStarted.set(false);
-          }}
-        >
-          Neue session starten
-        </button>
-      </div>
-    </div>
   {:else if sessionStarted && !sessionEnded}
     <!-- ============================== -->
     <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
