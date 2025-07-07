@@ -358,21 +358,21 @@ $: if (sessionEnded) {
     <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
     <!-- ============================== -->
     {#if !isMobile}
-      <div class="flex flex-col max-w-2xl mx-auto min-h-screen px-0.0">
+      <div class="flex flex-col max-w-2xl w-full mx-auto min-h-screen px-4">
         <section
           bind:this={questionsContainer}
-          class="w-full flex justify-center items-start pt-[30px] px-4"
+          class="w-full flex justify-center items-start pt-[30px]"
           aria-label="Scrollable questions container"
         >
           {#if limitedQuestions.length > 0}
-            <div class="w-[42rem] pb-[200px] flex">
-              <div class="flex-grow">
+            <div class="w-full flex justify-center pb-[200px]">
+              <div class="w-full max-w-2xl">
                 {#key currentIndex}
                   {#if limitedQuestions[currentIndex]}
                     <div class="relative">
                       <article
                         data-question-id={limitedQuestions[currentIndex].number}
-                        class="bg-white shadow-md rounded-lg p-4 border border-gray-200"
+                        class="w-full max-w-2xl bg-white shadow-md rounded-lg p-4 border border-gray-200 mx-auto"
                       >
                       {#if limitedQuestions[currentIndex].picture_question}
                         <div class="mb-2"></div>
