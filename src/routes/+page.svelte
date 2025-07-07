@@ -432,19 +432,21 @@ $: if (sessionEnded) {
           {/if}
         </section>
         {#if limitedQuestions.length > 0}
-          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow flex items-center gap-4 z-50">
-            <div class="flex items-center text-sm text-gray-600">
+          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-1 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
+            <div class="flex-1 flex justify-start items-center text-sm text-gray-600 ml-2 w-full">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="flex items-center text-sm text-green-600 ml-4">
+            <div class="flex-1 flex justify-center items-center text-sm text-green-600 w-full">
               Siege: {winCount} ({winPercentage}%)
             </div>
-            <button
-              class="ml-4 px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
-              on:click={() => sessionEnded = true}
-            >
-              X
-            </button>
+            <div class="flex-1 flex justify-end items-center w-full">
+              <button
+                class="px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
+                on:click={() => sessionEnded = true}
+              >
+                X
+              </button>
+            </div>
           </div>
           <!-- Fixed Previous Button -->
           <button
@@ -541,19 +543,21 @@ $: if (sessionEnded) {
           {/if}
         </section>
         {#if limitedQuestions.length > 0}
-          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-2 py-2 rounded-full shadow flex items-center gap-2 z-50">
-            <div class="flex items-center text-sm text-gray-600">
+          <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-2 py-1 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
+            <div class="flex-1 flex justify-start items-center text-xs text-gray-600 ml-1 w-full">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="flex items-center text-green-600 ml-2 text-sm">
+            <div class="flex-1 flex justify-center items-center text-xs text-green-600 w-full">
               Siege: {winCount} ({winPercentage}%)
             </div>
-            <button
-              class="ml-0 px-2 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-sm"
-              on:click={() => sessionEnded = true}
-            >
-              X
-            </button>
+            <div class="flex-1 flex justify-end items-center w-full">
+              <button
+                class="px-2 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-xs"
+                on:click={() => sessionEnded = true}
+              >
+                X
+              </button>
+            </div>
           </div>
           <!-- Fixed Previous Button -->
           <button
