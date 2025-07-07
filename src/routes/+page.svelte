@@ -322,7 +322,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             sessionStarted.set(true);
           }}
         >
-          Session starten
+          Los geht’s!
         </button>
       </div>
     </div>
