@@ -7,6 +7,7 @@
 </svelte:head>
 
 <script lang="ts">
+	let headerReady = false;
 	// --- External Imports ---
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
@@ -28,6 +29,41 @@
 		]);
 		Tree = TreeModule;
 		QuestionCard = QuestionCardModule;
+
+		setTimeout(() => {
+			headerReady = true;
+		}, 0);
+
+		// --- Lifecycle ---
+
+		let isMobile = false;
+		let mobileReady = false;
+
+		const checkMobile = () => {
+			isMobile = window.innerWidth <= 768;
+		};
+
+		checkMobile();
+
+		// ✅ Enforce default class=1 if none present
+		const currentParams = new URLSearchParams(window.location.search);
+		if (!currentParams.has('class')) {
+			currentParams.set('class', '1');
+			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+			window.history.replaceState({}, '', newUrl);
+		}
+
+		window.addEventListener('resize', checkMobile);
+
+		if (browser && isMobile) {
+			setTimeout(() => {
+				mobileReady = true;
+			}, 100); // simulate delay to ensure DOM is mounted
+		} else {
+			mobileReady = true;
+		}
+
+		return () => window.removeEventListener('resize', checkMobile);
 	});
 
 	// --- Types ---
@@ -193,7 +229,7 @@
 	<div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
 		<div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
 	</div>
-{:else}
+{:else if headerReady}
 	<!-- ============================== -->
 	<!-- ✅ Desktop Layout (Sidebar + Questions) -->
 	<!-- ============================== -->

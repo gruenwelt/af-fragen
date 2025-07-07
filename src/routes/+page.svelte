@@ -29,6 +29,8 @@ function getPictureKey(q: Question, key: string): string | undefined {
 }
 // Imports
 // ==============================
+
+let headerReady = false;
 import { onMount, tick } from 'svelte';
 import QuestionCard from '$lib/components/QuestionCard.svelte';
 import 'katex/dist/katex.min.css';
@@ -144,6 +146,9 @@ onMount(() => {
 
   checkMobile();
   window.addEventListener('resize', checkMobile);
+  setTimeout(() => {
+    headerReady = true;
+  }, 0);
   return () => window.removeEventListener('resize', checkMobile);
 });
 
@@ -272,8 +277,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
   <div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
     <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
   </div>
-{:else}
-
+{:else if headerReady}
   {#if !$sessionStarted}
     <div class="w-screen flex justify-center items-center min-h-screen">
       <div class="flex flex-col items-center text-center gap-6">
