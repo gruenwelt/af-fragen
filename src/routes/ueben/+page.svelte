@@ -35,10 +35,9 @@ import { onMount } from 'svelte';
 import QuestionCard from '$lib/components/QuestionCard.svelte';
 import 'katex/dist/katex.min.css';
 import { browser } from '$app/environment';
-import { page } from '$app/stores';
 import { get } from 'svelte/store';
 import { base } from '$app/paths';
-import questions from '$lib/data/fragenkatalog3b_prerendered.json';
+// Use questions from layout data
 
 // ==============================
 // Types
@@ -90,7 +89,11 @@ function extractQuestions(tree: any): Question[] {
 	}
 	return result;
 }
-const allQuestions: Question[] = extractQuestions(questions);
+import { page } from '$app/stores';
+// Get questions from layout data
+// @ts-ignore
+const questions = $page.data?.fragenkatalog;
+const allQuestions: Question[] = extractQuestions(questions ?? {});
 
 const answerKeys = { a: 'answer_a', b: 'answer_b', c: 'answer_c', d: 'answer_d' } as const;
 const answerHtmlKeys = { a: 'answerAHtml', b: 'answerBHtml', c: 'answerCHtml', d: 'answerDHtml' } as const;

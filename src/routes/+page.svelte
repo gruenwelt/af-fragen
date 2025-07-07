@@ -13,10 +13,9 @@
 	import 'katex/dist/katex.min.css';
 	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
+	import { collectQuestions } from '$lib/utils/questionLoader';
 
-	// --- Data Imports ---
-	let data: any;
-import fullTree from '$lib/data/tree.json';
+	import fullTree from '$lib/data/tree.json';
 
 	// --- Component Imports ---
 	let Tree: typeof import('$lib/components/Tree.svelte').default;
@@ -72,16 +71,9 @@ import fullTree from '$lib/data/tree.json';
 
 	// --- State & Reactive Vars ---
 
-	let questions: Question[] = [];
-
-	onMount(async () => {
-		const [{ collectQuestions }, module] = await Promise.all([
-			import('$lib/utils/questionLoader'),
-			import('$lib/data/fragenkatalog3b_prerendered.json')
-		]);
-		data = module.default;
-		questions = collectQuestions(data.sections);
-	});
+	const questions: Question[] = $page.data?.fragenkatalog?.sections
+		? collectQuestions($page.data.fragenkatalog.sections)
+		: [];
 
 	// Filtered questions based on class query param (browser only after hydration)
 	let filteredQuestions: Question[] = [];
