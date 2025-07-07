@@ -406,7 +406,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="flex-1 flex justify-center items-center text-sm text-green-600 w-full">
-              Siege: {winCount} ({winPercentage}%)
+              Erfolgsquote: {winCount} ({winPercentage}%)
             </div>
             <div class="flex-1 flex justify-end items-center w-full">
               <button
@@ -526,7 +526,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="flex-1 flex justify-center items-center text-xs text-green-600 w-full">
-              Siege: {winCount} ({winPercentage}%)
+              Erfolgsquote: {winCount} ({winPercentage}%)
             </div>
             <div class="flex-1 flex justify-end items-center w-full">
               <button
