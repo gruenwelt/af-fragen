@@ -248,7 +248,7 @@ import fullTree from '$lib/data/tree.json';
 		<div class="relative max-w-5xl mx-auto px-0.0 pt-0.0 pb-0 overflow-x-hidden">
 			<button
 				class={`fixed top-120 z-50 bg-white/70 px-4 py-3 rounded-full shadow transition-transform duration-300 transform ${
-					showSidebar ? 'left-[65%] rotate-180' : 'left-0'
+				showSidebar ? 'left-[65%] rotate-180' : 'left-0'
 				}`}
 				on:click={() => (showSidebar = !showSidebar)}
 				aria-label="Toggle Sidebar"

@@ -22,7 +22,7 @@
   {#if q.picture_question}
     <div class="mb-2"></div>
     <div class="flex justify-center mb-5">
-      <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-[70%] h-auto mx-auto" />
+      <img src={`${base}/svgs/${q.picture_question}.svg`} alt="Bild zur Frage" class="w-auto h-auto max-h-[300px] mx-auto" />
     </div>
   {/if}
 
@@ -40,7 +40,7 @@
     {#each ['a', 'b', 'c', 'd'] as key}
       <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
         {#if q[`picture_${key}`]}
-          <img src={`${base}/svgs/${q[`picture_${key}`]}.svg`} alt={`Bild Antwort ${key.toUpperCase()}`} class="mx-auto" />
+          <img src={`${base}/svgs/${q[`picture_${key}`]}.svg`} alt={`Bild Antwort ${key.toUpperCase()}`} class="w-auto h-auto max-h-[300px] mx-auto" />
         {:else if typeof q[`answer${key.toUpperCase()}Html`] === 'string' && q[`answer${key.toUpperCase()}Html`].includes('katex')}
           <div class="text-center">
             {@html q[`answer${key.toUpperCase()}Html`]}

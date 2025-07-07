@@ -4,14 +4,30 @@
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 
-let currentSearch = '';
-let currentPath = '';
+	let isDesktop = true;
+	let showPopup = false;
 
-$: currentSearch = browser ? $page.url.search : '';
-$: currentPath = browser ? $page.url.pathname : '';
+	onMount(() => {
+		if (browser) {
+			const updateSize = () => {
+				isDesktop = window.innerWidth > 768;
+			};
+			updateSize();
+			window.addEventListener('resize', updateSize);
+			return () => window.removeEventListener('resize', updateSize);
+		}
+	});
+
+	let currentSearch = '';
+	let currentPath = '';
+
+	$: currentSearch = browser ? $page.url.search : '';
+	$: currentPath = browser ? $page.url.pathname : '';
 </script>
 
+{#if isDesktop}
 <header>
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
@@ -27,16 +43,16 @@ $: currentPath = browser ? $page.url.pathname : '';
 		</svg>
 		<ul>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
-				<a href="{base}/?class=1">N</a>
+				<a href={`${currentPath}?class=1`}>N</a>
 			</li>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
-				<a href="{base}/?class=2">E</a>
+				<a href={`${currentPath}?class=2`}>E</a>
 			</li>
 			<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
-				<a href="{base}/?class=3">A</a>
+				<a href={`${currentPath}?class=3`}>A</a>
 			</li>
 			<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
-				<a href="{base}/">Alle</a>
+				<a href={`${currentPath}`}>Alle</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -53,9 +69,13 @@ $: currentPath = browser ? $page.url.pathname : '';
 			<li aria-current={browser && currentPath === base + '/' ? 'page' : undefined}>
 				<a href={`${base}/${currentSearch}`}>Fragen</a>
 			</li>
+			<li aria-current={browser && currentPath === base + '/ueben' ? 'page' : undefined}>
+				<a href={`${base}/ueben${currentSearch}`}>Üben</a>
+			</li>	
 			<li aria-current={browser && currentPath === base + '/info' ? 'page' : undefined}>
 				<a href={`${base}/info${currentSearch}`}>Info</a>
 			</li>
+
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
@@ -68,6 +88,77 @@ $: currentPath = browser ? $page.url.pathname : '';
 		</a>
 	</div>
 </header>
+{:else}
+<header>
+	<div class="corner">
+		<a href="https://svelte.dev/docs/kit">
+			<img src={logo} alt="SvelteKit" />
+		</a>
+	</div>
+
+	<div style="display: flex; flex-direction: column; align-items: center;">
+		<div style="width: 100%;">
+			<nav>
+				<svg viewBox="0 0 2 3" aria-hidden="true">
+					<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
+				</svg>
+				<ul>
+					<li>
+						<button class="hamburger" on:click={() => showPopup = !showPopup} aria-label="Toggle menu">
+							☰
+						</button>
+					</li>
+					<li aria-current={browser && currentPath === base + '/' ? 'page' : undefined}>
+						<a href={`${base}/${currentSearch}`}>Fragen</a>
+					</li>
+					<li aria-current={browser && currentPath === base + '/ueben' ? 'page' : undefined}>
+						<a href={`${base}/ueben${currentSearch}`}>Üben</a>
+					</li>	
+					<li aria-current={browser && currentPath === base + '/info' ? 'page' : undefined}>
+						<a href={`${base}/info${currentSearch}`}>Info</a>
+					</li>
+				</ul>
+				<svg viewBox="0 0 2 3" aria-hidden="true">
+					<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
+				</svg>
+			</nav>
+		</div>
+		{#if showPopup}
+			<div style="width: 100%;">
+				<nav style="margin-top: 1px;">
+					<svg viewBox="0 0 2 3" aria-hidden="true">
+						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
+					</svg>
+					<ul>
+						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '1' ? 'page' : undefined}>
+							<a href={`${currentPath}?class=1`}>N</a>
+						</li>
+						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '2' ? 'page' : undefined}>
+							<a href={`${currentPath}?class=2`}>E</a>
+						</li>
+						<li aria-current={browser && new URLSearchParams(currentSearch).get('class') === '3' ? 'page' : undefined}>
+							<a href={`${currentPath}?class=3`}>A</a>
+						</li>
+						<li aria-current={browser && !['1','2','3'].includes(new URLSearchParams(currentSearch).get('class') ?? '') ? 'page' : undefined}>
+							<a href={`${currentPath}`}>Alle</a>
+						</li>
+					</ul>
+					<svg viewBox="0 0 2 3" aria-hidden="true">
+						<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
+					</svg>
+				</nav>
+			</div>
+		{/if}
+	</div>
+
+	<div class="corner">
+		<a href="https://github.com/gruenwelt">
+			<img src={github} alt="GitHub" />
+		</a>
+	</div>
+</header>
+{/if}
+
 
 <style>
 	header {
@@ -157,4 +248,18 @@ $: currentPath = browser ? $page.url.pathname : '';
 	a:hover {
 		color: var(--color-theme-1);
 	}
+
+	button.hamburger {
+	  background: none;
+	  border: none;
+	  font-size: 1.4rem;
+	  padding-left: 0.5rem;
+	  padding-right: 0.4rem;
+	  text-transform: none;
+	  display: flex;
+	  align-items: center;
+	  transform: translateY(6px);
+	  cursor: pointer;
+	}
+
 </style>
