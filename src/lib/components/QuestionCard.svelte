@@ -11,6 +11,13 @@
   if (browser) {
     isDesktop = window.innerWidth > 768;
   }
+
+  function decodeHtmlEntities(str: string): string {
+    if (!browser) return str;
+    const div = document.createElement('div');
+    div.innerHTML = str;
+    return div.textContent || str;
+  }
 </script>
 
 <article
@@ -31,7 +38,7 @@
       {@html q.questionHtml}
     </div>
   {:else}
-    <div class="text-center">{@html q.questionHtml ?? ''}</div>
+    <div class="text-center">{@html decodeHtmlEntities(q.questionHtml ?? '')}</div>
   {/if}
 
   <div class="h-4"></div>

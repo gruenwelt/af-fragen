@@ -112,3 +112,7 @@ html, body {
   padding: 0;
   overflow: hidden;
 }
+
+u {
+  text-decoration: underline;
+}
