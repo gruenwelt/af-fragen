@@ -3,9 +3,23 @@
 	<meta name="description" content="Info über die app" />
 </svelte:head>
 
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
+	import { derived } from 'svelte/store';
 	let isMobile = false;
+
+	// Get current path and base
+	let currentPath = '';
+	let base = '';
+	$: if (browser) {
+		currentPath = window.location.pathname;
+		base = '';
+	}
+
+	// Reactive statement for isInfoPage
+	$: isInfoPage = browser && currentPath === base + '/info';
 
 	onMount(() => {
 		isMobile = window.innerWidth <= 768;

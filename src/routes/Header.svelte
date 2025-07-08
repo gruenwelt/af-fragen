@@ -28,6 +28,7 @@ let showPopup = true;
 	$: currentSearch = browser ? $page.url.search : '';
 	$: currentPath = browser ? $page.url.pathname : '';
   $: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? '1' : '1';
+  $: isInfoPage = browser && currentPath === base + '/info';
 	$: $sessionStarted;
 </script>
 
@@ -49,28 +50,28 @@ let showPopup = true;
 		</svg>
 		<ul>
 			<li aria-current={selectedClass === '1' ? 'page' : undefined}>
-				{#if $sessionStarted && selectedClass !== '1'}
+				{#if ($sessionStarted && selectedClass !== '1') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 				{:else}
 					<a href={`${currentPath}?class=1`}>N</a>
 				{/if}
 			</li>
 			<li aria-current={selectedClass === '2' ? 'page' : undefined}>
-				{#if $sessionStarted && selectedClass !== '2'}
+				{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 				{:else}
 					<a href={`${currentPath}?class=2`}>E</a>
 				{/if}
 			</li>
 			<li aria-current={selectedClass === '3' ? 'page' : undefined}>
-				{#if $sessionStarted && selectedClass !== '3'}
+				{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 				{:else}
 					<a href={`${currentPath}?class=3`}>A</a>
 				{/if}
 			</li>
 			<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
-				{#if $sessionStarted && selectedClass !== 'Alle'}
+				{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 				{:else}
 					<a href={`${currentPath}?class=Alle`}>Alle</a>
@@ -153,28 +154,28 @@ let showPopup = true;
 					</svg>
 					<ul>
 						<li aria-current={selectedClass === '1' ? 'page' : undefined}>
-							{#if $sessionStarted && selectedClass !== '1'}
+							{#if ($sessionStarted && selectedClass !== '1') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 							{:else}
 								<a href={`${currentPath}?class=1`}>N</a>
 							{/if}
 						</li>
 						<li aria-current={selectedClass === '2' ? 'page' : undefined}>
-							{#if $sessionStarted && selectedClass !== '2'}
+							{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 							{:else}
 								<a href={`${currentPath}?class=2`}>E</a>
 							{/if}
 						</li>
 						<li aria-current={selectedClass === '3' ? 'page' : undefined}>
-							{#if $sessionStarted && selectedClass !== '3'}
+							{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 							{:else}
 								<a href={`${currentPath}?class=3`}>A</a>
 							{/if}
 						</li>
 						<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
-							{#if $sessionStarted && selectedClass !== 'Alle'}
+							{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 							{:else}
 								<a href={`${currentPath}?class=Alle`}>Alle</a>
