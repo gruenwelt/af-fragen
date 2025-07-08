@@ -20,7 +20,14 @@
 	style="scrollbar-width: none; -ms-overflow-style: none;"
 	on:wheel|passive
 >
+	<p><strong>Funktionalität der App</strong></p>
+	<p>
+    Über die oberen Filter lassen sich die Prüfungsklassen N, E und A auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Klassen gemeinsam.<br><br>
+    Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet.<br><br>
+   Der Abschnitt „Fragen“ listet alle Fragen der ausgewählten Klasse vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.
+  	</p>
 
+	<p><strong>Daten</strong></p>
 	<p>
 		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
 		3. Auflage, März 2024
@@ -29,57 +36,74 @@
 		Die Prüfungsfragen werden in maschinenlesbarer Form von der<br>
 		Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen,<br>
 		Tulpenfeld 4, 53113 Bonn<br>
-		unter der Datenlizenz DL-DE->BY-2.0 bereitgestellt.<br>
+		unter der
+		<a href="https://www.govdata.de/dl-de/by-2-0" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Datenlizenz DL-DE->BY-2.0</a>
+		bereitgestellt.<br><br>
+
+		Dieser Fragen- und Antwortenkatalog veranschaulicht Prüfungsinhalte und Anforderungen in den Prüfungsteilen „Betriebliche Kenntnisse“, „Kenntnisse von Vorschriften“ und „Technische Kenntnisse“ die bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen A, E und N ab dem 24. Juni 2024 gefordert werden. Die Prüfungsinhalte und Anforderungen berücksichtigen die CEPT-Empfehlung T/R 61-02, den ERC-Report 32, den ECC-Report 89 sowie weitergehende Anforderungen, die sich unter anderem aus dem Amateurfunkgesetz (AFuG) und der ab dem 23. Juni 2024 gültigen Amateurfunkverordnung (AFuV) ergeben.<br><br>
+
+		Dieser Fragenkatalog ersetzt für Prüfungen ab dem 24. Juni 2024 die bisherigen von der Regulierungsbehörde bzw. der Bundesnetzagentur veröffentlichten Fragenkataloge und Einzelheiten aus der 1. Auflage (Oktober 2006) sowie der 2. Auflage (Dezember 2023).<br><br>
+
+		Für den Erwerb eines Amateurfunkzeugnisses müssen die Prüfungsteile „Technische Kenntnisse“, „Betriebliche Kenntnisse“ und „Kenntnisse von Vorschriften“ erfolgreich abgelegt werden. Die Inhalte und Anforderungen der Prüfungsteile für die Klassen N, E und A unterscheiden sich nur beim Prüfungsteil „Technische Kenntnisse“. Der Aufstieg von den Klassen N und E zu einer höheren Klasse ist mit einer Zusatzprüfung möglich, die nur aus dem bzw. den Prüfungsteil(en) „Technische Kenntnisse“ besteht.<br><br>
+		
+		Die Inhalte und Anforderungen der Prüfungsteile sind in dem nachfolgendem Fragenund Antwortenkatalog veranschaulicht. Eventuelle künftige Änderungen werden mindestens drei Monate vor ihrer Anwendung bekannt gemacht. Der Fragen- und Antwortenkatalog beinhaltet die folgenden Teile:
 	</p>
-	<p>
-		Dieser Fragen- und Antwortenkatalog veranschaulicht Prüfungsinhalte und Anforderungen in den Prüfungsteilen „Betriebliche Kenntnisse“, „Kenntnisse von Vorschriften“ und „Technische Kenntnisse“ die bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen A, E und N ab dem 24. Juni 2024 gefordert werden. Die Prüfungsinhalte und Anforderungen berücksichtigen die CEPT-Empfehlung T/R 61-02, den ERC-Report 32, den ECC-Report 89 sowie weitergehende Anforderungen, die sich unter anderem aus dem Amateurfunkgesetz (AFuG) und der ab dem 23. Juni 2024 gültigen Amateurfunkverordnung (AFuV) ergeben.
-	</p>
-	<p>
-		Dieser Fragenkatalog ersetzt für Prüfungen ab dem 24. Juni 2024 die bisherigen von der Regulierungsbehörde bzw. der Bundesnetzagentur veröffentlichten Fragenkataloge und Einzelheiten aus der 1. Auflage (Oktober 2006) sowie der 2. Auflage (Dezember 2023).
-	</p>
-	<p>
-		Für den Erwerb eines Amateurfunkzeugnisses müssen die Prüfungsteile „Technische Kenntnisse“, „Betriebliche Kenntnisse“ und „Kenntnisse von Vorschriften“ erfolgreich abgelegt werden. Die Inhalte und Anforderungen der Prüfungsteile für die Klassen N, E und A unterscheiden sich nur beim Prüfungsteil „Technische Kenntnisse“. Der Aufstieg von den Klassen N und E zu einer höheren Klasse ist mit einer Zusatzprüfung möglich, die nur aus dem bzw. den Prüfungsteil(en) „Technische Kenntnisse“ besteht.
-	</p>
-	<p>
-		Die Inhalte und Anforderungen der Prüfungsteile sind in dem nachfolgendem Fragenund Antwortenkatalog veranschaulicht. Eventuelle künftige Änderungen werden mindestens drei Monate vor ihrer Anwendung bekannt gemacht. Der Fragen- und Antwortenkatalog beinhaltet die folgenden Teile:<br>
-	</p>
-	<ul class="list-disc pl-4 space-y-1">
+		<ul class="list-disc pl-4 space-y-1">
 		<li>Prüfungsfragen im Prüfungsteil „Betriebliche Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen N, E und A,</li>
 		<li>Prüfungsfragen im Prüfungsteil „Kenntnisse von Vorschriften“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen N, E und A,</li>
 		<li>Prüfungsfragen im Prüfungsteil „Technische Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen N, E und A,</li>
 		<li>Weitere Prüfungsfragen im Prüfungsteil „Technische Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen E und A,</li>
 		<li>Weitere Prüfungsfragen im Prüfungsteil „Technische Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klasse A.</li>
-	</ul>
+		</ul><br>
 	<p>
-		Bei den Prüfungen müssen nicht ausschließlich Fragen und Antworten aus dem hier vorliegenden Katalog verwendet werden. Es können auch andere Fragen und Antworten verwendet werden, die sich inhaltlich an den Fragen des betreffenden Katalogs orientieren.
-	</p>
+		Bei den Prüfungen müssen nicht ausschließlich Fragen und Antworten aus dem hier vorliegenden Katalog verwendet werden. Es können auch andere Fragen und Antworten verwendet werden, die sich inhaltlich an den Fragen des betreffenden Katalogs orientieren.<br><br>
+
+		Die richtige Antwort bei jeder Frage ist im nachfolgenden Katalog immer die Antwort A. Die Antworten B, C und D sind falsche oder teilweise falsche Antworten. In den Prüfungsbögen werden die Antworten in zufälliger Reihenfolge angeordnet. Bei der Prüfung ist im Antwortbogen die als richtig angesehene Antwort anzukreuzen.<br><br>
+
+		Bei der Prüfung wird im Prüfungsteil „Technische Kenntnisse“ eine Formelsammlung zur Verfügung gestellt. Die Formelsammlung entspricht der als Anhang enthaltenen Formelsammlung und kann auch erforderliche Korrekturen und Ergänzungen enthalten. Andere Formelsammlungen dürfen bei der Prüfung nicht benutzt werden. Weiterhin sind bei der Prüfung im Teil „Technische Kenntnisse“ als Hilfsmittel eigene nicht programmierbare Taschenrechner ohne Textspeicher zulässig.<br><br>
+
+		Der Fragenkatalog ist ein Hilfsmittel zur Vorbereitung auf die Amateurfunkprüfung. Er kann jedoch nicht Lehr- und Unterrichtsmaterialien oder die Vielseitigkeit der Fachliteratur ersetzen.<br><br>
+
+		Weitere Informationen, Regelungen sowie Links zu den Gesetzen und Verordnungen zum Thema Amateurfunk sowie zur Durchführung der Amateurfunkprüfungen und zur Prüfungsvorbereitung finden Sie online unter bundesnetzagentur.de/amateurfunk.<br><br>
+
+		Die Fragen wurden mit großer Unterstützung durch den Runden Tisch Amateurfunk und dessen Mitgliedsverbänden sowie mit viel Engagement einzelner Funkamateure und Beschäftigten der Bundesnetzagentur erstellt. Wir danken allen, auch allen Hinweisgebern zu Korrekturen der 2. Auflage, die damit zu der Erstellung dieser 3. Auflage beigetragen haben. Ein besonderer Dank gilt erneut Dr. Matthias Jung und Björn Swierczek vom DARC e.V., die auf Seiten der Verbände die Überarbeitung des Fragenkatalogs federführend koordiniert und besonders tatkräftig zur Überarbeitung der Prüfungsfragen beigetragen haben.<br><br>
+
+		Offizielle Hilfsmittel zur Amateurfunkprüfung können hier heruntergeladen werden: 
+    <a href="https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Telekommunikation/Unternehmen_Institutionen/Frequenzen/Amateurfunk/AntraegeFormulare/Hilfsmittel_12062024.pdf?__blob=publicationFile&v=3" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">
+      Amateurfunkprüfungen – Hilfsmittel (PDF)
+    </a>
+  	</p>
+	<p><strong>Über die App</strong></p>
 	<p>
-		Die richtige Antwort bei jeder Frage ist im nachfolgenden Katalog immer die Antwort A. Die Antworten B, C und D sind falsche oder teilweise falsche Antworten. In den Prüfungsbögen werden die Antworten in zufälliger Reihenfolge angeordnet. Bei der Prüfung ist im Antwortbogen die als richtig angesehene Antwort anzukreuzen.
-	</p>
-	<p>
-		Bei der Prüfung wird im Prüfungsteil „Technische Kenntnisse“ eine Formelsammlung zur Verfügung gestellt. Die Formelsammlung entspricht der als Anhang enthaltenen Formelsammlung und kann auch erforderliche Korrekturen und Ergänzungen enthalten. Andere Formelsammlungen dürfen bei der Prüfung nicht benutzt werden. Weiterhin sind bei der Prüfung im Teil „Technische Kenntnisse“ als Hilfsmittel eigene nicht programmierbare Taschenrechner ohne Textspeicher zulässig.
-	</p>
-	<p>
-		Der Fragenkatalog ist ein Hilfsmittel zur Vorbereitung auf die Amateurfunkprüfung. Er kann jedoch nicht Lehr- und Unterrichtsmaterialien oder die Vielseitigkeit der Fachliteratur ersetzen.
-	</p>
-	<p>
-		Weitere Informationen, Regelungen sowie Links zu den Gesetzen und Verordnungen zum Thema Amateurfunk sowie zur Durchführung der Amateurfunkprüfungen und zur Prüfungsvorbereitung finden Sie online unter bundesnetzagentur.de/amateurfunk.
-	</p>
-	<p>
-		Die Fragen wurden mit großer Unterstützung durch den Runden Tisch Amateurfunk und dessen Mitgliedsverbänden sowie mit viel Engagement einzelner Funkamateure und Beschäftigten der Bundesnetzagentur erstellt. Wir danken allen, auch allen Hinweisgebern zu Korrekturen der 2. Auflage, die damit zu der Erstellung dieser 3. Auflage beigetragen haben. Ein besonderer Dank gilt erneut Dr. Matthias Jung und Björn Swierczek vom DARC e.V., die auf Seiten der Verbände die Überarbeitung des Fragenkatalogs federführend koordiniert und besonders tatkräftig zur Überarbeitung der Prüfungsfragen beigetragen haben.
-	</p>
-	<p>
-		Diese Web-App wurde von <a href="https://www.linkedin.com/in/gw10/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Puneet P.</a> entworfen und entwickelt, unter Verwendung des SvelteKit App Framework. Als Open-Source-Projekt kann der vollständige Code auf <a href="https://github.com/gruenwelt" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">GitHub</a> gefunden werden.
-	</p>
-	<p>
+		Diese Web-App wurde von <a href="https://www.linkedin.com/in/gw10/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Puneet P.</a> entworfen und entwickelt, unter Verwendung des SvelteKit App Framework. Als Open-Source-Projekt kann der vollständige Code auf <a href="https://github.com/gruenwelt" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">GitHub</a> gefunden werden.<br><br>
+	
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
+	
+	
+
+	<p><strong>Empfehlung</strong></p>
+	<p>
+		Zur Vorbereitung auf die Prüfung besuchen Sie <a href="https://www.50ohm.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">50Ohm.de</a>. Ein Angebot des <a href="https://www.darc.de/home/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Deutschen Amateur-Radio-Clubs e. V.</a>
+	</p>
+	
+	<p>&nbsp;</p>
+
+	<p class="text-sm text-gray-600"><strong>Rechtliche Hinweise / Disclaimer</strong></p>
+
 	<p class="text-sm text-gray-600">
-		Alle Inhalte dieser Web-App wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird jedoch keine Gewähr übernommen. Die Nutzung der Inhalte erfolgt auf eigene Verantwortung.
+		Datenschutz:<br>
+		Diese Web-App speichert oder sammelt keinerlei personenbezogene Daten – Punkt. Die Nutzung ist vollständig anonym, es findet keine Erfassung oder Auswertung von Nutzeraktivitäten statt.
 	</p>
 
 	<p class="text-sm text-gray-600">
-		Diese Web-App erhebt oder speichert keine personenbezogenen Daten. Es werden keine Cookies gesetzt und keine Tracking-Technologien verwendet. Die Nutzung erfolgt vollständig anonym und ohne Erfassung von Nutzeraktivitäten.
+		Unabhängigkeit:<br>
+		Diese Web-App steht in keinerlei Verbindung zu Dritten – insbesondere nicht zur Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen, zu 50Ohm.de, zum Deutschen Amateur-Radio-Club e. V. (DARC), zu Svelte, GitHub oder sonstigen genannten oder verwendeten Organisationen, Diensten oder Marken. Alle Referenzen dienen ausschließlich informativen oder funktionalen Zwecken.
+	</p>
+
+	<p class="text-sm text-gray-600">
+		Haftungsausschluss:<br>
+		Alle Inhalte dieser Web-App wurden mit größter Sorgfalt erstellt. Es wird jedoch keine Gewähr für deren Richtigkeit, Vollständigkeit oder Aktualität übernommen. Die Nutzung der Inhalte erfolgt auf eigene Verantwortung.
 	</p>
 
 	<div class="h-20"></div>
