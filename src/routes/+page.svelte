@@ -672,4 +672,8 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 			overflow: hidden;
 		}
 	}
+	/* Prevent double-tap zoom on buttons, links, and question cards */
+	button, a, article {
+		touch-action: manipulation;
+	}
 </style>
