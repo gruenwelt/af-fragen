@@ -248,11 +248,15 @@ $: if (browser && allQuestions.length > 0) {
 // Selected class from query params (reactive)
 $: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
 
-// Layout class for answers
+// Layout class for answers (mobile-aware, 4x1 if any picture on mobile)
 $: answerLayoutClass =
   limitedQuestions[currentIndex]
-    ? isLongAnswer(limitedQuestions[currentIndex])
-      ? 'flex flex-col gap-3'
+    ? (isLongAnswer(limitedQuestions[currentIndex]) ||
+       (isMobile && ['a', 'b', 'c', 'd'].some(k => {
+         const key = k as keyof typeof pictureKeys;
+         return limitedQuestions[currentIndex][pictureKeys[key]];
+       })))
+      ? 'grid grid-cols-1 gap-3'
       : 'grid grid-cols-2 gap-3'
     : 'grid grid-cols-2 gap-3';
 
@@ -380,6 +384,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
                             alt="Bild zur Frage"
                             class="w-auto h-auto max-h-[300px] mx-auto"
+                            style="width: 150%"
                           />
                         </div>
                       {/if}
@@ -407,6 +412,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                               <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto max-h-[300px] mx-auto"
+                                style="width: 150%"
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
@@ -503,6 +509,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
                             alt="Bild zur Frage"
                             class="w-auto h-auto max-h-[160px] mx-auto"
+                            style="width: 150%"
                           />
                         </div>
                       {/if}
@@ -530,6 +537,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                               <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto max-h-[100px] mx-auto"
+                                style="width: 150%"
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
