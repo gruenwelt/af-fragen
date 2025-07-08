@@ -36,20 +36,25 @@
 	on:wheel|passive
 >
 	<p>
-    <strong>Funktionalität der App</strong>
-  </p>
+		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
+		3. Auflage, März 2024
+	</p>
+
 	<p>
-    Über die oberen Filter lassen sich die Prüfungsklassen N, E und A auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Klassen gemeinsam.<br><br>
-    Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Prüfungsklasse nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Klasse gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Klassen deaktiviert.<br><br>
-   Der Abschnitt „Fragen“ listet alle Fragen der ausgewählten Klasse vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.
+    <strong>Funktionalität der App</strong>
   	</p>
+	<p>
+    	Über die oberen Filter lassen sich die Prüfungsklassen N, E und A auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Klassen gemeinsam.<br><br>
+    	
+		Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Prüfungsklasse nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Klasse gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Klassen deaktiviert.<br><br>
+   		
+		Der Abschnitt „Fragen“ listet alle Fragen der ausgewählten Klasse vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.<br><br>
+		
+		Die App funktioniert auch recht zuverlässig mit der integrierten Übersetzungsfunktion des Safari-Browsers.
+	</p>
 
 	<p>
 	  <strong>Daten</strong>
-	</p>
-	<p>
-		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
-		3. Auflage, März 2024
 	</p>
 	<p>
 		Die Prüfungsfragen werden in maschinenlesbarer Form von der<br>
@@ -98,7 +103,7 @@
 	</p>
 	<p>
 		Diese Web-App wurde von <a href="https://www.linkedin.com/in/gw10/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Puneet P.</a> entworfen und entwickelt, unter Verwendung des SvelteKit App Framework. Als Open-Source-Projekt kann der vollständige Code auf <a href="https://github.com/gruenwelt" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">GitHub</a> gefunden werden.<br><br>
-	
+		
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
 
