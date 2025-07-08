@@ -43,32 +43,15 @@
 	let Tree: typeof import('$lib/components/Tree.svelte').default;
 	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
 
-	onMount(async () => {
-		const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
-			import('$lib/components/Tree.svelte'),
-			import('$lib/components/QuestionCard.svelte')
-		]);
-		Tree = TreeModule;
-		QuestionCard = QuestionCardModule;
-
-		setTimeout(() => {
-			headerReady = true;
-		}, 0);
-
-		// --- Lifecycle ---
-
-		let isMobile = false;
-		let mobileReady = false;
-
+	onMount(() => {
 		const checkMobile = () => {
 			isMobile = window.innerWidth <= 768;
 		};
 
 		checkMobile();
 
-		// ✅ Enforce default class=1 if none present
-		const currentParams = new URLSearchParams(window.location.search);
-		if (!currentParams.has('class')) {
+		if (!new URLSearchParams(window.location.search).has('class')) {
+			const currentParams = new URLSearchParams(window.location.search);
 			currentParams.set('class', '1');
 			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
 			window.history.replaceState({}, '', newUrl);
@@ -76,13 +59,29 @@
 
 		window.addEventListener('resize', checkMobile);
 
-		if (browser && isMobile) {
-			setTimeout(() => {
+		const load = async () => {
+			if (browser && isMobile) {
+				setTimeout(() => {
+					mobileReady = true;
+				}, 100);
+			} else {
 				mobileReady = true;
-			}, 100); // simulate delay to ensure DOM is mounted
-		} else {
-			mobileReady = true;
-		}
+			}
+		};
+		load();
+
+		setTimeout(() => {
+			headerReady = true;
+		}, 0);
+
+		(async () => {
+			const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
+				import('$lib/components/Tree.svelte'),
+				import('$lib/components/QuestionCard.svelte')
+			]);
+			Tree = TreeModule;
+			QuestionCard = QuestionCardModule;
+		})();
 
 		return () => window.removeEventListener('resize', checkMobile);
 	});

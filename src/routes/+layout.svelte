@@ -28,7 +28,7 @@
 <div class="app">
 	<Header />
 
-	<main role="main">
+	<main>
 		{@render children()}
 	</main>
 	<footer>
@@ -71,9 +71,6 @@
 		padding: 12px;
 	}
 	
-	footer a {
-		font-weight: bold;
-	}
 
 	@media (min-width: 480px) {
 		footer {

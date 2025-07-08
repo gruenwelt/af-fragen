@@ -35,16 +35,16 @@ let showPopup = true;
 {#if isDesktop === undefined}
 	<!-- No header until screen size is known -->
 {:else if isDesktop}
-<header role="banner">
+<header>
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" role="img" aria-label="SvelteKit Logo" />
+			<img src={logo} alt="SvelteKit" aria-label="SvelteKit Logo" />
 		</a>
 	</div>
 
 		<!-- Filter by class nav bar -->
 	<!-- This nav bar allows filtering by class via query parameter -->
-	<nav role="navigation" aria-label="Klassenauswahl">
+	<nav aria-label="Klassenauswahl">
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -84,7 +84,7 @@ let showPopup = true;
 	</nav>
 
 
-	<nav role="navigation" aria-label="Hauptnavigation">
+	<nav aria-label="Hauptnavigation">
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -107,21 +107,21 @@ let showPopup = true;
 
 	<div class="corner">
 		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" role="img" aria-label="GitHub Profil" />
+			<img src={github} alt="GitHub" aria-label="GitHub Profil" />
 		</a>
 	</div>
 </header>
 {:else}
-<header role="banner">
+<header>
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" role="img" aria-label="SvelteKit Logo" />
+			<img src={logo} alt="SvelteKit" aria-label="SvelteKit Logo" />
 		</a>
 	</div>
 
 	<div style="display: flex; flex-direction: column; align-items: center;">
 		<div style="width: 100%;">
-			<nav role="navigation" aria-label="Hauptnavigation">
+			<nav aria-label="Hauptnavigation">
 				<svg viewBox="0 0 2 3" aria-hidden="true">
 					<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 				</svg>
@@ -148,7 +148,7 @@ let showPopup = true;
 		</div>
 		{#if showPopup}
 			<div style="width: 100%;">
-				<nav role="navigation" aria-label="Klassenauswahl" style="margin-top: 1px;">
+				<nav aria-label="Klassenauswahl" style="margin-top: 1px;">
 					<svg viewBox="0 0 2 3" aria-hidden="true">
 						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 					</svg>
@@ -192,7 +192,7 @@ let showPopup = true;
 
 	<div class="corner">
 		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" role="img" aria-label="GitHub Profil" />
+			<img src={github} alt="GitHub" aria-label="GitHub Profil" />
 		</a>
 	</div>
 </header>
