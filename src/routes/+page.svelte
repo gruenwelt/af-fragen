@@ -1,9 +1,6 @@
 <svelte:head>
-	<!-- ============================== -->
-	<!-- ✅ Head Metadata               -->
-	<!-- ============================== -->
-	<title>Fragenkatalog</title>
-	<meta name="description" content="Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen" />
+  <title>Übungsmodus – Amateurfunkprüfung Simulator (N, E, A)</title>
+  <meta name="description" content="Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge." />
 </svelte:head>
 
 <script lang="ts">

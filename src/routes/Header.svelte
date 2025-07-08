@@ -35,16 +35,16 @@ let showPopup = true;
 {#if isDesktop === undefined}
 	<!-- No header until screen size is known -->
 {:else if isDesktop}
-<header>
+<header role="banner">
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" />
+			<img src={logo} alt="SvelteKit" role="img" aria-label="SvelteKit Logo" />
 		</a>
 	</div>
 
 		<!-- Filter by class nav bar -->
 	<!-- This nav bar allows filtering by class via query parameter -->
-	<nav>
+	<nav role="navigation" aria-label="Klassenauswahl">
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -84,7 +84,7 @@ let showPopup = true;
 	</nav>
 
 
-	<nav>
+	<nav role="navigation" aria-label="Hauptnavigation">
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
@@ -107,21 +107,21 @@ let showPopup = true;
 
 	<div class="corner">
 		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" />
+			<img src={github} alt="GitHub" role="img" aria-label="GitHub Profil" />
 		</a>
 	</div>
 </header>
 {:else}
-<header>
+<header role="banner">
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" />
+			<img src={logo} alt="SvelteKit" role="img" aria-label="SvelteKit Logo" />
 		</a>
 	</div>
 
 	<div style="display: flex; flex-direction: column; align-items: center;">
 		<div style="width: 100%;">
-			<nav>
+			<nav role="navigation" aria-label="Hauptnavigation">
 				<svg viewBox="0 0 2 3" aria-hidden="true">
 					<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 				</svg>
@@ -148,7 +148,7 @@ let showPopup = true;
 		</div>
 		{#if showPopup}
 			<div style="width: 100%;">
-				<nav style="margin-top: 1px;">
+				<nav role="navigation" aria-label="Klassenauswahl" style="margin-top: 1px;">
 					<svg viewBox="0 0 2 3" aria-hidden="true">
 						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 					</svg>
@@ -192,7 +192,7 @@ let showPopup = true;
 
 	<div class="corner">
 		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" />
+			<img src={github} alt="GitHub" role="img" aria-label="GitHub Profil" />
 		</a>
 	</div>
 </header>

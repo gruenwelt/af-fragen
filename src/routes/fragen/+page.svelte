@@ -1,9 +1,30 @@
 <svelte:head>
-	<!-- ============================== -->
-	<!-- ✅ Head Metadata               -->
-	<!-- ============================== -->
-	<title>Fragenkatalog</title>
-	<meta name="description" content="Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen" />
+  <title>Fragenkatalog – Alle offiziellen Fragen der Amateurfunkprüfung (N, E, A)</title>
+  <meta name="description" content="Durchsuche den vollständigen Fragenkatalog zur deutschen Amateurfunkprüfung. Filtere nach Klasse N, E oder A und navigiere durch alle Themenbereiche." />
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Wie viele Fragen gibt es in der Klasse N?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Es gibt 180 offizielle Prüfungsfragen für die Klasse N."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ist das die offizielle Datenquelle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja, die Fragen basieren auf dem offiziellen Katalog der Bundesnetzagentur."
+          }
+        }
+      ]
+    })}
+  </script>
 </svelte:head>
 
 <script lang="ts">

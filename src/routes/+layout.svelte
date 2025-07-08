@@ -7,19 +7,35 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+  <title>Funkfragen – Amateurfunkprüfung online lernen</title>
+  <meta name="description" content="Trainiere mit Fragen für die Klassen N, E, A der deutschen Amateurfunkprüfung." />
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Funkfragen",
+      "url": "https://funkfragen.de",
+      "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E und A mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      }
+    })}
+  </script>
+</svelte:head>
+
 <div class="app">
 	<Header />
 
-	<main>
+	<main role="main">
 		{@render children()}
 	</main>
-	<!--
 	<footer>
 		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
+			
 		</p>
 	</footer>
-	-->
 </div>
 
 <style>
@@ -46,9 +62,8 @@
 		overflow: auto; /* scroll content inside main */
 	}
 
-	/*
 	footer {
-		flex-shrink: 0; /* prevent shrinking
+		flex-shrink: 0; /* prevent shrinking */
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -65,5 +80,4 @@
 			padding: 12px 0;
 		}
 	}
-	*/ 
 </style>

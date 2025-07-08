@@ -1,6 +1,20 @@
 <svelte:head>
 	<title>Info</title>
 	<meta name="description" content="Info über die app" />
+	<script type="application/ld+json">
+		{JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "WebPage",
+			"name": "Info – Funkfragen",
+			"description": "Informationen über die Funktionalität der Web-App zur Vorbereitung auf die Amateurfunkprüfung sowie über Datenquellen, Lizenz, Datenschutz und Haftung.",
+			"url": "https://funkfragen.de/info",
+			"publisher": {
+				"@type": "Organization",
+				"name": "Funkfragen",
+				"url": "https://funkfragen.de"
+			}
+		})}
+	</script>
 </svelte:head>
 
 <script lang="ts">
