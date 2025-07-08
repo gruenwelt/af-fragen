@@ -112,12 +112,20 @@ let currentIndex = 0;
 
 // Make winCount reactive to sessionAnswers
 $: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
+
+// ==============================
+// Success Rate (reactive)
+// ==============================
+$: successRate = (
+  currentIndex > 0
+    ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
+    : 0
+);
 let questionLimit = 25;
 let shuffledAnswers: ShuffledAnswer[] = [];
 export let selectedAnswerIndex: number | null = null;
 let shuffledMap: Record<string, ShuffledAnswer[]> = {};
 let wrongQuestions: SessionAnswer[] = [];
-let winPercentage = 0;
 
 // ==============================
 // Functions
@@ -194,15 +202,14 @@ let setSelected = (index: number) => {
     sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
     sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
     sessionStorage.setItem('af-current-index', currentIndex.toString());
-    // Force immediate update of winPercentage after new answer is selected
-    winPercentage = Math.round(
-      (sessionAnswers.filter((a) => a.isCorrect).length / sessionAnswers.length) * 100
-    );
     if (isCorrect) {
       winCount++;
     } else {
       wrongQuestions.push(answer);
     }
+    // Recalculate successRate after answer
+    successRate = Math.round((sessionAnswers.filter(a => a.isCorrect).length / (currentIndex + 1)) * 100);
+    console.log('Success rate after answer:', successRate);
   }
 
   if (browser) {
@@ -269,12 +276,6 @@ let limitedQuestions: Question[] = [];
 // Use all session answers for wrong answer review, not just those in limitedQuestions
 $: relevantSessionAnswers = sessionAnswers;
 
-// Win percentage based only on answered questions
-$: {
-  const totalShown = sessionAnswers.length;
-  const correct = sessionAnswers.filter((a) => a.isCorrect).length;
-  winPercentage = totalShown > 0 ? Math.round((correct / totalShown) * 100) : 0;
-}
 
 // Shuffle answers whenever question changes, but keep shuffle per question
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
@@ -443,7 +444,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate">
-              Erfolgsquote: {winPercentage}% ({winCount}) 
+              {successRate}% ({winCount})
             </div>
             <div class="w-[25%] flex justify-end items-center">
               <button
@@ -478,7 +479,25 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
           <!-- Fixed Next Button -->
           <button
             class="fixed right-4 top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
-            on:click={() => currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1)}
+            on:click={() => {
+              const q = limitedQuestions[currentIndex];
+              if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
+                const skippedAnswer = {
+                  questionNumber: q.number,
+                  selectedIndex: -1,
+                  isCorrect: false
+                };
+                sessionAnswers.push(skippedAnswer);
+                wrongQuestions.push(skippedAnswer);
+              }
+              // Recalculate successRate after skip (desktop)
+              successRate = currentIndex > 0
+                ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
+                : 0;
+              console.log('Success rate after skip:', successRate);
+              sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+              currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
+            }}
             disabled={currentIndex >= limitedQuestions.length - 1}
           >
             →
@@ -569,7 +588,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="w-[50%] flex justify-center items-center text-base text-green-600 whitespace-nowrap truncate">
-              Erfolgsquote: {winPercentage}% ({winCount}) 
+              {successRate}% ({winCount})
             </div>
             <div class="w-[25%] flex justify-end items-center">
               <button
@@ -604,7 +623,25 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
           <!-- Fixed Next Button -->
           <button
             class="fixed right-2 top-120 transform -translate-y-1/2 w-16 h-16 rounded-full bg-white shadow-lg z-50 text-3xl cursor-pointer"
-            on:click={() => currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1)}
+            on:click={() => {
+              const q = limitedQuestions[currentIndex];
+              if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
+                const skippedAnswer = {
+                  questionNumber: q.number,
+                  selectedIndex: -1,
+                  isCorrect: false
+                };
+                sessionAnswers.push(skippedAnswer);
+                wrongQuestions.push(skippedAnswer);
+              }
+              // Recalculate successRate after skip (mobile)
+              successRate = currentIndex > 0
+                ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
+                : 0;
+              console.log('Success rate after skip:', successRate);
+              sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+              currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
+            }}
             disabled={currentIndex >= limitedQuestions.length - 1}
           >
             →
