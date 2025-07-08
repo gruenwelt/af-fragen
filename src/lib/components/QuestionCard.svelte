@@ -31,7 +31,7 @@
       {@html q.questionHtml}
     </div>
   {:else}
-    <div class="text-center">{q.questionHtml ?? ''}</div>
+    <div class="text-center">{@html q.questionHtml ?? ''}</div>
   {/if}
 
   <div class="h-4"></div>
@@ -50,7 +50,7 @@
             {@html q[`answer${key.toUpperCase()}Html`]}
           </div>
         {:else}
-          <div class="text-center">{q[`answer${key.toUpperCase()}Html`] ?? ''}</div>
+          <div class="text-center">{@html q[`answer${key.toUpperCase()}Html`] ?? ''}</div>
         {/if}
       </div>
     {/each}
