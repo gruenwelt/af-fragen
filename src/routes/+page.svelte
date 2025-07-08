@@ -382,10 +382,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                       {#if limitedQuestions[currentIndex].picture_question}
                         <div class="mb-2"></div>
                         <div class="flex justify-center mb-5">
-                          <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
+                          <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex].picture_question}.svg`}
                             alt="Bild zur Frage"
                             class="w-auto h-auto max-h-[300px] mx-auto"
-                            style="width: 150%"
                           />
                         </div>
                       {/if}
@@ -410,10 +409,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             data-answer-index={i}
                           >
                             {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
-                              <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                              <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto max-h-[300px] mx-auto"
-                                style="width: 150%"
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
@@ -525,10 +523,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                       {#if limitedQuestions[currentIndex].picture_question}
                         <div class="mb-1"></div>
                         <div class="flex justify-center mb-3">
-                          <img src={`${base}/svgs/${limitedQuestions[currentIndex].picture_question}.svg`}
+                          <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex].picture_question}.svg`}
                             alt="Bild zur Frage"
                             class="w-auto h-auto max-h-[160px] mx-auto"
-                            style="width: 150%"
                           />
                         </div>
                       {/if}
@@ -553,10 +550,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             data-answer-index={i}
                           >
                             {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
-                              <img src={`${base}/svgs/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                              <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto max-h-[100px] mx-auto"
-                                style="width: 150%"
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
