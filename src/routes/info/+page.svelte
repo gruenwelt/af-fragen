@@ -9,6 +9,11 @@
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
 	let isMobile = false;
+	let showFunctionality = false;
+	let showData = false;
+	let showAbout = false;
+	let showRecommendation = false;
+	let showLegal = false;
 
 	// Get current path and base
 	let currentPath = '';
@@ -28,25 +33,36 @@
 
 
 <div
-	class="space-y-6 pt-8"
+	class="space-y-6 pt-8 max-w-2xl mx-auto"
 	class:pr-1={isMobile}
 	class:p-1={isMobile}
 	style="scrollbar-width: none; -ms-overflow-style: none;"
 	on:wheel|passive
 >
-	<p><strong>Funktionalität der App</strong></p>
-	<p>
+	<p on:click={() => showFunctionality = !showFunctionality}
+	   class="cursor-pointer font-bold hover:text-[color:var(--color-theme-1)]"
+	>
+    <strong>Funktionalität der App {showFunctionality ? '▾' : '▸'}</strong>
+  </p>
+	{#if showFunctionality}
+	<p class="text-justify">
     Über die oberen Filter lassen sich die Prüfungsklassen N, E und A auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Klassen gemeinsam.<br><br>
-    Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet.<br><br>
+    Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Prüfungsklasse nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Klasse gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Klassen deaktiviert.<br><br>
    Der Abschnitt „Fragen“ listet alle Fragen der ausgewählten Klasse vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.
   	</p>
+	{/if}
 
-	<p><strong>Daten</strong></p>
-	<p>
+	<p on:click={() => showData = !showData}
+	   class="cursor-pointer font-bold hover:text-[color:var(--color-theme-1)]"
+	>
+	  <strong>Daten {showData ? '▾' : '▸'}</strong>
+	</p>
+	{#if showData}
+	<p class="text-justify">
 		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
 		3. Auflage, März 2024
 	</p>
-	<p>
+	<p class="text-justify">
 		Die Prüfungsfragen werden in maschinenlesbarer Form von der<br>
 		Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen,<br>
 		Tulpenfeld 4, 53113 Bonn<br>
@@ -69,7 +85,7 @@
 		<li>Weitere Prüfungsfragen im Prüfungsteil „Technische Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klassen E und A,</li>
 		<li>Weitere Prüfungsfragen im Prüfungsteil „Technische Kenntnisse“ bei Prüfungen zum Erwerb von Amateurfunkzeugnissen der Klasse A.</li>
 		</ul><br>
-	<p>
+	<p class="text-justify">
 		Bei den Prüfungen müssen nicht ausschließlich Fragen und Antworten aus dem hier vorliegenden Katalog verwendet werden. Es können auch andere Fragen und Antworten verwendet werden, die sich inhaltlich an den Fragen des betreffenden Katalogs orientieren.<br><br>
 
 		Die richtige Antwort bei jeder Frage ist im nachfolgenden Katalog immer die Antwort A. Die Antworten B, C und D sind falsche oder teilweise falsche Antworten. In den Prüfungsbögen werden die Antworten in zufälliger Reihenfolge angeordnet. Bei der Prüfung ist im Antwortbogen die als richtig angesehene Antwort anzukreuzen.<br><br>
@@ -87,38 +103,55 @@
       Amateurfunkprüfungen – Hilfsmittel (PDF)
     </a>
   	</p>
-	<p><strong>Über die App</strong></p>
-	<p>
+	{/if}
+
+	<p on:click={() => showAbout = !showAbout}
+	   class="cursor-pointer font-bold hover:text-[color:var(--color-theme-1)]"
+	>
+	  <strong>Über die App {showAbout ? '▾' : '▸'}</strong>
+	</p>
+	{#if showAbout}
+	<p class="text-justify">
 		Diese Web-App wurde von <a href="https://www.linkedin.com/in/gw10/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Puneet P.</a> entworfen und entwickelt, unter Verwendung des SvelteKit App Framework. Als Open-Source-Projekt kann der vollständige Code auf <a href="https://github.com/gruenwelt" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">GitHub</a> gefunden werden.<br><br>
 	
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
-	
-	
+	{/if}
 
-	<p><strong>Empfehlung</strong></p>
-	<p>
+	<p on:click={() => showRecommendation = !showRecommendation}
+	   class="cursor-pointer font-bold hover:text-[color:var(--color-theme-1)]"
+	>
+	  <strong>Empfehlung {showRecommendation ? '▾' : '▸'}</strong>
+	</p>
+	{#if showRecommendation}
+	<p class="text-justify">
 		Zur Vorbereitung auf die Prüfung besuchen Sie <a href="https://www.50ohm.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">50Ohm.de</a>. Ein Angebot des <a href="https://www.darc.de/home/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Deutschen Amateur-Radio-Clubs e. V.</a>
 	</p>
-	
+	{/if}
+
 	<p>&nbsp;</p>
 
-	<p class="text-sm text-gray-600"><strong>Rechtliche Hinweise / Disclaimer</strong></p>
-
-	<p class="text-sm text-gray-600">
+	<p on:click={() => showLegal = !showLegal}
+	   class="cursor-pointer font-bold hover:text-[color:var(--color-theme-1)] text-sm text-gray-600"
+	>
+	  <strong>Rechtliche Hinweise / Disclaimer {showLegal ? '▾' : '▸'}</strong>
+	</p>
+	{#if showLegal}
+	<p class="text-sm text-gray-600 text-justify">
 		Datenschutz:<br>
 		Diese Web-App speichert oder sammelt keinerlei personenbezogene Daten – Punkt. Die Nutzung ist vollständig anonym, es findet keine Erfassung oder Auswertung von Nutzeraktivitäten statt.
 	</p>
 
-	<p class="text-sm text-gray-600">
+	<p class="text-sm text-gray-600 text-justify">
 		Unabhängigkeit:<br>
 		Diese Web-App steht in keinerlei Verbindung zu Dritten – insbesondere nicht zur Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen, zu 50Ohm.de, zum Deutschen Amateur-Radio-Club e. V. (DARC), zu Svelte, GitHub oder sonstigen genannten oder verwendeten Organisationen, Diensten oder Marken. Alle Referenzen dienen ausschließlich informativen oder funktionalen Zwecken.
 	</p>
 
-	<p class="text-sm text-gray-600">
+	<p class="text-sm text-gray-600 text-justify">
 		Haftungsausschluss:<br>
 		Alle Inhalte dieser Web-App wurden mit größter Sorgfalt erstellt. Es wird jedoch keine Gewähr für deren Richtigkeit, Vollständigkeit oder Aktualität übernommen. Die Nutzung der Inhalte erfolgt auf eigene Verantwortung.
 	</p>
+	{/if}
 
 	<div class="h-20"></div>
 
