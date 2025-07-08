@@ -24,6 +24,15 @@ function getPictureKey(q: Question, key: string): string | undefined {
   };
   return q[map[key]];
 }
+
+// Decode HTML entities utility
+function decodeHtmlEntities(str: string): string {
+  if (!str) return '';
+  if (typeof window === 'undefined') return str;
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
 // Imports
 // ==============================
 
@@ -394,7 +403,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         </div>
                       {:else}
                         <div class="text-center">
-                          {@html limitedQuestions[currentIndex].questionHtml ?? ''}
+                          {@html decodeHtmlEntities(limitedQuestions[currentIndex].questionHtml ?? '')}
                         </div>
                       {/if}
                       <div class="h-4"></div>
@@ -535,7 +544,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         </div>
                       {:else}
                         <div class="text-center">
-                          {@html limitedQuestions[currentIndex].questionHtml ?? ''}
+                          {@html decodeHtmlEntities(limitedQuestions[currentIndex].questionHtml ?? '')}
                         </div>
                       {/if}
                       <div class="h-2"></div>
