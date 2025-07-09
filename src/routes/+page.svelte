@@ -435,6 +435,8 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
                             class:border-green-500={selectedAnswerIndex !== null && i === correctIndex}
+                            class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
+                            class:text-white={selectedAnswerIndex === i && i !== correctIndex}
                             on:click={() => selectedAnswerIndex === null && setSelected(i)}
                             data-answer-index={i}
                           >
@@ -576,6 +578,8 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
                             class:border-green-500={selectedAnswerIndex !== null && i === correctIndex}
+                            class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
+                            class:text-white={selectedAnswerIndex === i && i !== correctIndex}
                             on:click={() => selectedAnswerIndex === null && setSelected(i)}
                             data-answer-index={i}
                           >
