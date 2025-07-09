@@ -710,7 +710,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
       {/if}
 
       <p class="text-3xl font-bold mb-6 {winCount >= 19 && successRate >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
-        {winCount} richtige Antworten ({successRate}%)
+        {winCount} richtige Antworten ({Math.round((winCount / questionLimit) * 100)}%)
       </p>
 
       <div class="flex justify-around mt-6 gap-4">
