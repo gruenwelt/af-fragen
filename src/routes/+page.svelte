@@ -139,6 +139,7 @@ let sessionEnded = false;
 let reviewingWrongAnswers = false;
 let sessionAnswers: SessionAnswer[] = [];
 let currentIndex = 0;
+let showResults = false;
 
 // Make winCount reactive to sessionAnswers
 $: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
@@ -168,6 +169,10 @@ function isLongAnswer(q: Question): boolean {
   );
   const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
   return hasLongText && !hasImages;
+}
+
+function showResultsOverlay() {
+  showResults = true;
 }
 // ==============================
 // Mobile detection state
@@ -309,8 +314,8 @@ $: relevantSessionAnswers = sessionAnswers;
 
 // Shuffle answers whenever question changes, but keep shuffle per question
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
-  selectedAnswerIndex = null;
   const q = limitedQuestions[currentIndex];
+  const previous = sessionAnswers.find(a => a.questionNumber === q.number);
   if (!shuffledMap[q.number]) {
     const answers = [
       { text: q.answer_a, html: q.answerAHtml, index: 0 },
@@ -321,6 +326,7 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
     shuffledMap[q.number] = [...answers].sort(() => Math.random() - 0.5);
   }
   shuffledAnswers = shuffledMap[q.number];
+  selectedAnswerIndex = previous ? previous.selectedIndex : null;
 }
 
 // Index of correct answer in shuffledAnswers
@@ -432,8 +438,10 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
-                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
+                            class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
+                            class:border-gray-300={selectedAnswerIndex === null}
+                            class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
+                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:bg-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:text-white={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
@@ -441,9 +449,11 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             data-answer-index={i}
                           >
                             {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
-                              <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                              <img
+                                src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto mx-auto"
+                                class:invert={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
@@ -479,20 +489,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             <div class="w-[25%] flex justify-end items-center">
               <button
                 class="px-4 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
-                on:click={() => {
-                  sessionEnded = false;
-                  sessionAnswers = [];
-                  currentIndex = 0;
-                  wrongQuestions = [];
-                  reviewingWrongAnswers = false;
-                  selectedAnswerIndex = null;
-                  limitedQuestions = [];
-                  sessionStorage.removeItem('af-session-started');
-                  sessionStorage.removeItem('af-session-answers');
-                  sessionStorage.removeItem('af-limited-questions');
-                  sessionStorage.removeItem('af-current-index');
-                  sessionStarted.set(false);
-                }}
+                on:click={showResultsOverlay}
               >
                 X
               </button>
@@ -575,8 +572,10 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
-                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i}
+                            class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
+                            class:border-gray-300={selectedAnswerIndex === null}
+                            class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
+                            class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:bg-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:text-white={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
@@ -584,9 +583,11 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                             data-answer-index={i}
                           >
                             {#if limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}
-                              <img src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
+                              <img
+                                src={`${base}/svgs-2x/${limitedQuestions[currentIndex][pictureKeys[Object.keys(answerKeys)[answer.index] as keyof typeof pictureKeys]]}.svg`}
                                 alt={"Bild Antwort " + Object.keys(answerKeys)[answer.index].toUpperCase()}
                                 class="w-auto h-auto mx-auto"
+                                class:invert={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
                               />
                             {:else if answer.html?.includes('katex')}
                               <div class="text-center">
@@ -623,20 +624,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             <div class="w-[25%] flex justify-end items-center">
               <button
                 class="px-4 py-1 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer text-sm"
-                on:click={() => {
-                  sessionEnded = false;
-                  sessionAnswers = [];
-                  currentIndex = 0;
-                  wrongQuestions = [];
-                  reviewingWrongAnswers = false;
-                  selectedAnswerIndex = null;
-                  limitedQuestions = [];
-                  sessionStorage.removeItem('af-session-started');
-                  sessionStorage.removeItem('af-session-answers');
-                  sessionStorage.removeItem('af-limited-questions');
-                  sessionStorage.removeItem('af-current-index');
-                  sessionStarted.set(false);
-                }}
+                on:click={showResultsOverlay}
               >
                 X
               </button>
@@ -707,3 +695,53 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		touch-action: manipulation;
 	}
 </style>
+
+{#if showResults}
+  <div class="fixed inset-0 z-[999] flex items-center justify-center px-4 bg-black/30 backdrop-blur-sm transition-opacity duration-300">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100 min-h-[320px] flex flex-col justify-center items-center">
+      {#if winCount >= 19 && successRate >= 76}
+        <p class="text-lg font-bold mb-6">🎉 Super gemacht! Du hast bestanden!</p>
+      {:else if successRate >= 60}
+        <p class="text-lg font-bold mt-4 mb-6">😌 Noch nicht ganz – aber du bist fast am Ziel!</p>
+      {:else if successRate < 25}
+        <p class="text-lg font-bold mt-4 mb-6">📚 Vielleicht hilft noch etwas Lernen?</p>
+      {:else}
+        <p class="text-lg font-bold mt-4 mb-6">💡 Leider nicht bestanden!</p>
+      {/if}
+
+      <p class="text-3xl font-bold mb-6 {winCount >= 19 && successRate >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
+        {winCount} richtige Antworten ({successRate}%)
+      </p>
+
+      <div class="flex justify-around mt-6 gap-4">
+        <button
+          class="w-16 h-10 py-1 rounded-full text-sm font-medium shadow transition-all cursor-pointer bg-green-600 text-white"
+          on:click={() => showResults = false}
+        >
+          ←
+        </button>
+        <button
+          class="w-16 h-10 py-1 rounded-full text-sm font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
+          on:click={() => {
+            sessionEnded = false;
+            sessionAnswers = [];
+            currentIndex = 0;
+            wrongQuestions = [];
+            reviewingWrongAnswers = false;
+            selectedAnswerIndex = null;
+            limitedQuestions = [];
+            shuffledMap = {};
+            sessionStorage.removeItem('af-session-started');
+            sessionStorage.removeItem('af-session-answers');
+            sessionStorage.removeItem('af-limited-questions');
+            sessionStorage.removeItem('af-current-index');
+            sessionStarted.set(false);
+            showResults = false;
+          }}
+        >
+          X
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
