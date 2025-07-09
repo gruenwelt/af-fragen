@@ -5,6 +5,23 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Testmodus" />
   <meta property="og:title" content="Üben – Funkfragen: Prüfungssimulator für Amateurfunk" />
   <meta property="og:description" content="Simuliere die deutsche Amateurfunkprüfung im Übungsmodus: Wähle zufällige Fragen der Klassen N, E oder A und bereite dich gezielt vor." />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Funkfragen Übungsmodus",
+    "url": "https://funkfragen.de",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
+    "inLanguage": "de",
+    "mainEntityOfPage": "https://funkfragen.de",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Funkfragen"
+    }
+  }
+  </script>
 </svelte:head>
 
 <script lang="ts">
@@ -212,7 +229,7 @@ let setSelected = (index: number) => {
     sessionAnswers.push(answer);
     // Persist session state to sessionStorage
     sessionStorage.setItem('af-session-started', 'true');
-    sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+    sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers, null, 0));
     sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
     sessionStorage.setItem('af-current-index', currentIndex.toString());
     if (isCorrect) {

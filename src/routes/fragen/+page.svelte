@@ -6,28 +6,24 @@
   <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
   <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
   <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Wie viele Fragen gibt es in der Klasse N?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Es gibt 180 offizielle Prüfungsfragen für die Klasse N."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Ist das die offizielle Datenquelle?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Ja, die Fragen basieren auf dem offiziellen Katalog der Bundesnetzagentur."
-          }
-        }
-      ]
-    })}
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Fragenkatalog – Funkfragen",
+    "url": "https://funkfragen.de/fragen",
+    "description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (Klassen N, E, A) mit Themenfilter und Navigation.",
+    "inLanguage": "de",
+    "mainEntityOfPage": "https://funkfragen.de/fragen",
+    "about": {
+      "@type": "EducationalOccupationalProgram",
+      "name": "Amateurfunkprüfung Deutschland",
+      "educationalLevel": ["N", "E", "A"]
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Funkfragen"
+    }
+  }
   </script>
 </svelte:head>
 
