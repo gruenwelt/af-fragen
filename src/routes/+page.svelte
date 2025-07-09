@@ -477,7 +477,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             <div class="w-[25%] flex justify-start items-center text-sm text-gray-600 ml-1">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate">
+            <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
               {winCount}
             </div>
             <div class="w-[25%] flex justify-end items-center">
@@ -608,7 +608,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
             <div class="w-[25%] flex justify-start items-center text-base text-gray-600 ml-1">
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
-            <div class="w-[50%] flex justify-center items-center text-base text-green-600 whitespace-nowrap truncate">
+            <div class="w-[50%] flex justify-center items-center text-base text-green-600 whitespace-nowrap truncate font-bold">
               {winCount}
             </div>
             <div class="w-[25%] flex justify-end items-center">
@@ -704,6 +704,23 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		border-width: 1px;
 		border-style: solid;
 		border-color: #d1d5db; /* Tailwind gray-300 */
+	}
+
+	/* Ensure white text for right and wrong answers in light mode */
+	.answer-box.bg-green-600,
+	.answer-box.bg-\[color\:var\(--color-theme-1\)\] {
+		color: #fff;
+	}
+
+	/* Selected answer borders in light mode */
+	.answer-box.bg-green-600 {
+		color: #fff;
+		border-color: #16a34a;
+	}
+
+	.answer-box.bg-\[color\:var\(--color-theme-1\)\] {
+		color: #fff;
+		border-color: var(--color-theme-1);
 	}
 
 	@media (prefers-color-scheme: dark) {
