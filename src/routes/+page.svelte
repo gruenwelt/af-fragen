@@ -662,7 +662,24 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 	body {
 		height: 100%;
 		overflow-y: auto;
+		scrollbar-width: none;            /* Firefox */
+		-ms-overflow-style: none;         /* Internet Explorer/Edge */
 	}
+
+	html::-webkit-scrollbar,
+	body::-webkit-scrollbar {
+		display: none;                    /* Chrome, Safari */
+	}
+
+	/* Universal scrollbar hiding for all scrollable containers */
+	* {
+		scrollbar-width: none;            /* Firefox */
+		-ms-overflow-style: none;         /* Internet Explorer/Edge */
+	}
+	*::-webkit-scrollbar {
+		display: none;                    /* Chrome, Safari */
+	}
+
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}
@@ -670,12 +687,12 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
-	@media (max-width: 768px) {
+	/* @media (max-width: 768px) {
 		html,
 		body {
 			overflow: hidden;
 		}
-	}
+	} */
 	/* Prevent double-tap zoom on buttons, links, and question cards */
 	button, a, article {
 		touch-action: manipulation;
