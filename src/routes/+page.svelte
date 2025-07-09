@@ -439,9 +439,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           <button
                             type="button"
                             class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
-                            class:border-gray-300={selectedAnswerIndex === null}
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
+                            class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
                             class:bg-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:text-white={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
@@ -573,9 +573,9 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                           <button
                             type="button"
                             class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
-                            class:border-gray-300={selectedAnswerIndex === null}
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
+                            class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
                             class:bg-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:bg-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:text-white={selectedAnswerIndex !== null && (i === correctIndex || selectedAnswerIndex === i)}
