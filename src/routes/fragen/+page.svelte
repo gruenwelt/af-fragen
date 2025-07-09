@@ -1,6 +1,10 @@
 <svelte:head>
   <title>Fragenkatalog – Alle offiziellen Fragen der Amateurfunkprüfung (N, E, A)</title>
   <meta name="description" content="Durchsuche den vollständigen Fragenkatalog zur deutschen Amateurfunkprüfung. Filtere nach Klasse N, E oder A und navigiere durch alle Themenbereiche." />
+  <link rel="canonical" href="https://funkfragen.de/fragen" />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Fragenkatalog, Lernapp" />
+  <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
+  <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
   <script type="application/ld+json">
     {JSON.stringify({
       "@context": "https://schema.org",

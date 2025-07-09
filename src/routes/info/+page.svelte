@@ -1,6 +1,10 @@
 <svelte:head>
 	<title>Info</title>
 	<meta name="description" content="Info über die app" />
+	<link rel="canonical" href="https://funkfragen.de/info" />
+	<meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp" />
+	<meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
+	<meta property="og:description" content="Funkfragen bietet einen Prüfungssimulator und umfassende Vorbereitung für Amateurfunklizenzklassen N, E und A." />
 	<script type="application/ld+json">
 		{JSON.stringify({
 			"@context": "https://schema.org",
@@ -121,12 +125,10 @@
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
 
+	<p><strong>Ressourcen</strong></p>
 	<p>
-	  <strong>Empfehlung</strong>
-	</p>
-	<p>
-		Zur Vorbereitung auf die Prüfung besuchen Sie <a href="https://www.50ohm.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">50Ohm.de</a>. Ein Angebot des <a href="https://www.darc.de/home/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Deutschen Amateur-Radio-Clubs e. V.</a>
-	</p>
+    Zur ergänzenden Prüfungsvorbereitung empfehlen wir das Lernangebot auf <a href="https://www.50ohm.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">50Ohm.de</a> (ein Angebot des <a href="https://www.darc.de/home/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Deutschen Amateur-Radio-Clubs e. V.</a>).
+  </p>
 
 	<p>&nbsp;</p>
 
