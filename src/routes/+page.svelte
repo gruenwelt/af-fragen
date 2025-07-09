@@ -147,11 +147,7 @@ $: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
 // ==============================
 // Success Rate (reactive)
 // ==============================
-$: successRate = (
-  currentIndex > 0
-    ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
-    : 0
-);
+// (Removed: successRate calculation is now only in final results overlay.)
 let questionLimit = 25;
 let shuffledAnswers: ShuffledAnswer[] = [];
 export let selectedAnswerIndex: number | null = null;
@@ -242,9 +238,7 @@ let setSelected = (index: number) => {
     } else {
       wrongQuestions.push(answer);
     }
-    // Recalculate successRate after answer
-    successRate = Math.round((sessionAnswers.filter(a => a.isCorrect).length / (currentIndex + 1)) * 100);
-    console.log('Success rate after answer:', successRate);
+    // (Removed: successRate recalculation)
   }
 
   if (browser) {
@@ -484,7 +478,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate">
-              {winCount}   ({successRate}%)
+              {winCount}
             </div>
             <div class="w-[25%] flex justify-end items-center">
               <button
@@ -517,11 +511,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                 sessionAnswers.push(skippedAnswer);
                 wrongQuestions.push(skippedAnswer);
               }
-              // Recalculate successRate after skip (desktop)
-              successRate = currentIndex > 0
-                ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
-                : 0;
-              console.log('Success rate after skip:', successRate);
+              // (Removed: successRate recalculation after skip)
               sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
               currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
             }}
@@ -619,7 +609,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
               {currentIndex + 1} / {limitedQuestions.length}
             </div>
             <div class="w-[50%] flex justify-center items-center text-base text-green-600 whitespace-nowrap truncate">
-              {winCount}   ({successRate}%)
+              {winCount}
             </div>
             <div class="w-[25%] flex justify-end items-center">
               <button
@@ -652,11 +642,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                 sessionAnswers.push(skippedAnswer);
                 wrongQuestions.push(skippedAnswer);
               }
-              // Recalculate successRate after skip (mobile)
-              successRate = currentIndex > 0
-                ? Math.round((sessionAnswers.filter(a => a.isCorrect).length / currentIndex) * 100)
-                : 0;
-              console.log('Success rate after skip:', successRate);
+              // (Removed: successRate recalculation after skip)
               sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
               currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
             }}
@@ -699,17 +685,17 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 {#if showResults}
   <div class="fixed inset-0 z-[999] flex items-center justify-center px-4 bg-black/30 backdrop-blur-sm transition-opacity duration-300">
     <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100 min-h-[320px] flex flex-col justify-center items-center">
-      {#if winCount >= 19 && successRate >= 76}
+      {#if winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76}
         <p class="text-lg font-bold mb-6">🎉 Super gemacht! Du hast bestanden!</p>
-      {:else if successRate >= 60}
+      {:else if Math.round((winCount / questionLimit) * 100) >= 60}
         <p class="text-lg font-bold mt-4 mb-6">😌 Noch nicht ganz – aber du bist fast am Ziel!</p>
-      {:else if successRate < 25}
+      {:else if Math.round((winCount / questionLimit) * 100) < 25}
         <p class="text-lg font-bold mt-4 mb-6">📚 Vielleicht hilft noch etwas Lernen?</p>
       {:else}
         <p class="text-lg font-bold mt-4 mb-6">💡 Leider nicht bestanden!</p>
       {/if}
 
-      <p class="text-3xl font-bold mb-6 {winCount >= 19 && successRate >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
+      <p class="text-3xl font-bold mb-6 {winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
         {winCount} richtige Antworten ({Math.round((winCount / questionLimit) * 100)}%)
       </p>
 
