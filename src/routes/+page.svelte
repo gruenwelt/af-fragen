@@ -699,6 +699,13 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 	}
 
 
+	/* Restore default border for .answer-box in light mode */
+	.answer-box {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #d1d5db; /* Tailwind gray-300 */
+	}
+
 	@media (prefers-color-scheme: dark) {
 		article.bg-white {
 			background-color: #1e1e1e;
@@ -747,6 +754,12 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		.answer-box.bg-\[color\:var\(--color-theme-1\)\] {
 			background-color: rgba(255, 62, 0, 0.3) !important;
 			border-color: rgba(255, 62, 0, 0.3) !important;
+		}
+
+		/* Invert only question and answer images in dark mode */
+		.answer-box img,
+		article img {
+			filter: invert(1) hue-rotate(180deg);
 		}
 	}
 </style>
