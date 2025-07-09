@@ -116,3 +116,92 @@ html, body {
 u {
   text-decoration: underline;
 }
+
+.answer-box {
+	border-radius: 0.5rem;   /* Tailwind's rounded-lg */
+	padding: 0.75rem;        /* Tailwind's p-3 */
+	min-height: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.answer-border {
+	border: 1px solid #D1D5DB; /* Tailwind's border-gray-300 */
+}
+
+.answer-text {
+	color: #374151; /* Tailwind's text-gray-700 */
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-bg-0: hsl(210, 20%, 20%);
+		--color-bg-1: hsl(210, 20%, 15%);
+		--color-bg-2: hsl(210, 20%, 10%);
+		--color-text: rgba(255, 255, 255, 0.87);
+		--color-theme-1: #ff3e00;
+		--color-theme-2: #8ab4f8;
+	}
+
+	body {
+		background-image:
+			radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%),
+			linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
+	}
+
+	pre {
+		background-color: rgba(255, 255, 255, 0.1);
+		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+	}
+
+	a {
+		color: var(--color-theme-1);
+	}
+
+	a:hover {
+		color: var(--color-theme-2);
+	}
+
+	.answer-border {
+		border-color: #666;
+	}
+
+	.answer-text {
+		color: #ddd;
+	}
+
+	.border-green-600 {
+		border-color: rgba(22, 163, 74, 0.3) !important; /* Tailwind green-600 with 30% opacity */
+	}
+
+	.bg-green-600 {
+		background-color: rgba(22, 163, 74, 0.3) !important; /* Tailwind green-600 with 30% opacity */
+	}
+
+	.bg-\[color\:var\(--color-theme-1\)\] {
+		background-color: rgba(255, 62, 0, 0.3) !important;
+	}
+
+	.border-\[color\:var\(--color-theme-1\)\] {
+		border-color: rgba(255, 62, 0, 0.3) !important;
+	}
+
+	.text-white {
+		color: #fff;
+	}
+
+	/* Stronger dark mode overrides for selected answer buttons */
+	button.bg-\[color\:var\(--color-theme-1\)\] {
+		background-color: var(--color-theme-1) !important;
+		border-color: var(--color-theme-1) !important;
+		color: #fff !important;
+	}
+
+	button.bg-green-600 {
+		background-color: #16a34a !important;
+		border-color: #16a34a !important;
+		color: #fff !important;
+	}
+}

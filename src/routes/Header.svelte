@@ -301,4 +301,25 @@ let showPopup = true;
 	  cursor: pointer;
 	}
 
+	@media (prefers-color-scheme: dark) {
+		nav {
+			--background: rgba(30, 30, 30, 0.7);
+		}
+
+		path {
+			fill: var(--background);
+		}
+
+		ul {
+			background: var(--background);
+		}
+
+		nav a {
+			color: var(--color-text);
+		}
+
+		a:hover {
+			color: var(--color-theme-1);
+		}
+	}
 </style>

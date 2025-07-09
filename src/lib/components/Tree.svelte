@@ -84,3 +84,15 @@
     </li>
   {/each}
 </ul>
+<style>
+  @media (prefers-color-scheme: dark) {
+    ul {
+      color: #ddd;
+    }
+
+    button:hover,
+    button:focus-visible {
+      color: var(--color-theme-1);
+    }
+  }
+</style>

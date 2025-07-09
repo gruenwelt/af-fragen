@@ -154,9 +154,15 @@
 
 	<div class="h-20"></div>
 
-	<style>
-		div::-webkit-scrollbar {
-			display: none;
-		}
-	</style>
 </div>
+
+<style>
+	div::-webkit-scrollbar {
+		display: none;
+	}
+	@media (prefers-color-scheme: dark) {
+		.text-gray-600 {
+			color: #ccc;
+		}
+	}
+</style>

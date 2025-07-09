@@ -49,7 +49,7 @@
       : "grid grid-cols-2 gap-3"
   }>
     {#each ['a', 'b', 'c', 'd'] as key}
-      <div class="border border-gray-300 rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700">
+      <div class="answer-box answer-border answer-text">
         {#if q[`picture_${key}`]}
           <img src={`${base}/svgs-2x/${q[`picture_${key}`]}.svg`} alt={`Bild Antwort ${key.toUpperCase()}`} class="w-auto h-auto mx-auto" />
         {:else if typeof q[`answer${key.toUpperCase()}Html`] === 'string' && q[`answer${key.toUpperCase()}Html`].includes('katex')}
@@ -67,3 +67,17 @@
     {q.number} – {q.section1}; {q.section2}; {q.section3}
   </footer>
 </article>
+
+<style>
+  @media (prefers-color-scheme: dark) {
+    article.bg-white {
+      background-color: #1e1e1e;
+      border-color: #444;
+      color: #eee;
+    }
+
+    footer.text-gray-500 {
+      color: #aaa;
+    }
+  }
+</style>

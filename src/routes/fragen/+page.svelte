@@ -351,4 +351,22 @@
 		height: 100vh;
 		overflow: hidden;
 	}
+
+	@media (prefers-color-scheme: dark) {
+		nav.bg-white\/70 {
+			background-color: rgba(30, 30, 30, 0.7);
+		}
+
+		.fixed.top-120.bg-white\/70 {
+			background-color: rgba(30, 30, 30, 0.7);
+		}
+
+		.fixed.top-\[5\%\].left-0.bg-white\/70 {
+			background-color: rgba(30, 30, 30, 0.7);
+		}
+
+		.bg-gray-400 {
+			background-color: #888;
+		}
+	}
 </style>

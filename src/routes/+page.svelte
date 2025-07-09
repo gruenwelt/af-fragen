@@ -432,7 +432,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full"
+                            class="answer-box answer-border answer-text"
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
@@ -562,7 +562,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="border rounded-lg p-3 min-h-[1rem] flex items-center justify-center text-gray-700 cursor-pointer hover:border-[color:var(--color-theme-1)] w-full text-xs"
+                            class="answer-box answer-border answer-text text-xs"
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
@@ -696,6 +696,54 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 	/* Prevent double-tap zoom on buttons, links, and question cards */
 	button, a, article {
 		touch-action: manipulation;
+	}
+
+	/* Reusable answer box border and text color utility classes (shared with QuestionCard.svelte) */
+	.answer-border {
+	  border-color: #D1D5DB; /* light mode: gray-300 */
+	}
+	.answer-text {
+	  color: #374151; /* light mode: gray-700 */
+	}
+
+	@media (prefers-color-scheme: dark) {
+		article.bg-white {
+			background-color: #1e1e1e;
+			border-color: #444;
+			color: #eee;
+		}
+
+		.text-gray-500 {
+			color: #aaa;
+		}
+
+		.text-gray-600 {
+			color: #ccc;
+		}
+
+		.bg-white\/80 {
+			background-color: rgba(30, 30, 30, 0.8);
+		}
+
+		.bg-white {
+			background-color: #222;
+		}
+
+		.bg-gray-400 {
+			background-color: #888;
+		}
+
+		.shadow-md,
+		.shadow-lg,
+		.shadow {
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+		}
+	  .answer-border {
+	    border-color: #666;
+	  }
+	  .answer-text {
+	    color: #ddd;
+	  }
 	}
 </style>
 
