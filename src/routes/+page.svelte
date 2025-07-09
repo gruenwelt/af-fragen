@@ -432,7 +432,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="answer-box answer-border answer-text"
+                            class="answer-box"
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
@@ -562,7 +562,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
                         {#each shuffledAnswers as answer, i (answer.index)}
                           <button
                             type="button"
-                            class="answer-box answer-border answer-text text-xs"
+                            class="answer-box text-xs"
                             class:border-green-600={selectedAnswerIndex !== null && i === correctIndex}
                             class:border-[color:var(--color-theme-1)]={selectedAnswerIndex === i && i !== correctIndex}
                             class:border-gray-300={selectedAnswerIndex === null || (selectedAnswerIndex !== i && i !== correctIndex)}
@@ -698,13 +698,6 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		touch-action: manipulation;
 	}
 
-	/* Reusable answer box border and text color utility classes (shared with QuestionCard.svelte) */
-	.answer-border {
-	  border-color: #D1D5DB; /* light mode: gray-300 */
-	}
-	.answer-text {
-	  color: #374151; /* light mode: gray-700 */
-	}
 
 	@media (prefers-color-scheme: dark) {
 		article.bg-white {
@@ -738,12 +731,23 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		.shadow {
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 		}
-	  .answer-border {
-	    border-color: #666;
-	  }
-	  .answer-text {
-	    color: #ddd;
-	  }
+
+		/* Fallback border color for .answer-box in dark mode */
+		.answer-box {
+			border-width: 1px;
+			border-style: solid;
+			border-color: #666;
+		}
+
+		.answer-box.bg-green-600 {
+			background-color: rgba(22, 163, 74, 0.3) !important;
+			border-color: rgba(22, 163, 74, 0.3) !important;
+		}
+
+		.answer-box.bg-\[color\:var\(--color-theme-1\)\] {
+			background-color: rgba(255, 62, 0, 0.3) !important;
+			border-color: rgba(255, 62, 0, 0.3) !important;
+		}
 	}
 </style>
 

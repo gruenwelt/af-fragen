@@ -172,22 +172,6 @@ u {
 		color: #ddd;
 	}
 
-	.border-green-600 {
-		border-color: rgba(22, 163, 74, 0.3) !important; /* Tailwind green-600 with 30% opacity */
-	}
-
-	.bg-green-600 {
-		background-color: rgba(22, 163, 74, 0.3) !important; /* Tailwind green-600 with 30% opacity */
-	}
-
-	.bg-\[color\:var\(--color-theme-1\)\] {
-		background-color: rgba(255, 62, 0, 0.3) !important;
-	}
-
-	.border-\[color\:var\(--color-theme-1\)\] {
-		border-color: rgba(255, 62, 0, 0.3) !important;
-	}
-
 	.text-white {
 		color: #fff;
 	}
