@@ -95,4 +95,13 @@
       color: var(--color-theme-1);
     }
   }
+
+  :global(.light) ul {
+    color: var(--color-text);
+  }
+
+  :global(.light) button:hover,
+  :global(.light) button:focus-visible {
+    color: var(--color-theme-1);
+  }
 </style>

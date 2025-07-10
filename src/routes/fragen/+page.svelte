@@ -43,48 +43,49 @@
 	let Tree: typeof import('$lib/components/Tree.svelte').default;
 	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
 
-	onMount(() => {
-		const checkMobile = () => {
-			isMobile = window.innerWidth <= 768;
-		};
+onMount(() => {
+	document.documentElement.classList.add('light');
+	const checkMobile = () => {
+		isMobile = window.innerWidth <= 768;
+	};
 
-		checkMobile();
+	checkMobile();
 
-		if (!new URLSearchParams(window.location.search).has('class')) {
-			const currentParams = new URLSearchParams(window.location.search);
-			currentParams.set('class', '1');
-			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-			window.history.replaceState({}, '', newUrl);
-		}
+	if (!new URLSearchParams(window.location.search).has('class')) {
+		const currentParams = new URLSearchParams(window.location.search);
+		currentParams.set('class', '1');
+		const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+		window.history.replaceState({}, '', newUrl);
+	}
 
-		window.addEventListener('resize', checkMobile);
+	window.addEventListener('resize', checkMobile);
 
-		const load = async () => {
-			if (browser && isMobile) {
-				setTimeout(() => {
-					mobileReady = true;
-				}, 100);
-			} else {
+	const load = async () => {
+		if (browser && isMobile) {
+			setTimeout(() => {
 				mobileReady = true;
-			}
-		};
-		load();
+			}, 100);
+		} else {
+			mobileReady = true;
+		}
+	};
+	load();
 
-		setTimeout(() => {
-			headerReady = true;
-		}, 0);
+	setTimeout(() => {
+		headerReady = true;
+	}, 0);
 
-		(async () => {
-			const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
-				import('$lib/components/Tree.svelte'),
-				import('$lib/components/QuestionCard.svelte')
-			]);
-			Tree = TreeModule;
-			QuestionCard = QuestionCardModule;
-		})();
+	(async () => {
+		const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
+			import('$lib/components/Tree.svelte'),
+			import('$lib/components/QuestionCard.svelte')
+		]);
+		Tree = TreeModule;
+		QuestionCard = QuestionCardModule;
+	})();
 
-		return () => window.removeEventListener('resize', checkMobile);
-	});
+	return () => window.removeEventListener('resize', checkMobile);
+});
 
 	// --- Types ---
 	type Question = {
@@ -352,6 +353,36 @@ body {
 	overflow: hidden;
 }
 
+/* --- Light/Dark class-based theming overrides for nav/sidebar backgrounds --- */
+:global(.light) nav.bg-white\/70 {
+	background-color: rgba(255, 255, 255, 0.7);
+	color: black;
+}
+
+:global(.light) .fixed.top-120.bg-white\/70 {
+	background-color: rgba(255, 255, 255, 0.7);
+	color: black;
+}
+
+:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 {
+	background-color: rgba(255, 255, 255, 0.7);
+	color: black;
+}
+
+:global(.light) nav.bg-white\/70 .text-white,
+:global(.light) nav.bg-white\/70 .fill-white,
+:global(.light) nav.bg-white\/70 .stroke-white,
+:global(.light) .fixed.top-120.bg-white\/70 .text-white,
+:global(.light) .fixed.top-120.bg-white\/70 .fill-white,
+:global(.light) .fixed.top-120.bg-white\/70 .stroke-white,
+:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .text-white,
+:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .fill-white,
+:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .stroke-white {
+	color: black !important;
+	fill: black !important;
+	stroke: black !important;
+}
+
 @media (prefers-color-scheme: dark) {
 	nav.bg-white\/70 {
 		background-color: rgba(30, 30, 30, 0.7);
@@ -384,5 +415,17 @@ body {
 
 :global(.dark) .bg-gray-400 {
 	background-color: #888;
+}
+
+:global(nav.bg-white\/70) {
+	color: black;
+}
+
+:global(.fixed.top-120.bg-white\/70) {
+	color: black;
+}
+
+:global(.fixed.top-\[5\%\].left-0.bg-white\/70) {
+	color: black;
 }
 </style>

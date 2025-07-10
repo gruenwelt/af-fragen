@@ -5,7 +5,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'var(--color-theme-1)'
+        primary: 'var(--color-theme-1)',
+        sidebarLightBg: 'rgba(255, 255, 255, 0.7)',
+        sidebarLightText: '#000000'
       }
     }
   },
