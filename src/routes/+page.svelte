@@ -41,8 +41,8 @@ import { get } from 'svelte/store';
 import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
 import { restoreSessionState, persistSessionState } from '$lib/utils/sessionState';
-import { getShuffledAnswers } from '$lib/utils/shuffling';
-import type { ShuffledAnswer } from '$lib/utils/shuffling';
+import { getShuffledAnswers } from '$lib/utils/shufflingAnswers';
+import type { ShuffledAnswer } from '$lib/utils/shufflingAnswers';
 // Use questions from layout data
 
 // ==============================
