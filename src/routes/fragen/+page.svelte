@@ -17,6 +17,7 @@
 	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
 	import { collectQuestions } from '$lib/utils/questionLoader';
+	import { filterQuestionsByClass } from '$lib/utils/filterByClass';
 
 	import fullTree from '$lib/data/tree.json';
 
@@ -24,13 +25,11 @@
 	let Tree: typeof import('$lib/components/Tree.svelte').default;
 	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
 
+import { isMobile } from '$lib/stores/device';
+import { get } from 'svelte/store';
+
 onMount(() => {
 	document.documentElement.classList.add('light');
-	const checkMobile = () => {
-		isMobile = window.innerWidth <= 768;
-	};
-
-	checkMobile();
 
 	if (!new URLSearchParams(window.location.search).has('class')) {
 		const currentParams = new URLSearchParams(window.location.search);
@@ -39,10 +38,8 @@ onMount(() => {
 		window.history.replaceState({}, '', newUrl);
 	}
 
-	window.addEventListener('resize', checkMobile);
-
 	const load = async () => {
-		if (browser && isMobile) {
+		if (browser && get(isMobile)) {
 			setTimeout(() => {
 				mobileReady = true;
 			}, 100);
@@ -64,8 +61,6 @@ onMount(() => {
 		Tree = TreeModule;
 		QuestionCard = QuestionCardModule;
 	})();
-
-	return () => window.removeEventListener('resize', checkMobile);
 });
 
 	// --- Types ---
@@ -98,13 +93,14 @@ onMount(() => {
 	 * Determines if a question has any long answers (by length or images).
 	 * Uses 2×2 layout for images on desktop, 4×1 on mobile.
 	 */
+	import { isMobile as isMobileStore } from '$lib/stores/device';
 	function isLongAnswer(q: Question): boolean {
-		const threshold = isMobile ? 12 : 60;
+		const threshold = $isMobile ? 12 : 60;
 		const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
 			(a) => a.length > threshold
 		);
 		const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
-		return hasLongText || (isMobile && hasImages);
+		return hasLongText || ($isMobile && hasImages);
 	}
 
 	// --- State & Reactive Vars ---
@@ -121,14 +117,7 @@ onMount(() => {
 		const c = $page.url.searchParams.get('class') ?? '1';
 		isLoading = true;
 
-		let target: Question[];
-		if (c === '1' || c === '2' || c === '3') {
-			target = questions.filter((q) => q.class === c);
-		} else if (c === 'Alle') {
-			target = questions;
-		} else {
-			target = [];
-		}
+		const target = filterQuestionsByClass(questions, c);
 
 		setTimeout(() => {
 			filteredQuestions = target;
@@ -172,36 +161,8 @@ onMount(() => {
 
 	// --- Lifecycle ---
 
-	let isMobile = false;
+	// let isMobile = false;
 	let mobileReady = false;
-
-	onMount(() => {
-		const checkMobile = () => {
-			isMobile = window.innerWidth <= 768;
-		};
-
-		checkMobile();
-
-		// ✅ Enforce default class=1 if none present
-		const currentParams = new URLSearchParams(window.location.search);
-		if (!currentParams.has('class')) {
-			currentParams.set('class', '1');
-			const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-			window.history.replaceState({}, '', newUrl);
-		}
-
-		window.addEventListener('resize', checkMobile);
-
-		if (browser && isMobile) {
-			setTimeout(() => {
-				mobileReady = true;
-			}, 100); // simulate delay to ensure DOM is mounted
-		} else {
-			mobileReady = true;
-		}
-
-		return () => window.removeEventListener('resize', checkMobile);
-	});
 
 	let showSidebar = false;
 
@@ -235,7 +196,7 @@ onMount(() => {
 	<!-- ============================== -->
 	<!-- ✅ Desktop Layout (Sidebar + Questions) -->
 	<!-- ============================== -->
-	{#if !isMobile && mobileReady}
+	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
 			<!-- Sidebar: Navigation tree -->
 			<nav

@@ -13,7 +13,7 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
-	let isMobile = false;
+	import { isMobile } from '$lib/stores/device';
 
 	// Get current path and base
 	let currentPath = '';
@@ -25,18 +25,14 @@
 
 	// Reactive statement for isInfoPage
 	$: isInfoPage = browser && currentPath === base + '/info';
-
-	onMount(() => {
-		isMobile = window.innerWidth <= 768;
-	});
 </script>
 
 
 <div
 	lang="de"
 	class="space-y-6 pt-8 max-w-2xl mx-auto break-words hyphens-auto text-justify"
-	class:pr-1={isMobile}
-	class:p-1={isMobile}
+	class:pr-1={$isMobile}
+	class:p-1={$isMobile}
 	style="scrollbar-width: none; -ms-overflow-style: none;"
 	on:wheel|passive
 >

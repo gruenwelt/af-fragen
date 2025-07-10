@@ -33,6 +33,7 @@
 
 let headerReady = false;
 import { onMount, tick } from 'svelte';
+import { isMobile } from '$lib/stores/device';
 import QuestionCard from '$lib/components/QuestionCard.svelte';
 import 'katex/dist/katex.min.css';
 import { browser } from '$app/environment';
@@ -55,6 +56,7 @@ type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect:
 // Data & Derived Data
 // ==============================
 import { collectQuestions } from '$lib/utils/questionLoader';
+import { filterQuestionsByClass } from '$lib/utils/filterByClass';
 import { page } from '$app/stores';
 // Questions and allQuestions will be initialized reactively before session starts
 let questions: any = null;
@@ -90,7 +92,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // ==============================
 function isLongAnswer(q: Question): boolean {
   // Use a dynamic threshold based on isMobile
-  const threshold = isMobile ? 12 : 60;
+  const threshold = isMobileValue ? 12 : 60;
   const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
     (a) => a.length > threshold
   );
@@ -106,16 +108,9 @@ function showResultsOverlay() {
 // ==============================
 
 // Mobile detection state
-let isMobile = false;
+$: isMobileValue = $isMobile;
 
 onMount(() => {
-  const checkMobile = () => {
-    isMobile = window.innerWidth <= 768;
-  };
-
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-
   // Restore session state from sessionStorage if available
   if (browser) {
     const restored = restoreSessionState();
@@ -130,7 +125,6 @@ onMount(() => {
   setTimeout(() => {
     headerReady = true;
   }, 0);
-  return () => window.removeEventListener('resize', checkMobile);
 });
 
 // Selected class from query params (reactive)
@@ -149,14 +143,7 @@ $: if (browser && allQuestions.length > 0) {
   }
   // Now, update filteredQuestions whenever selectedClass changes
   isLoading = true;
-  let target: Question[];
-  if (selectedClass === '1' || selectedClass === '2' || selectedClass === '3') {
-    target = allQuestions.filter((q) => q.class === selectedClass);
-  } else if (selectedClass === 'Alle') {
-    target = allQuestions;
-  } else {
-    target = [];
-  }
+  let target: Question[] = filterQuestionsByClass(allQuestions, selectedClass);
   setTimeout(() => {
     filteredQuestions = target;
     isLoading = false;
@@ -248,13 +235,7 @@ let setSelected = (index: number) => {
               allQuestions = collectQuestions(questions ?? {});
             }
 
-            let target: Question[];
-            if (selectedClassNow === '1' || selectedClassNow === '2' || selectedClassNow === '3') {
-              target = allQuestions.filter((q) => q.class === selectedClassNow);
-            } else {
-              target = allQuestions;
-            }
-
+            let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
             filteredQuestions = target;
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
             sessionAnswers = [];

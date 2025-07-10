@@ -16,9 +16,9 @@ export type Question = {
   picture_c?: string;
   picture_d?: string;
   number: string;
-  section1: string;
-  section2: string;
-  section3: string;
+  section1?: string;
+  section2?: string;
+  section3?: string;
 };
 
 export function collectQuestions(tree: any, path: string[] = []): Question[] {

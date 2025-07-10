@@ -3,28 +3,17 @@ import { page } from '$app/stores';
 import { browser } from '$app/environment';
 import logo from '$lib/images/svelte-logo.svg';
 import { base } from '$app/paths';
-import { onMount } from 'svelte';
 import { sessionStarted } from '$lib/stores/session';
 import { isDarkMode } from '$lib/stores/theme';
+import { isMobile } from '$lib/stores/device';
 
 let github = '';
 let githubWhite = '';
 $: github = `${base}/github.svg`;
 $: githubWhite = `${base}/github-white.png`;
 
-let isDesktop: boolean | undefined = undefined;
+$: isDesktop = browser ? !$isMobile : undefined;
 let showPopup = true;
-
-onMount(() => {
-	if (browser) {
-		const updateSize = () => {
-			isDesktop = window.innerWidth > 768;
-		};
-		updateSize();
-		window.addEventListener('resize', updateSize);
-		return () => window.removeEventListener('resize', updateSize);
-	}
-});
 
 let currentSearch = '';
 let currentPath = '';
