@@ -38,30 +38,31 @@ onMount(() => {
 		window.history.replaceState({}, '', newUrl);
 	}
 
-	const load = async () => {
-		if (browser && get(isMobile)) {
-			setTimeout(() => {
-				mobileReady = true;
-			}, 100);
-		} else {
-			mobileReady = true;
-		}
-	};
-	load();
+	initializeState();
+	loadComponents();
+});
 
+async function loadComponents() {
+	const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
+		import('$lib/components/Tree.svelte'),
+		import('$lib/components/QuestionCard.svelte')
+	]);
+	Tree = TreeModule;
+	QuestionCard = QuestionCardModule;
+}
+
+async function initializeState() {
+	if (browser && get(isMobile)) {
+		setTimeout(() => {
+			mobileReady = true;
+		}, 100);
+	} else {
+		mobileReady = true;
+	}
 	setTimeout(() => {
 		headerReady = true;
 	}, 0);
-
-	(async () => {
-		const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
-			import('$lib/components/Tree.svelte'),
-			import('$lib/components/QuestionCard.svelte')
-		]);
-		Tree = TreeModule;
-		QuestionCard = QuestionCardModule;
-	})();
-});
+}
 
 	// --- Types ---
 	type Question = {
