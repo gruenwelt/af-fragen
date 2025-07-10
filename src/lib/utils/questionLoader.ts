@@ -1,5 +1,3 @@
-
-
 export type Question = {
   question: string;
   questionHtml: string;
@@ -23,30 +21,15 @@ export type Question = {
   section3: string;
 };
 
-export function collectQuestions(sections: any[], path: string[] = []): Question[] {
+export function collectQuestions(tree: any, path: string[] = []): Question[] {
+  const sections = tree.sections ?? tree;
   let questions: Question[] = [];
   for (const section of sections) {
     const currentPath = [...path, section.title];
     if (section.questions) {
       questions.push(
         ...section.questions.map((q: any) => ({
-          question: q.question,
-          questionHtml: q.questionHtml,
-          answer_a: q.answer_a,
-          answerAHtml: q.answerAHtml,
-          answer_b: q.answer_b,
-          answerBHtml: q.answerBHtml,
-          answer_c: q.answer_c,
-          answerCHtml: q.answerCHtml,
-          answer_d: q.answer_d,
-          answerDHtml: q.answerDHtml,
-          class: q.class,
-          picture_question: q.picture_question,
-          picture_a: q.picture_a,
-          picture_b: q.picture_b,
-          picture_c: q.picture_c,
-          picture_d: q.picture_d,
-          number: q.number,
+          ...q,
           section1: (currentPath[0] || '').replace('Prüfungsfragen im Prüfungsteil: ', ''),
           section2: currentPath[1] || '',
           section3: currentPath[2] || ''
