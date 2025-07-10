@@ -69,15 +69,13 @@
 </article>
 
 <style>
-  @media (prefers-color-scheme: dark) {
-    article.bg-white {
-      background-color: #1e1e1e;
-      border-color: #444;
-      color: #eee;
-    }
+  :global(.dark) article.bg-white {
+    background-color: #1e1e1e;
+    border-color: #444;
+    color: #eee;
+  }
 
-    footer.text-gray-500 {
-      color: #aaa;
-    }
+  :global(.dark) footer.text-gray-500 {
+    color: #aaa;
   }
 </style>

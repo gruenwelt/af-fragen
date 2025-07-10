@@ -1,44 +1,54 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { browser } from '$app/environment';
-	import logo from '$lib/images/svelte-logo.svg';
-	import github from '$lib/images/github.svg';
-	import { base } from '$app/paths';
-	import { onMount } from 'svelte';
-    import { sessionStarted } from '$lib/stores/session';
+import { page } from '$app/stores';
+import { browser } from '$app/environment';
+import logo from '$lib/images/svelte-logo.svg';
+import { base } from '$app/paths';
+import { onMount } from 'svelte';
+import { sessionStarted } from '$lib/stores/session';
+import { isDarkMode } from '$lib/stores/theme';
 
-	let isDesktop: boolean | undefined = undefined;
+let github = '';
+let githubWhite = '';
+$: github = `${base}/github.svg`;
+$: githubWhite = `${base}/github-white.png`;
+
+let isDesktop: boolean | undefined = undefined;
 let showPopup = true;
 
-	onMount(() => {
-		if (browser) {
-			const updateSize = () => {
-				isDesktop = window.innerWidth > 768;
-			};
-			updateSize();
-			window.addEventListener('resize', updateSize);
-			return () => window.removeEventListener('resize', updateSize);
-		}
-	});
+onMount(() => {
+	if (browser) {
+		const updateSize = () => {
+			isDesktop = window.innerWidth > 768;
+		};
+		updateSize();
+		window.addEventListener('resize', updateSize);
+		return () => window.removeEventListener('resize', updateSize);
+	}
+});
 
-	let currentSearch = '';
-	let currentPath = '';
-  let selectedClass = '';
+let currentSearch = '';
+let currentPath = '';
+let selectedClass = '';
 
-	$: currentSearch = browser ? $page.url.search : '';
-	$: currentPath = browser ? $page.url.pathname : '';
-  $: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? '1' : '1';
-  $: isInfoPage = browser && currentPath === base + '/info';
-	$: $sessionStarted;
+$: currentSearch = browser ? $page.url.search : '';
+$: currentPath = browser ? $page.url.pathname : '';
+$: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? '1' : '1';
+$: isInfoPage = browser && currentPath === base + '/info';
+$: $sessionStarted;
+$: $isDarkMode;
+  
 </script>
+  
 
 {#if isDesktop === undefined}
 	<!-- No header until screen size is known -->
 {:else if isDesktop}
 <header>
 	<div class="corner">
-		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" aria-label="SvelteKit Logo" />
+		<a href="https://github.com/gruenwelt">
+			<div class="w-8 h-8 flex items-center justify-center">
+				<img src={$isDarkMode ? githubWhite : github} alt="GitHub" aria-label="GitHub Profil" class="w-full h-full object-contain" />
+			</div>
 		</a>
 	</div>
 
@@ -105,17 +115,20 @@ let showPopup = true;
 		</svg>
 	</nav>
 
-	<div class="corner">
-		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" aria-label="GitHub Profil" />
-		</a>
+	<div class="corner corner-toggle">
+	  <label class="inline-flex items-center cursor-pointer">
+	    <input type="checkbox" class="sr-only peer" bind:checked={$isDarkMode}>
+	    <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[color:var(--color-theme-1)] dark:peer-focus:ring-[color:var(--color-theme-1)] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[color:var(--color-theme-1)] dark:peer-checked:bg-[color:var(--color-theme-1)]"></div>
+	  </label>
 	</div>
 </header>
 {:else}
 <header>
 	<div class="corner">
-		<a href="https://svelte.dev/docs/kit">
-			<img src={logo} alt="SvelteKit" aria-label="SvelteKit Logo" />
+		<a href="https://github.com/gruenwelt">
+			<div class="w-8 h-8 flex items-center justify-center">
+				<img src={$isDarkMode ? githubWhite : github} alt="GitHub" aria-label="GitHub Profil" class="w-full h-full object-contain" />
+			</div>
 		</a>
 	</div>
 
@@ -190,10 +203,11 @@ let showPopup = true;
 		{/if}
 	</div>
 
-	<div class="corner">
-		<a href="https://github.com/gruenwelt">
-			<img src={github} alt="GitHub" aria-label="GitHub Profil" />
-		</a>
+	<div class="corner corner-toggle">
+	  <label class="inline-flex items-center cursor-pointer">
+	    <input type="checkbox" class="sr-only peer" bind:checked={$isDarkMode}>
+	    <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[color:var(--color-theme-1)] dark:peer-focus:ring-[color:var(--color-theme-1)] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[color:var(--color-theme-1)] dark:peer-checked:bg-[color:var(--color-theme-1)]"></div>
+	  </label>
 	</div>
 </header>
 {/if}
@@ -301,25 +315,30 @@ let showPopup = true;
 	  cursor: pointer;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		nav {
-			--background: rgba(30, 30, 30, 0.7);
-		}
-
-		path {
-			fill: var(--background);
-		}
-
-		ul {
-			background: var(--background);
-		}
-
-		nav a {
-			color: var(--color-text);
-		}
-
-		a:hover {
-			color: var(--color-theme-1);
-		}
+	.corner-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-right: 0.5rem;
 	}
+
+:global(.dark) nav {
+	--background: rgba(30, 30, 30, 0.7);
+}
+
+:global(.dark) path {
+	fill: var(--background);
+}
+
+:global(.dark) ul {
+	background: var(--background);
+}
+
+:global(.dark) nav a {
+	color: var(--color-text);
+}
+
+:global(.dark) a:hover {
+	color: var(--color-theme-1);
+}
 </style>

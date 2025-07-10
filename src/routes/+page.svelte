@@ -723,61 +723,57 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.index === 0);
 		border-color: var(--color-theme-1);
 	}
 
-	@media (prefers-color-scheme: dark) {
-		article.bg-white {
-			background-color: #1e1e1e;
-			border-color: #444;
-			color: #eee;
-		}
+	.dark article.bg-white {
+		background-color: #1e1e1e;
+		border-color: #444;
+		color: #eee;
+	}
 
-		.text-gray-500 {
-			color: #aaa;
-		}
+	.dark .text-gray-500 {
+		color: #aaa;
+	}
 
-		.text-gray-600 {
-			color: #ccc;
-		}
+	.dark .text-gray-600 {
+		color: #ccc;
+	}
 
-		.bg-white\/80 {
-			background-color: rgba(30, 30, 30, 0.8);
-		}
+	.dark .bg-white\/80 {
+		background-color: rgba(30, 30, 30, 0.8);
+	}
 
-		.bg-white {
-			background-color: #222;
-		}
+	.dark .bg-white {
+		background-color: #222;
+	}
 
-		.bg-gray-400 {
-			background-color: #888;
-		}
+	.dark .bg-gray-400 {
+		background-color: #888;
+	}
 
-		.shadow-md,
-		.shadow-lg,
-		.shadow {
-			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-		}
+	.dark .shadow-md,
+	.dark .shadow-lg,
+	.dark .shadow {
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+	}
 
-		/* Fallback border color for .answer-box in dark mode */
-		.answer-box {
-			border-width: 1px;
-			border-style: solid;
-			border-color: #666;
-		}
+	.dark .answer-box {
+		border-width: 1px;
+		border-style: solid;
+		border-color: #666;
+	}
 
-		.answer-box.bg-green-600 {
-			background-color: rgba(22, 163, 74, 0.3) !important;
-			border-color: rgba(22, 163, 74, 0.3) !important;
-		}
+	.dark .answer-box.bg-green-600 {
+		background-color: rgba(22, 163, 74, 0.3) !important;
+		border-color: rgba(22, 163, 74, 0.3) !important;
+	}
 
-		.answer-box.bg-\[color\:var\(--color-theme-1\)\] {
-			background-color: rgba(255, 62, 0, 0.3) !important;
-			border-color: rgba(255, 62, 0, 0.3) !important;
-		}
+	.dark .answer-box.bg-\[color\:var\(--color-theme-1\)\] {
+		background-color: rgba(255, 62, 0, 0.3) !important;
+		border-color: rgba(255, 62, 0, 0.3) !important;
+	}
 
-		/* Invert only question and answer images in dark mode */
-		.answer-box img,
-		article img {
-			filter: invert(1) hue-rotate(180deg);
-		}
+	.dark .answer-box img,
+	.dark article img {
+		filter: invert(1) hue-rotate(180deg);
 	}
 </style>
 

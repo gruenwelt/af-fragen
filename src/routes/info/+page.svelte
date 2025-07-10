@@ -160,9 +160,7 @@
 	div::-webkit-scrollbar {
 		display: none;
 	}
-	@media (prefers-color-scheme: dark) {
-		.text-gray-600 {
-			color: #ccc;
-		}
+	:global(.dark) .text-gray-600 {
+		color: #ccc;
 	}
 </style>
