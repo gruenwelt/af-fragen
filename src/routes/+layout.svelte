@@ -14,7 +14,7 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Online Test" />
   <meta property="og:title" content="Funkfragen – Online lernen für die Amateurfunkprüfung" />
   <meta property="og:description" content="Offizieller Fragenkatalog und Prüfungssimulator für die Amateurfunkklassen N, E und A – interaktiv, kostenlos und ohne Anmeldung." />
-  <script type="application/ld+json">
+  <script type="application/ld+json">[
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -27,8 +27,28 @@
       "@type": "Organization",
       "name": "Funkfragen"
     }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Funkfragen Übungsmodus",
+    "url": "https://funkfragen.de",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
+    "inLanguage": "de",
+    "mainEntityOfPage": "https://funkfragen.de",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Funkfragen"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
   }
-  </script>
+]</script>
 </svelte:head>
 
 <div class="app">
@@ -84,4 +104,3 @@
 		}
 	}
 </style>
-

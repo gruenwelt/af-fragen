@@ -5,8 +5,7 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Testmodus" />
   <meta property="og:title" content="Üben – Funkfragen: Prüfungssimulator für Amateurfunk" />
   <meta property="og:description" content="Simuliere die deutsche Amateurfunkprüfung im Übungsmodus: Wähle zufällige Fragen der Klassen N, E oder A und bereite dich gezielt vor." />
-  <script type="application/ld+json">
-  {
+  <script type="application/ld+json">{ 
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Funkfragen Übungsmodus",
@@ -19,9 +18,13 @@
     "publisher": {
       "@type": "Organization",
       "name": "Funkfragen"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
     }
-  }
-  </script>
+  }</script>
 </svelte:head>
 
 <script lang="ts">

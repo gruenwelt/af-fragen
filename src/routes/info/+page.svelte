@@ -5,22 +5,7 @@
 	<meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp" />
 	<meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
 	<meta property="og:description" content="Funkfragen bietet einen Prüfungssimulator und umfassende Vorbereitung für Amateurfunklizenzklassen N, E und A." />
-	<script type="application/ld+json">
-	{
-		"@context": "https://schema.org",
-		"@type": "WebPage",
-		"name": "Info – Funkfragen",
-		"description": "Informationen über die Funktionalität der Web-App zur Vorbereitung auf die Amateurfunkprüfung sowie über Datenquellen, Lizenz, Datenschutz und Haftung.",
-		"url": "https://funkfragen.de/info",
-		"inLanguage": "de",
-		"mainEntityOfPage": "https://funkfragen.de/info",
-		"publisher": {
-			"@type": "Organization",
-			"name": "Funkfragen",
-			"url": "https://funkfragen.de"
-		}
-	}
-	</script>
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Info – Funkfragen","description":"Informationen über die Funktionalität der Web-App zur Vorbereitung auf die Amateurfunkprüfung sowie über Datenquellen, Lizenz, Datenschutz und Haftung.","url":"https://funkfragen.de/info","inLanguage":"de","mainEntityOfPage":"https://funkfragen.de/info","publisher":{"@type":"Organization","name":"Funkfragen","url":"https://funkfragen.de"}}</script>
 </svelte:head>
 
 <script lang="ts">
