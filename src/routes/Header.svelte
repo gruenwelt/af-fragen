@@ -6,6 +6,7 @@ import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
 import { isDarkMode } from '$lib/stores/theme';
 import { isMobile } from '$lib/stores/device';
+import { onMount } from 'svelte';
 
 let github = '';
 let githubWhite = '';
@@ -25,6 +26,16 @@ $: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? 
 $: isInfoPage = browser && currentPath === base + '/info';
 $: $sessionStarted;
 $: $isDarkMode;
+
+if (browser) {
+	onMount(() => {
+		if (currentPath === base + '/info') {
+			document.documentElement.classList.add('info-page');
+		} else {
+			document.documentElement.classList.remove('info-page');
+		}
+	});
+}
   
 </script>
   
@@ -48,28 +59,28 @@ $: $isDarkMode;
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={selectedClass === '1' ? 'page' : undefined}>
+			<li aria-current={!isInfoPage && selectedClass === '1' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== '1') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 				{:else}
 					<a href={`${currentPath}?class=1`}>N</a>
 				{/if}
 			</li>
-			<li aria-current={selectedClass === '2' ? 'page' : undefined}>
+			<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 				{:else}
 					<a href={`${currentPath}?class=2`}>E</a>
 				{/if}
 			</li>
-			<li aria-current={selectedClass === '3' ? 'page' : undefined}>
+			<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 				{:else}
 					<a href={`${currentPath}?class=3`}>A</a>
 				{/if}
 			</li>
-			<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
+			<li aria-current={!isInfoPage && selectedClass === 'Alle' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 				{:else}
@@ -155,28 +166,28 @@ $: $isDarkMode;
 						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 					</svg>
 					<ul>
-						<li aria-current={selectedClass === '1' ? 'page' : undefined}>
+						<li aria-current={!isInfoPage && selectedClass === '1' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '1') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 							{:else}
 								<a href={`${currentPath}?class=1`}>N</a>
 							{/if}
 						</li>
-						<li aria-current={selectedClass === '2' ? 'page' : undefined}>
+						<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
 							{:else}
 								<a href={`${currentPath}?class=2`}>E</a>
 							{/if}
 						</li>
-						<li aria-current={selectedClass === '3' ? 'page' : undefined}>
+						<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
 							{:else}
 								<a href={`${currentPath}?class=3`}>A</a>
 							{/if}
 						</li>
-						<li aria-current={selectedClass === 'Alle' ? 'page' : undefined}>
+						<li aria-current={!isInfoPage && selectedClass === 'Alle' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
 							{:else}
@@ -261,7 +272,7 @@ $: $isDarkMode;
 		height: 100%;
 	}
 
-	li[aria-current='page']::before {
+	:global(:not(.info-page)) li[aria-current='page']::before {
 		--size: 6px;
 		content: '';
 		width: 0;
