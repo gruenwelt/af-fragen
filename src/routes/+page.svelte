@@ -301,7 +301,7 @@ let setSelected = (index: number) => {
         </div>
         <!-- Fixed Previous Button -->
         <button
-          class="fixed left-4 top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+          class="fixed left-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
           on:click={() => currentIndex = Math.max(0, currentIndex - 1)}
           disabled={currentIndex === 0}
         >
@@ -309,7 +309,7 @@ let setSelected = (index: number) => {
         </button>
         <!-- Fixed Next Button -->
         <button
-          class="fixed right-4 top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+          class="fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
           on:click={() => {
             const q = limitedQuestions[currentIndex];
             if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
