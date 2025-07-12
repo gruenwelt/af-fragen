@@ -391,6 +391,14 @@ let setSelected = (index: number) => {
   .dark .shadow {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
+
+  .dark button.bg-white {
+    background-color: #333 !important;
+  }
+
+  .dark button.text-black {
+    color: #eee !important;
+  }
 </style>
 
 {#if showResults}
