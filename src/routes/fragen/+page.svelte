@@ -216,8 +216,9 @@ async function initializeState() {
 			<!-- Questions container -->
 			<section
 				bind:this={questionsContainer}
-				class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto overflow-x-hidden"
+				class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto overflow-x-hidden scroll-smooth"
 				aria-label="Scrollable questions container"
+				style="will-change: transform;"
 			>
 				{#if QuestionCard}
 					{#each filteredQuestions as q}
@@ -274,8 +275,9 @@ async function initializeState() {
 
 			<section
 				bind:this={questionsContainer}
-				class="w-full space-y-3 px-1 pt-1 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh]"
+				class="w-full space-y-3 px-1 pt-1 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh] scroll-smooth"
 				aria-label="Scrollable questions container"
+				style="will-change: transform;"
 			>
 				{#each filteredQuestions as q}
 					<QuestionCard 
