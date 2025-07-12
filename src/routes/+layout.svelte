@@ -57,11 +57,6 @@
 	<main>
 		{@render children()}
 	</main>
-	<footer>
-		<p>
-			
-		</p>
-	</footer>
 </div>
 
 <style>
@@ -86,21 +81,5 @@
 		margin: 0 auto;
 		box-sizing: border-box;
 		overflow: auto; /* scroll content inside main */
-	}
-
-	footer {
-		flex-shrink: 0; /* prevent shrinking */
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-	
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
 	}
 </style>

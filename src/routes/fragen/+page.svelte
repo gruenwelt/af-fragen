@@ -201,7 +201,7 @@ async function initializeState() {
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
 			<!-- Sidebar: Navigation tree -->
 			<nav
-				class="w-[35%] rounded-lg p-4 max-h-[80vh] overflow-y-auto bg-white/70"
+				class="w-[35%] rounded-lg p-4 max-h-[90vh] overflow-y-auto bg-white/70"
 				aria-label="Left sidebar navigation menu"
 			>
 				{#if Tree}
@@ -216,7 +216,7 @@ async function initializeState() {
 			<!-- Questions container -->
 			<section
 				bind:this={questionsContainer}
-				class="w-[65%] space-y-6 max-h-[80vh] overflow-y-auto overflow-x-hidden scroll-smooth"
+				class="w-[65%] space-y-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scroll-smooth"
 				aria-label="Scrollable questions container"
 				style="will-change: transform;"
 			>
