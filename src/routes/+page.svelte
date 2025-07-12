@@ -70,7 +70,6 @@ let filteredQuestions: Question[] = [];
 let isLoading = false;
 let selectedClass: string = 'Alle';
 let questionsContainer: HTMLElement | null = null;
-let showSidebar = false;
 let sessionEnded = false;
 let reviewingWrongAnswers = false;
 let sessionAnswers: SessionAnswer[] = [];
@@ -216,6 +215,7 @@ let setSelected = (index: number) => {
           class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow relative cursor-pointer"
           style="border-radius: 9999px 9999px 9999px 9999px;"
           on:click={async () => {
+            isLoading = true;
             const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
             await tick();
             if (!questions) {
@@ -237,6 +237,7 @@ let setSelected = (index: number) => {
             sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
             sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
             sessionStorage.setItem('af-current-index', currentIndex.toString());
+            isLoading = false;
             sessionStarted.set(true);
           }}
         >
@@ -249,30 +250,28 @@ let setSelected = (index: number) => {
     <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
     <!-- ============================== -->
     <div class="flex flex-col max-w-2xl w-full mx-auto min-h-screen px-4">
-      <section
-        bind:this={questionsContainer}
-        class="w-full flex justify-center items-start pt-[10px]"
-        aria-label="Scrollable questions container"
-      >
-        {#if limitedQuestions.length > 0}
+      {#if limitedQuestions.length > 0}
+        <section
+          bind:this={questionsContainer}
+          class="w-full flex justify-center items-start pt-[10px]"
+          aria-label="Scrollable questions container"
+        >
           <div class="w-full flex justify-center pb-[200px]">
             <div class="w-full max-w-2xl">
               {#key currentIndex}
-                {#if limitedQuestions[currentIndex]}
-                  <QuestionCard
-                    q={limitedQuestions[currentIndex]}
-                    {base}
-                    {shuffledAnswers}
-                    {selectedAnswerIndex}
-                    {correctIndex}
-                    onSelect={(i) => selectedAnswerIndex === null && setSelected(i)}
-                  />
-                {/if}
+                <QuestionCard
+                  q={limitedQuestions[currentIndex]}
+                  {base}
+                  {shuffledAnswers}
+                  {selectedAnswerIndex}
+                  {correctIndex}
+                  onSelect={(i) => selectedAnswerIndex === null && setSelected(i)}
+                />
               {/key}
             </div>
           </div>
-        {/if}
-      </section>
+        </section>
+      {/if}
       {#if limitedQuestions.length > 0}
         <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-3 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
           <div class="w-[25%] flex justify-start items-center text-sm text-gray-600 ml-1">
@@ -312,7 +311,6 @@ let setSelected = (index: number) => {
               sessionAnswers.push(skippedAnswer);
               wrongQuestions.push(skippedAnswer);
             }
-            // (Removed: successRate recalculation after skip)
             sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
             currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
           }}
