@@ -10,7 +10,6 @@
 <svelte:head>
   <title>Funkfragen – Amateurfunkprüfung online lernen</title>
   <meta name="description" content="Trainiere mit Fragen für die Klassen N, E, A der deutschen Amateurfunkprüfung." />
-  <link rel="canonical" href="https://funkfragen.de" />
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Online Test" />
   <meta property="og:title" content="Funkfragen – Online lernen für die Amateurfunkprüfung" />
   <meta property="og:description" content="Offizieller Fragenkatalog und Prüfungssimulator für die Amateurfunkklassen N, E und A – interaktiv, kostenlos und ohne Anmeldung." />
