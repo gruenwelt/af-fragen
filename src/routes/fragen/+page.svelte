@@ -13,7 +13,6 @@
 	// --- External Imports ---
 	import { onMount, tick } from 'svelte';
 	import { page } from '$app/stores';
-	import 'katex/dist/katex.min.css';
 	import { base } from '$app/paths';
 	import { browser } from '$app/environment';
 	import { collectQuestions } from '$lib/utils/questionLoader';
@@ -91,19 +90,6 @@ async function initializeState() {
 
 	// --- Utility Functions ---
 
-	/**
-	 * Determines if a question has any long answers (by length or images).
-	 * Uses 2×2 layout for images on desktop, 4×1 on mobile.
-	 */
-	import { isMobile as isMobileStore } from '$lib/stores/device';
-	function isLongAnswer(q: Question): boolean {
-		const threshold = $isMobile ? 12 : 60;
-		const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
-			(a) => a.length > threshold
-		);
-		const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
-		return hasLongText || ($isMobile && hasImages);
-	}
 
 	// --- State & Reactive Vars ---
 
@@ -220,7 +206,6 @@ async function initializeState() {
 							this={QuestionCard}
 							{q}
 							isHighlighted={highlightedNumbers.includes(q.number)}
-							{isLongAnswer}
 							{base}
 						/>
 					{/each}
@@ -273,7 +258,6 @@ async function initializeState() {
 					<QuestionCard 
 						{q}
 						isHighlighted={highlightedNumbers.includes(q.number)}
-						{isLongAnswer}
 						{base}
 					/>
 				{/each}

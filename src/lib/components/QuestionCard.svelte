@@ -4,10 +4,10 @@
   import { page } from '$app/stores';
   import { get } from 'svelte/store';
   import { onMount } from 'svelte';
+  import 'katex/dist/katex.min.css';
 
   // Component props
   export let q: any; // Current question object
-  export let isLongAnswer: (q: any) => boolean; // Determines layout based on answer length/presence of images
   export let base: string; // Base path for image resources
   export let isHighlighted: boolean = false; // Whether to visually highlight the question card
   export let shuffledAnswers: any[] = []; // Optional externally provided answer order
@@ -45,6 +45,17 @@
     div.innerHTML = str;
     return div.textContent || str;
   }
+
+  function isLongAnswer(q: any): boolean {
+    const threshold = isDesktop ? 60 : 12;
+    const hasLongText = ['answer_a', 'answer_b', 'answer_c', 'answer_d'].some(
+      (key) => (q[key]?.length || 0) > threshold
+    );
+    const hasImages = ['picture_a', 'picture_b', 'picture_c', 'picture_d'].some(
+      (key) => !!q[key]
+    );
+    return hasLongText && !hasImages;
+  }
 </script>
 
 <article
@@ -71,7 +82,7 @@
   <div class="h-4"></div>
 
   <div class={
-    isLongAnswer(q) || (!isDesktop && shuffledAnswers.some(ans => ans.picture))
+    (q && isLongAnswer(q)) || (!isDesktop && shuffledAnswers.some(ans => ans.picture))
       ? "grid grid-cols-1 gap-3"
       : "grid grid-cols-2 gap-3"
   }>

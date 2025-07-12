@@ -35,7 +35,6 @@ let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
 import QuestionCard from '$lib/components/QuestionCard.svelte';
-import 'katex/dist/katex.min.css';
 import { browser } from '$app/environment';
 import { get } from 'svelte/store';
 import { base } from '$app/paths';
@@ -90,15 +89,6 @@ let wrongQuestions: SessionAnswer[] = [];
 // ==============================
 // Functions and Utilities
 // ==============================
-function isLongAnswer(q: Question): boolean {
-  // Use a dynamic threshold based on isMobile
-  const threshold = isMobileValue ? 12 : 60;
-  const hasLongText = [q.answer_a, q.answer_b, q.answer_c, q.answer_d].some(
-    (a) => a.length > threshold
-  );
-  const hasImages = !!(q.picture_a || q.picture_b || q.picture_c || q.picture_d);
-  return hasLongText && !hasImages;
-}
 
 function showResultsOverlay() {
   showResults = true;
@@ -230,9 +220,13 @@ let setSelected = (index: number) => {
             const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
             await tick();
             if (!questions) {
-              // @ts-ignore
-              questions = $page.data?.fragenkatalog;
-              allQuestions = collectQuestions(questions ?? {});
+              const data = get(page).data;
+              questions = data?.fragenkatalog;
+              if (!questions) {
+                console.error('No fragenkatalog found in page data');
+                return;
+              }
+              allQuestions = collectQuestions(questions);
             }
 
             let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
@@ -269,7 +263,6 @@ let setSelected = (index: number) => {
                 {#if limitedQuestions[currentIndex]}
                   <QuestionCard
                     q={limitedQuestions[currentIndex]}
-                    {isLongAnswer}
                     {base}
                     {shuffledAnswers}
                     {selectedAnswerIndex}
