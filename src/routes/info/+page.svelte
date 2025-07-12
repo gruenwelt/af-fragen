@@ -11,9 +11,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
-	import { derived } from 'svelte/store';
 	import { isMobile } from '$lib/stores/device';
+
+	let headerReady = false;
+
+onMount(() => {
+	if (browser) {
+		requestAnimationFrame(() => {
+			headerReady = true;
+		});
+	}
+});
 
 	// Get current path and base
 	let currentPath = '';
@@ -27,7 +35,6 @@
 	$: isInfoPage = browser && currentPath === base + '/info';
 </script>
 
-
 <div
 	lang="de"
 	class="space-y-6 pt-8 max-w-2xl mx-auto break-words hyphens-auto text-justify"
@@ -36,6 +43,7 @@
 	style="scrollbar-width: none; -ms-overflow-style: none;"
 	on:wheel|passive
 >
+	{#if headerReady}
 	<p>
 		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
 		3. Auflage, März 2024
@@ -135,6 +143,7 @@
 
 	<div class="h-20"></div>
 
+	{/if}
 </div>
 
 <style>

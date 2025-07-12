@@ -1,0 +1,1 @@
+import{r as n}from"./B7tTZa3I.js";const o=n(!1,i=>{if(typeof window>"u")return;const e=()=>i(window.innerWidth<=768);return e(),window.addEventListener("resize",e),()=>window.removeEventListener("resize",e)});export{o as i};
