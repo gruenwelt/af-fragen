@@ -259,7 +259,7 @@ let setSelected = (index: number) => {
     <div class="flex flex-col max-w-2xl w-full mx-auto min-h-screen px-4">
       <section
         bind:this={questionsContainer}
-        class="w-full flex justify-center items-start pt-[30px]"
+        class="w-full flex justify-center items-start pt-[10px]"
         aria-label="Scrollable questions container"
       >
         {#if limitedQuestions.length > 0}
