@@ -158,8 +158,8 @@ async function initializeState() {
 	let mobileReady = false;
 
 let showSidebar = false; // initially false, triggered reactively later
-// Show sidebar only after filteredQuestions are rendered
-$: if (!showSidebar && questionsContainer && filteredQuestions.length > 0) {
+// Show sidebar only after filteredQuestions are rendered, and only on desktop
+$: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$isMobile) {
   tick().then(() => {
     requestAnimationFrame(() => {
       showSidebar = true;
