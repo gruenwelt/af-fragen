@@ -157,7 +157,15 @@ async function initializeState() {
 	// let isMobile = false;
 	let mobileReady = false;
 
-	let showSidebar = false;
+let showSidebar = false; // initially false, triggered reactively later
+// Show sidebar only after filteredQuestions are rendered
+$: if (!showSidebar && questionsContainer && filteredQuestions.length > 0) {
+  tick().then(() => {
+    requestAnimationFrame(() => {
+      showSidebar = true;
+    });
+  });
+}
 
 	// --- Highlighted Questions ---
 	let highlightedNumbers: string[] = [];
@@ -192,11 +200,13 @@ async function initializeState() {
 	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
 			<!-- Sidebar: Navigation tree -->
-			<Sidebar
-				{Tree}
-				{treeData}
-				on:sectionclick={(e) => handleSectionClick(e.detail)}
-			/>
+			{#if showSidebar}
+				<Sidebar
+					{Tree}
+					{treeData}
+					on:sectionclick={(e) => handleSectionClick(e.detail)}
+				/>
+			{/if}
 
 			<!-- Questions container -->
 			<section
@@ -245,13 +255,15 @@ async function initializeState() {
 				></div>
 			{/if}
 
-			<Sidebar
-				{Tree}
-				{treeData}
-				mobile
-				visible={showSidebar}
-				on:sectionclick={(e) => handleSectionClick(e.detail)}
-			/>
+			{#if showSidebar}
+				<Sidebar
+					{Tree}
+					{treeData}
+					mobile
+					visible={showSidebar}
+					on:sectionclick={(e) => handleSectionClick(e.detail)}
+				/>
+			{/if}
 
 			<section
 				bind:this={questionsContainer}
