@@ -34,13 +34,11 @@
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
-import QuestionCard from '$lib/components/QuestionCard.svelte';
+let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 import { browser } from '$app/environment';
 import { get } from 'svelte/store';
 import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
-import { restoreSessionState, persistSessionState } from '$lib/utils/sessionState';
-import { getShuffledAnswers } from '$lib/utils/shufflingAnswers';
 import type { ShuffledAnswer } from '$lib/utils/shufflingAnswers';
 // Use questions from layout data
 
@@ -54,8 +52,7 @@ type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect:
 // ==============================
 // Data & Derived Data
 // ==============================
-import { collectQuestions } from '$lib/utils/questionLoader';
-import { filterQuestionsByClass } from '$lib/utils/filterByClass';
+// Dynamic imports will be used for collectQuestions and filterQuestionsByClass
 import { page } from '$app/stores';
 // Questions and allQuestions will be initialized reactively before session starts
 let questions: any = null;
@@ -102,13 +99,16 @@ $: isMobileValue = $isMobile;
 onMount(() => {
   // Restore session state from sessionStorage if available
   if (browser) {
-    const restored = restoreSessionState();
-    if (restored) {
-      sessionAnswers = restored.sessionAnswers;
-      limitedQuestions = restored.limitedQuestions;
-      currentIndex = restored.currentIndex;
-      sessionStarted.set(true);
-    }
+    (async () => {
+      const { restoreSessionState } = await import('$lib/utils/sessionState');
+      const restored = restoreSessionState();
+      if (restored) {
+        sessionAnswers = restored.sessionAnswers;
+        limitedQuestions = restored.limitedQuestions;
+        currentIndex = restored.currentIndex;
+        sessionStarted.set(true);
+      }
+    })();
   }
 
   setTimeout(() => {
@@ -132,11 +132,14 @@ $: if (browser && allQuestions.length > 0) {
   }
   // Now, update filteredQuestions whenever selectedClass changes
   isLoading = true;
-  let target: Question[] = filterQuestionsByClass(allQuestions, selectedClass);
-  setTimeout(() => {
-    filteredQuestions = target;
-    isLoading = false;
-  }, 300);
+  (async () => {
+    const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
+    let target: Question[] = filterQuestionsByClass(allQuestions, selectedClass);
+    setTimeout(() => {
+      filteredQuestions = target;
+      isLoading = false;
+    }, 300);
+  })();
 }
 
 // Show correct highlight when an answer is selected
@@ -153,10 +156,16 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
   const q = limitedQuestions[currentIndex];
   const previous = sessionAnswers.find(a => a.questionNumber === q.number);
   if (!shuffledMap[q.number]) {
-    shuffledMap[q.number] = getShuffledAnswers(q);
+    (async () => {
+      const { getShuffledAnswers } = await import('$lib/utils/shufflingAnswers');
+      shuffledMap[q.number] = getShuffledAnswers(q);
+      shuffledAnswers = shuffledMap[q.number];
+      selectedAnswerIndex = previous ? previous.selectedIndex : null;
+    })();
+  } else {
+    shuffledAnswers = shuffledMap[q.number];
+    selectedAnswerIndex = previous ? previous.selectedIndex : null;
   }
-  shuffledAnswers = shuffledMap[q.number];
-  selectedAnswerIndex = previous ? previous.selectedIndex : null;
 }
 
 // Index of correct answer in shuffledAnswers
@@ -174,7 +183,10 @@ let setSelected = (index: number) => {
     const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
     sessionAnswers.push(answer);
     // Persist session state to sessionStorage
-    persistSessionState({ sessionAnswers, limitedQuestions, currentIndex });
+    (async () => {
+      const { persistSessionState } = await import('$lib/utils/sessionState');
+      persistSessionState({ sessionAnswers, limitedQuestions, currentIndex });
+    })();
     if (isCorrect) {
       winCount++;
     } else {
@@ -218,6 +230,10 @@ let setSelected = (index: number) => {
             isLoading = true;
             const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
             await tick();
+            if (!QuestionCard) {
+              const module = await import('$lib/components/QuestionCard.svelte');
+              QuestionCard = module.default;
+            }
             if (!questions) {
               const data = get(page).data;
               questions = data?.fragenkatalog;
@@ -225,9 +241,11 @@ let setSelected = (index: number) => {
                 const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
                 questions = module.default;
               }
+              const { collectQuestions } = await import('$lib/utils/questionLoader');
               allQuestions = collectQuestions(questions);
             }
 
+            const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
             let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
             filteredQuestions = target;
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
@@ -259,14 +277,17 @@ let setSelected = (index: number) => {
           <div class="w-full flex justify-center pb-[200px]">
             <div class="w-full max-w-2xl">
               {#key currentIndex}
-                <QuestionCard
-                  q={limitedQuestions[currentIndex]}
-                  {base}
-                  {shuffledAnswers}
-                  {selectedAnswerIndex}
-                  {correctIndex}
-                  onSelect={(i) => selectedAnswerIndex === null && setSelected(i)}
-                />
+                {#if QuestionCard}
+                  <svelte:component
+                    this={QuestionCard}
+                    q={limitedQuestions[currentIndex]}
+                    {base}
+                    {shuffledAnswers}
+                    {selectedAnswerIndex}
+                    {correctIndex}
+                    onSelect={(i) => selectedAnswerIndex === null && setSelected(i)}
+                  />
+                {/if}
               {/key}
             </div>
           </div>
