@@ -216,15 +216,14 @@ let setSelected = (index: number) => {
           class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow relative cursor-pointer"
           style="border-radius: 9999px 9999px 9999px 9999px;"
           on:click={async () => {
-            // Use fresh selectedClass from page store to avoid stale closure
             const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
             await tick();
             if (!questions) {
               const data = get(page).data;
               questions = data?.fragenkatalog;
               if (!questions) {
-                console.error('No fragenkatalog found in page data');
-                return;
+                const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
+                questions = module.default;
               }
               allQuestions = collectQuestions(questions);
             }
@@ -234,7 +233,6 @@ let setSelected = (index: number) => {
             limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
             sessionAnswers = [];
             shuffledMap = {};
-            // Persist session state to sessionStorage before session starts
             sessionStorage.setItem('af-session-started', 'true');
             sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
             sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));

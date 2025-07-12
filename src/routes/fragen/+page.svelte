@@ -62,6 +62,13 @@ async function initializeState() {
 	setTimeout(() => {
 		headerReady = true;
 	}, 0);
+
+	if ($page.data?.fragenkatalog?.sections) {
+		questions = collectQuestions($page.data.fragenkatalog.sections);
+	} else {
+		const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
+		questions = collectQuestions(module.default.sections);
+	}
 }
 
 	// --- Types ---
@@ -93,9 +100,7 @@ async function initializeState() {
 
 	// --- State & Reactive Vars ---
 
-	const questions: Question[] = $page.data?.fragenkatalog?.sections
-		? collectQuestions($page.data.fragenkatalog.sections)
-		: [];
+	let questions: Question[] = [];
 
 	// Filtered questions based on class query param (browser only after hydration)
 	let filteredQuestions: Question[] = [];
