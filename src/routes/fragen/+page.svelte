@@ -335,6 +335,7 @@ body {
 
 	.fixed.top-120.bg-white\/70 {
 		background-color: rgba(30, 30, 30, 0.7);
+		color: white;
 	}
 
 	.fixed.top-\[5\%\].left-0.bg-white\/70 {
@@ -372,5 +373,10 @@ body {
 
 :global(.fixed.top-\[5\%\].left-0.bg-white\/70) {
 	color: black;
+}
+
+/* Ensure the mobile sidebar toggle icon appears white in dark mode */
+:global(.dark .fixed.top-120.bg-white\/70) {
+	color: white !important;
 }
 </style>
