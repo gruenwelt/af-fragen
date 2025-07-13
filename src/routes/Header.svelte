@@ -341,7 +341,7 @@ if (browser) {
 	  text-transform: none;
 	  display: flex;
 	  align-items: center;
-	  transform: translateY(6px);
+	  transform: translateY(5.5px);
 	  cursor: pointer;
 	}
 
