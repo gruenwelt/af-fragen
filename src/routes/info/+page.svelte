@@ -1,11 +1,30 @@
 <svelte:head>
-	<title>Info</title>
-	<meta name="description" content="Info über die app" />
-	<link rel="canonical" href="https://funkfragen.de/info" />
-	<meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp" />
-	<meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
-	<meta property="og:description" content="Funkfragen bietet einen Prüfungssimulator und umfassende Vorbereitung für Amateurfunklizenzklassen N, E und A." />
-	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Info – Funkfragen","description":"Informationen über die Funktionalität der Web-App zur Vorbereitung auf die Amateurfunkprüfung sowie über Datenquellen, Lizenz, Datenschutz und Haftung.","url":"https://funkfragen.de/info","inLanguage":"de","mainEntityOfPage":"https://funkfragen.de/info","publisher":{"@type":"Organization","name":"Funkfragen","url":"https://funkfragen.de"}}</script>
+  <title>Info – Amateurfunkprüfung Simulator (N, E, A)</title>
+  <meta name="description" content="Informationen über die Web-App zur Vorbereitung auf die Amateurfunkprüfung, zu Datenquellen, Lizenz, Datenschutz und rechtlichen Hinweisen." />
+  <link rel="canonical" href="https://funkfragen.de/info" />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Informationen" />
+  <meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
+  <meta property="og:description" content="Erfahre mehr über die Funktionalität, Datenquellen, Datenschutz und Lizenzbedingungen der Funkfragen Web-App." />
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Funkfragen Info",
+    "url": "https://funkfragen.de/info",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "description": "Informationen über die Web-App zur Vorbereitung auf die Amateurfunkprüfung, zu Datenquellen, Lizenz, Datenschutz und rechtlichen Hinweisen.",
+    "inLanguage": "de",
+    "mainEntityOfPage": "https://funkfragen.de/info",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Funkfragen"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    }
+  }</script>
 </svelte:head>
 
 <script lang="ts">
@@ -50,16 +69,26 @@ onMount(() => {
 	</p>
 
 	<p>
-    <strong>Funktionalität der App</strong>
-  	</p>
+	  <strong>Funktionalität der App</strong>
+	</p>
 	<p>
-    	Über die oberen Filter lassen sich die Prüfungsklassen N, E und A auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Klassen gemeinsam.<br><br>
-    	
-		Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf der gewählten Prüfungsklasse und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Prüfungsklasse nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Klasse gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Klassen deaktiviert.<br><br>
-   		
-		Der Abschnitt „Fragen“ listet alle Fragen der ausgewählten Klasse vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.<br><br>
-		
-		Die App funktioniert auch recht zuverlässig mit der integrierten Übersetzungsfunktion des Safari-Browsers.
+	  Über die oberen Filter lassen sich die Prüfungsteile „Technische Kenntnisse“ (unterteilt in N, E und A), „Betriebliche Kenntnisse“ (B) und „Kenntnisse von Vorschriften“ (V) auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Teilen gemeinsam.<br><br>
+
+	  Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf dem gewählten Prüfungsteil und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Auswahl nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Auswahl gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Teile deaktiviert.<br><br>
+
+	  Der Abschnitt „Fragen“ listet alle Fragen des gewählten Prüfungsteils vollständig auf. Über die linke Seitenleiste kann zusätzlich navigiert werden – beim Klick wird automatisch zur ersten Frage der jeweiligen Gruppe gescrollt. Wie in den Originaldaten angegeben, ist hier stets die erste Antwort (oben oder oben-links) die richtige.<br><br>
+
+	  Die App funktioniert auch recht zuverlässig mit der integrierten Übersetzungsfunktion des Safari-Browsers.
+	</p>
+
+	<p>
+	  <strong>Prüfungsaufbau und Lizenzklassen</strong>
+	</p>
+	<p>
+	  Informationen zum Ablauf der Amateurfunkprüfung sowie zu den verschiedenen Lizenzklassen finden Sie auf der Website des Deutschen Amateur-Radio-Clubs (DARC): 
+	  <a href="https://www.darc.de/einsteiger/amateurfunkausbildung/#c37989" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">
+	    Amateurfunkausbildung – DARC
+	  </a>.
 	</p>
 
 	<p>
@@ -101,6 +130,8 @@ onMount(() => {
 
 		Die Fragen wurden mit großer Unterstützung durch den Runden Tisch Amateurfunk und dessen Mitgliedsverbänden sowie mit viel Engagement einzelner Funkamateure und Beschäftigten der Bundesnetzagentur erstellt. Wir danken allen, auch allen Hinweisgebern zu Korrekturen der 2. Auflage, die damit zu der Erstellung dieser 3. Auflage beigetragen haben. Ein besonderer Dank gilt erneut Dr. Matthias Jung und Björn Swierczek vom DARC e.V., die auf Seiten der Verbände die Überarbeitung des Fragenkatalogs federführend koordiniert und besonders tatkräftig zur Überarbeitung der Prüfungsfragen beigetragen haben.<br><br>
 
+		<br>
+
 		Offizielle Hilfsmittel zur Amateurfunkprüfung können hier heruntergeladen werden: 
     <a href="https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Telekommunikation/Unternehmen_Institutionen/Frequenzen/Amateurfunk/AntraegeFormulare/Hilfsmittel_12062024.pdf?__blob=publicationFile&v=3" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">
       Amateurfunkprüfungen – Hilfsmittel (PDF)
@@ -115,6 +146,15 @@ onMount(() => {
 		
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
+
+	<p>
+	  <strong>Besonderer Dank</strong>
+	</p>
+	<p>
+	  Vielen Dank an <a href="https://www.afup.a36.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Junghard, DF1IAV</a> für seine hilfreichen Hinweise und Anregungen zur Verbesserung der App.
+	</p>
+
+
 
 	<p><strong>Ressourcen</strong></p>
 	<p>

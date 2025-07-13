@@ -17,18 +17,6 @@
   // Event dispatcher to notify parent of section clicks
   const dispatch = createEventDispatcher();
 
-  // State to manage collapsed top-level sections
-  let collapsedSections = new Set();
-
-  // Helper to toggle top-level section collapse
-  function toggleCollapse(title: string) {
-    collapsedSections = new Set(
-      collapsedSections.has(title)
-        ? [...collapsedSections].filter((t) => t !== title)
-        : [...collapsedSections, title]
-    );
-  }
-
   // Set indentation and font styling based on tree depth level
   $: levelClass = level === 1
     ? ''
@@ -58,25 +46,17 @@
           <span>-</span> <span>{node.title}</span>
         </button>
       {:else if level === 1}
-        <!-- Top-level collapsible section (Level 1) -->
-        <button
-          type="button"
-          class="flex items-center gap-1 text-left w-full cursor-pointer focus:outline-none"
-          on:click={() => {
-            selectedId = null;
-            toggleCollapse(node.title);
-          }}
-        >
-          <span class={`transform transition-transform inline-block ${collapsedSections.has(node.title) ? 'rotate-0' : 'rotate-90'}`}>&gt;</span>
+        <!-- Top-level section (Level 1) without collapsing -->
+        <div class="flex items-center gap-1 text-left w-full">
           {node.title}
-        </button>
+        </div>
       {:else}
         <!-- Non-clickable intermediate section (Level 2 without question_numbers) -->
         {node.title}
       {/if}
 
       <!-- Recurse into sub-sections -->
-      {#if node.sections && level < 3 && (level !== 1 || !collapsedSections.has(node.title))}
+      {#if node.sections && level < 3}
         {#if TreeComponent}
           <svelte:component this={TreeComponent} nodes={node.sections} level={level + 1} on:sectionclick bind:selectedId />
         {/if}
@@ -90,7 +70,6 @@
       color: #ddd;
     }
 
-    button:hover,
     button:focus-visible {
       color: var(--color-theme-1);
     }
@@ -100,7 +79,6 @@
     color: var(--color-text);
   }
 
-  :global(.light) button:hover,
   :global(.light) button:focus-visible {
     color: var(--color-theme-1);
   }

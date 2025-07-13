@@ -19,6 +19,7 @@ export type Question = {
   section1?: string;
   section2?: string;
   section3?: string;
+  topLevelClass?: string;
 };
 
 export function collectQuestions(tree: any, path: string[] = []): Question[] {
@@ -32,7 +33,15 @@ export function collectQuestions(tree: any, path: string[] = []): Question[] {
           ...q,
           section1: (currentPath[0] || '').replace('Prüfungsfragen im Prüfungsteil: ', ''),
           section2: currentPath[1] || '',
-          section3: currentPath[2] || ''
+          section3: currentPath[2] || '',
+          topLevelClass:
+            currentPath[0]?.includes('Technische')
+              ? q.class
+              : currentPath[0]?.includes('Betriebliche')
+              ? 'B'
+              : currentPath[0]?.includes('Vorschriften')
+              ? 'V'
+              : undefined
         }))
       );
     }
