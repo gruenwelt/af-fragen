@@ -1,0 +1,1 @@
+function u(e,o=[]){const i=e.sections??e;let n=[];for(const s of i){const t=[...o,s.title];s.questions&&n.push(...s.questions.map(c=>({...c,section1:(t[0]||"").replace("Prüfungsfragen im Prüfungsteil: ",""),section2:t[1]||"",section3:t[2]||""}))),s.sections&&n.push(...u(s.sections,t))}return n}export{u as collectQuestions};
