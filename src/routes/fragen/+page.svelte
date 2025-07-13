@@ -29,7 +29,11 @@ import { isMobile } from '$lib/stores/device';
 import { get } from 'svelte/store';
 
 onMount(() => {
-	document.documentElement.classList.add('light');
+	if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		document.documentElement.classList.add('dark');
+	} else {
+		document.documentElement.classList.add('light');
+	}
 
 	if (!new URLSearchParams(window.location.search).has('class')) {
 		const currentParams = new URLSearchParams(window.location.search);
@@ -367,7 +371,10 @@ body {
 }
 
 /* Ensure the mobile sidebar toggle icon appears white in dark mode */
-:global(.dark .fixed.top-120.bg-white\/70) {
+:global(html.dark .fixed.top-120.bg-white\/70),
+:global(body.dark .fixed.top-120.bg-white\/70) {
 	color: white !important;
+	fill: white !important;
+	stroke: white !important;
 }
 </style>
