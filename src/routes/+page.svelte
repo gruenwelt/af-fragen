@@ -1,5 +1,6 @@
 <svelte:head>
   <title>Übungsmodus – Amateurfunkprüfung Simulator (N, E, A)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge." />
   <link rel="canonical" href="https://funkfragen.de/" />
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Testmodus" />
@@ -326,6 +327,9 @@ let setSelected = (index: number) => {
 
 
 <style global>
+  html {
+    touch-action: manipulation;
+  }
   html,
   body,
   * {
