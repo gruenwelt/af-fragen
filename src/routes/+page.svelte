@@ -31,6 +31,7 @@
 // Imports
 // ==============================
 
+import QuestionButtons from '$lib/components/Buttons.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -85,6 +86,40 @@ let wrongQuestions: SessionAnswer[] = [];
 // ==============================
 // Functions and Utilities
 // ==============================
+
+function startSession() {
+  isLoading = true;
+  const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
+  tick().then(async () => {
+    if (!QuestionCard) {
+      const module = await import('$lib/components/QuestionCard.svelte');
+      QuestionCard = module.default;
+    }
+    if (!questions) {
+      const data = get(page).data;
+      questions = data?.fragenkatalog;
+      if (!questions) {
+        const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
+        questions = module.default;
+      }
+      const { collectQuestions } = await import('$lib/utils/questionLoader');
+      allQuestions = collectQuestions(questions);
+    }
+
+    const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
+    let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
+    filteredQuestions = target;
+    limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+    sessionAnswers = [];
+    shuffledMap = {};
+    sessionStorage.setItem('af-session-started', 'true');
+    sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+    sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
+    sessionStorage.setItem('af-current-index', currentIndex.toString());
+    isLoading = false;
+    sessionStarted.set(true);
+  });
+}
 
 function showResultsOverlay() {
   showResults = true;
@@ -207,62 +242,7 @@ let setSelected = (index: number) => {
   </div>
 {:else if headerReady}
   {#if !$sessionStarted}
-    <div class="w-screen flex justify-center items-center min-h-screen">
-      <div class="flex flex-col items-center text-center gap-6">
-        <div class="flex gap-4">
-          {#each questionLimits as limit}
-            <button
-              class="w-16 h-10 rounded-full text-sm font-medium shadow transition-all cursor-pointer"
-              class:bg-[color:var(--color-theme-1)]={questionLimit === limit}
-              class:text-white={questionLimit === limit}
-              class:bg-white={questionLimit !== limit}
-              class:text-black={questionLimit !== limit}
-              on:click={() => questionLimit = limit}
-            >
-              {limit}
-            </button>
-          {/each}
-        </div>
-        <button
-          class="px-10 py-4 text-2xl rounded-full bg-green-600 text-white shadow relative cursor-pointer"
-          style="border-radius: 9999px 9999px 9999px 9999px;"
-          on:click={async () => {
-            isLoading = true;
-            const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
-            await tick();
-            if (!QuestionCard) {
-              const module = await import('$lib/components/QuestionCard.svelte');
-              QuestionCard = module.default;
-            }
-            if (!questions) {
-              const data = get(page).data;
-              questions = data?.fragenkatalog;
-              if (!questions) {
-                const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
-                questions = module.default;
-              }
-              const { collectQuestions } = await import('$lib/utils/questionLoader');
-              allQuestions = collectQuestions(questions);
-            }
-
-            const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
-            let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
-            filteredQuestions = target;
-            limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
-            sessionAnswers = [];
-            shuffledMap = {};
-            sessionStorage.setItem('af-session-started', 'true');
-            sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
-            sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
-            sessionStorage.setItem('af-current-index', currentIndex.toString());
-            isLoading = false;
-            sessionStarted.set(true);
-          }}
-        >
-          Los geht’s!
-        </button>
-      </div>
-    </div>
+    <QuestionButtons {questionLimit} on:setLimit={(e) => questionLimit = e.detail} on:startSession={startSession} />
   {:else if sessionStarted && !sessionEnded}
     <!-- ============================== -->
     <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
@@ -285,7 +265,7 @@ let setSelected = (index: number) => {
                     {shuffledAnswers}
                     {selectedAnswerIndex}
                     {correctIndex}
-                    onSelect={(i) => selectedAnswerIndex === null && setSelected(i)}
+                    onSelect={(i: number) => selectedAnswerIndex === null && setSelected(i)}
                   />
                 {/if}
               {/key}
