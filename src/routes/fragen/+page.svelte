@@ -1,11 +1,11 @@
 <svelte:head>
-  <title>Fragenkatalog – Alle offiziellen Fragen der Amateurfunkprüfung (N, E, A)</title>
+  <title>Fragenkatalog – Alle offiziellen Fragen der Amateurfunkprüfung (N, E, A, B, V)</title>
   <meta name="description" content="Durchsuche den vollständigen Fragenkatalog zur deutschen Amateurfunkprüfung. Filtere nach Klasse N, E oder A und navigiere durch alle Themenbereiche." />
   <link rel="canonical" href="https://funkfragen.de/fragen" />
-  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Fragenkatalog, Lernapp" />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Fragenkatalog, Lernapp" />
   <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
-  <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
-  <script type="application/ld+json">{"@context": "https://schema.org","@type": "CollectionPage","name": "Fragenkatalog – Funkfragen","url": "https://funkfragen.de/fragen","description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (Klassen N, E, A) mit Themenfilter und Navigation.","inLanguage": "de","mainEntityOfPage": "https://funkfragen.de/fragen","about": {"@type": "EducationalOccupationalProgram","name": "Amateurfunkprüfung Deutschland","educationalLevel": ["N", "E", "A"]},"publisher": {"@type": "Organization","name": "Funkfragen"}}</script>
+  <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A, B, V – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
+  <script type="application/ld+json">{"@context": "https://schema.org","@type": "CollectionPage","name": "Fragenkatalog – Funkfragen","url": "https://funkfragen.de/fragen","description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (N, E, A, B, V) mit Themenfilter und Navigation.","inLanguage": "de","mainEntityOfPage": "https://funkfragen.de/fragen","about": {"@type": "EducationalOccupationalProgram","name": "Amateurfunkprüfung Deutschland","educationalLevel": ["N", "E", "A"]},"publisher": {"@type": "Organization","name": "Funkfragen"}}</script>
 </svelte:head>
 
 <script lang="ts">

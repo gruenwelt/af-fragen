@@ -1,8 +1,8 @@
 <svelte:head>
-  <title>Info – Amateurfunkprüfung Simulator (N, E, A)</title>
+  <title>Info – Amateurfunkprüfung Simulator (N, E, A, B, V)</title>
   <meta name="description" content="Informationen über die Web-App zur Vorbereitung auf die Amateurfunkprüfung, zu Datenquellen, Lizenz, Datenschutz und rechtlichen Hinweisen." />
   <link rel="canonical" href="https://funkfragen.de/info" />
-  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Informationen" />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Informationen, Fragenkatalog, Amateurfunkzeugnis" />
   <meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
   <meta property="og:description" content="Erfahre mehr über die Funktionalität, Datenquellen, Datenschutz und Lizenzbedingungen der Funkfragen Web-App." />
   <script type="application/ld+json">{

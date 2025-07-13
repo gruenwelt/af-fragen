@@ -9,17 +9,17 @@
 
 <svelte:head>
   <title>Funkfragen – Amateurfunkprüfung online lernen</title>
-  <meta name="description" content="Trainiere mit Fragen für die Klassen N, E, A der deutschen Amateurfunkprüfung." />
-  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Online Test" />
+  <meta name="description" content="Trainiere mit Fragen zur deutschen Amateurfunkprüfung (N, E, A, B, V)." />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Online Test, Fragenkatalog, Amateurfunkzeugnis" />
   <meta property="og:title" content="Funkfragen – Online lernen für die Amateurfunkprüfung" />
-  <meta property="og:description" content="Offizieller Fragenkatalog und Prüfungssimulator für die Amateurfunkklassen N, E und A – interaktiv, kostenlos und ohne Anmeldung." />
+  <meta property="og:description" content="Offizieller Fragenkatalog und Prüfungssimulator zur deutschen Amateurfunkprüfung (N, E, A, B, V) – interaktiv, kostenlos und ohne Anmeldung." />
   <script type="application/ld+json">[
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Funkfragen",
     "url": "https://funkfragen.de",
-    "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E und A mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
+    "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
     "inLanguage": "de",
     "mainEntityOfPage": "https://funkfragen.de",
     "publisher": {
@@ -34,7 +34,7 @@
     "url": "https://funkfragen.de",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "All",
-    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
+    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
     "inLanguage": "de",
     "mainEntityOfPage": "https://funkfragen.de",
     "publisher": {

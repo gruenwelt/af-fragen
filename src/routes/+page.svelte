@@ -1,11 +1,11 @@
 <svelte:head>
-  <title>Übungsmodus – Amateurfunkprüfung Simulator (N, E, A)</title>
+  <title>Übungsmodus – Amateurfunkprüfung Simulator (N, E, A, B, V)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge." />
+  <meta name="description" content="Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge." />
   <link rel="canonical" href="https://funkfragen.de/" />
-  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Prüfungsfragen, Lernapp, Testmodus" />
+  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Testmodus, Fragenkatalog, Amateurfunkzeugnis" />
   <meta property="og:title" content="Üben – Funkfragen: Prüfungssimulator für Amateurfunk" />
-  <meta property="og:description" content="Simuliere die deutsche Amateurfunkprüfung im Übungsmodus: Wähle zufällige Fragen der Klassen N, E oder A und bereite dich gezielt vor." />
+  <meta property="og:description" content="Simuliere die deutsche Amateurfunkprüfung im Übungsmodus: Wähle zufällige Fragen zur deutschen Amateurfunkprüfung (N, E, A, B, V) und bereite dich gezielt vor." />
   <script type="application/ld+json">{ 
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -13,7 +13,7 @@
     "url": "https://funkfragen.de",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "All",
-    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E und A. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
+    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
     "inLanguage": "de",
     "mainEntityOfPage": "https://funkfragen.de",
     "publisher": {
