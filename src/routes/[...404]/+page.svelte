@@ -12,7 +12,7 @@
   <meta name="robots" content="noindex" />
 </svelte:head>
 
-<div class="h-screen w-screen flex items-center justify-center bg-white px-4">
+<div class="h-screen w-screen flex items-center justify-center px-4">
   <div class="text-center animate-fade-in flex flex-col items-center space-y-4">
     <svg class="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
