@@ -286,7 +286,7 @@ let setSelected = (index: number) => {
         </section>
       {/if}
       {#if limitedQuestions.length > 0}
-        <div class="fixed bottom-[10px] left-1/2 md:left-auto md:right-4 -translate-x-1/2 md:translate-x-0 bg-white/80 backdrop-blur px-4 rounded-full shadow flex justify-between items-center z-50 w-[calc(60%)] max-w-full md:w-[calc(20%)] md:max-w-xl">
+        <div class="fixed bottom-[10px] left-1/2 md:left-1/2 -translate-x-1/2 md:-translate-x-1/2 bg-white/80 backdrop-blur px-4 rounded-full shadow flex justify-between items-center z-50 w-[calc(60%)] max-w-full md:w-[calc(60%)] md:max-w-xl">
           <div class="w-[25%] flex justify-start items-center text-sm ml-1">
             {currentIndex + 1} / {limitedQuestions.length}
           </div>
