@@ -1,4 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Disallow: /?class=
+Disallow: /fragen?class=
+Disallow: /info?class=
 Sitemap: https://funkfragen.de/sitemap.xml
