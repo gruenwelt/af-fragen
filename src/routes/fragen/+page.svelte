@@ -44,13 +44,6 @@ onMount(() => {
 		document.documentElement.classList.add('light');
 	}
 
-	if (!new URLSearchParams(window.location.search).has('class')) {
-		const currentParams = new URLSearchParams(window.location.search);
-		currentParams.set('class', '1');
-		const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-		window.history.replaceState({}, '', newUrl);
-	}
-
 	initializeState();
 	loadComponents();
 });
