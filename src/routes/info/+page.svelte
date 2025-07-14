@@ -25,12 +25,23 @@
       "priceCurrency": "EUR"
     }
   }</script>
+  {#if $showNoIndex}
+    <meta name="robots" content="noindex" />
+  {/if}
 </svelte:head>
 
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { isMobile } from '$lib/stores/device';
+	import { page } from '$app/stores';
+	import { derived } from 'svelte/store';
+
+	const showNoIndex = derived(page, ($page) => {
+	  // Avoid accessing searchParams during prerendering
+	  if (!browser) return false;
+	  return $page.url.searchParams.has('class');
+	});
 
 	let headerReady = false;
 

@@ -26,6 +26,9 @@
       "priceCurrency": "EUR"
     }
   }</script>
+  {#if $showNoIndex}
+    <meta name="robots" content="noindex" />
+  {/if}
 </svelte:head>
 
 <script lang="ts">
@@ -56,6 +59,12 @@ type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect:
 // ==============================
 // Dynamic imports will be used for collectQuestions and filterQuestionsByClass
 import { page } from '$app/stores';
+import { derived } from 'svelte/store';
+const showNoIndex = derived(page, ($page) => {
+  // Guard against accessing searchParams during prerendering (when $page.url may not be available)
+  if (!browser || !$page?.url?.searchParams) return false;
+  return $page.url.searchParams.has('class');
+});
 // Questions and allQuestions will be initialized reactively before session starts
 let questions: any = null;
 let allQuestions: Question[] = [];

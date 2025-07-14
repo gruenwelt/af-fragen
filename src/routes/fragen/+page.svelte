@@ -6,15 +6,24 @@
   <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
   <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A, B, V – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
   <script type="application/ld+json">{"@context": "https://schema.org","@type": "CollectionPage","name": "Fragenkatalog – Funkfragen","url": "https://funkfragen.de/fragen","description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (N, E, A, B, V) mit Themenfilter und Navigation.","inLanguage": "de","mainEntityOfPage": "https://funkfragen.de/fragen","about": {"@type": "EducationalOccupationalProgram","name": "Amateurfunkprüfung Deutschland","educationalLevel": ["N", "E", "A"]},"publisher": {"@type": "Organization","name": "Funkfragen"}}</script>
+  {#if $showNoIndex}
+    <meta name="robots" content="noindex" />
+  {/if}
 </svelte:head>
 
 <script lang="ts">
 	let headerReady = false;
 	// --- External Imports ---
-	import { onMount, tick } from 'svelte';
-	import { page } from '$app/stores';
-	import { base } from '$app/paths';
-	import { browser } from '$app/environment';
+import { onMount, tick } from 'svelte';
+import { page } from '$app/stores';
+import { derived } from 'svelte/store';
+import { browser } from '$app/environment';
+const showNoIndex = derived(page, ($page) => {
+  // Guard: don't access searchParams when not in browser (e.g. during prerender)
+  if (!browser) return false;
+  return $page.url.searchParams.has('class');
+});
+import { base } from '$app/paths';
 	import { collectQuestions } from '$lib/utils/questionLoader';
 	import { filterQuestionsByClass } from '$lib/utils/filterByClass';
 

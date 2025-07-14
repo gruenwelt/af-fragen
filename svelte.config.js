@@ -15,7 +15,7 @@ const config = {
 			base: '/af-fragen'
 		},
 		prerender: {
-			entries: ['*']
+			entries: ['*', '/[...404]']
 		}
 	}
 };
