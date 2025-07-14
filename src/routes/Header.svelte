@@ -26,8 +26,6 @@ $: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? 
 $: isInfoPage = browser && currentPath === base + '/info';
 $: $sessionStarted;
 $: $isDarkMode;
-// Log whenever the user toggles between dark and light mode
-$: console.log('[Header] isDarkMode changed:', $isDarkMode);
 
 if (browser) {
 	onMount(() => {
@@ -36,8 +34,6 @@ if (browser) {
 		} else {
 			document.documentElement.classList.remove('info-page');
 		}
-		console.log('[Header] Initial isDarkMode:', $isDarkMode);
-		console.log('[Header] <html> classList:', document.documentElement.classList.value);
 	});
 }
   
