@@ -39,9 +39,9 @@ import QuestionButtons from '$lib/components/Buttons.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
+import { isDarkMode } from '$lib/stores/theme';
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 import { browser } from '$app/environment';
-import { get } from 'svelte/store';
 import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
 import type { ShuffledAnswer } from '$lib/utils/shufflingAnswers';
@@ -59,12 +59,14 @@ type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect:
 // ==============================
 // Dynamic imports will be used for collectQuestions and filterQuestionsByClass
 import { page } from '$app/stores';
-import { derived } from 'svelte/store';
+import { derived, get } from 'svelte/store';
 const showNoIndex = derived(page, ($page) => {
   // Guard against accessing searchParams during prerendering (when $page.url may not be available)
   if (!browser || !$page?.url?.searchParams) return false;
   return $page.url.searchParams.has('class');
 });
+
+// Dark mode tracking
 // Questions and allQuestions will be initialized reactively before session starts
 let questions: any = null;
 let allQuestions: Question[] = [];
@@ -284,16 +286,16 @@ let setSelected = (index: number) => {
         </section>
       {/if}
       {#if limitedQuestions.length > 0}
-        <div class="fixed bottom-[10px] left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur px-4 py-3 rounded-full shadow flex justify-between items-center z-50 w-[calc(100%-20px)] max-w-2xl">
-          <div class="w-[25%] flex justify-start items-center text-sm text-gray-600 ml-1">
+        <div class="fixed bottom-[10px] left-1/2 md:left-auto md:right-4 -translate-x-1/2 md:translate-x-0 bg-white/80 backdrop-blur px-4 rounded-full shadow flex justify-between items-center z-50 w-[calc(60%)] max-w-full md:w-[calc(20%)] md:max-w-xl">
+          <div class="w-[25%] flex justify-start items-center text-sm ml-1">
             {currentIndex + 1} / {limitedQuestions.length}
           </div>
           <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
             {winCount}
           </div>
-          <div class="w-[25%] flex justify-end items-center">
+          <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
             <button
-              class="px-4 py-0 rounded-l-full rounded-r-full bg-red-500 text-white cursor-pointer"
+              class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white"
               on:click={showResultsOverlay}
             >
               X
@@ -302,7 +304,7 @@ let setSelected = (index: number) => {
         </div>
         <!-- Fixed Previous Button -->
         <button
-          class="fixed left-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+          class={`fixed left-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
           on:click={() => currentIndex = Math.max(0, currentIndex - 1)}
           disabled={currentIndex === 0}
         >
@@ -310,7 +312,7 @@ let setSelected = (index: number) => {
         </button>
         <!-- Fixed Next Button -->
         <button
-          class="fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full bg-white shadow-lg z-50 text-4xl cursor-pointer"
+          class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
           on:click={() => {
             const q = limitedQuestions[currentIndex];
             if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
@@ -335,91 +337,33 @@ let setSelected = (index: number) => {
 {/if}
 
 
-<style global>
-  html {
-    touch-action: manipulation;
-  }
-  html,
-  body,
-  * {
-    scrollbar-width: none;            /* Firefox */
-    -ms-overflow-style: none;         /* IE/Edge */
-  }
-
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar,
-  *::-webkit-scrollbar {
-    display: none;                    /* Chrome/Safari */
-  }
-
-  /* Dark mode overrides */
-  .dark article.bg-white {
-    background-color: #1e1e1e;
-    border-color: #444;
-    color: #eee;
-  }
-
-  .dark .text-gray-500 {
-    color: #aaa;
-  }
-
-  .dark .text-gray-600 {
-    color: #ccc;
-  }
-
-  .dark .bg-white\/80 {
-    background-color: rgba(30, 30, 30, 0.8);
-  }
-
-  .dark .bg-white {
-    background-color: #222;
-  }
-
-  .dark .bg-gray-400 {
-    background-color: #888;
-  }
-
-  .dark .shadow-md,
-  .dark .shadow-lg,
-  .dark .shadow {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  }
-
-  .dark button.bg-white {
-    background-color: #333 !important;
-  }
-
-  .dark button.text-black {
-    color: #eee !important;
-  }
-</style>
 
 {#if showResults}
   <div class="fixed inset-0 z-[999] flex items-center justify-center px-4 bg-black/30 backdrop-blur-sm transition-opacity duration-300">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100 min-h-[320px] flex flex-col justify-center items-center">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100 min-h-[416px] flex flex-col justify-center items-center">
       {#if winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76}
-        <p class="text-lg font-bold mb-6">🎉 Super gemacht! Du hast bestanden!</p>
+        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">🎉 Super gemacht! Du hast bestanden!</p>
       {:else if Math.round((winCount / questionLimit) * 100) >= 60}
-        <p class="text-lg font-bold mt-4 mb-6">😌 Noch nicht ganz – aber du bist fast am Ziel!</p>
+        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">😌 Noch nicht ganz – aber du bist fast am Ziel!</p>
       {:else if Math.round((winCount / questionLimit) * 100) < 25}
-        <p class="text-lg font-bold mt-4 mb-6">📚 Vielleicht hilft noch etwas Lernen?</p>
+        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">📚 Vielleicht hilft noch etwas Lernen?</p>
       {:else}
-        <p class="text-lg font-bold mt-4 mb-6">💡 Leider nicht bestanden!</p>
+        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">💡 Leider nicht bestanden!</p>
       {/if}
 
-      <p class="text-3xl font-bold mb-6 {winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
+      <p class="text-3xl font-bold mb-10 leading-snug {winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
         {winCount} richtige Antworten ({Math.round((winCount / questionLimit) * 100)}%)
       </p>
 
-      <div class="flex justify-around mt-6 gap-4">
+      <div class="flex justify-around mt-10 gap-6">
         <button
-          class="w-16 h-10 py-1 rounded-full text-sm font-medium shadow transition-all cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+          class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
           on:click={() => showResults = false}
         >
           ←
         </button>
         <button
-          class="w-16 h-10 py-1 rounded-full text-sm font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
+          class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
           on:click={() => {
             sessionEnded = false;
             sessionAnswers = [];

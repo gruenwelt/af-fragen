@@ -6,9 +6,7 @@
   <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
   <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A, B, V – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
   <script type="application/ld+json">{"@context": "https://schema.org","@type": "CollectionPage","name": "Fragenkatalog – Funkfragen","url": "https://funkfragen.de/fragen","description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (N, E, A, B, V) mit Themenfilter und Navigation.","inLanguage": "de","mainEntityOfPage": "https://funkfragen.de/fragen","about": {"@type": "EducationalOccupationalProgram","name": "Amateurfunkprüfung Deutschland","educationalLevel": ["N", "E", "A"]},"publisher": {"@type": "Organization","name": "Funkfragen"}}</script>
-  {#if $showNoIndex}
-    <meta name="robots" content="noindex" />
-  {/if}
+  {@html showNoIndexTag}
 </svelte:head>
 
 <script lang="ts">
@@ -23,6 +21,9 @@ const showNoIndex = derived(page, ($page) => {
   if (!browser) return false;
   return $page.url.searchParams.has('class');
 });
+$: showNoIndexTag = $showNoIndex
+  ? `<meta name="robots" content="noindex" />`
+  : '';
 import { base } from '$app/paths';
 	import { collectQuestions } from '$lib/utils/questionLoader';
 	import { filterQuestionsByClass } from '$lib/utils/filterByClass';
@@ -30,31 +31,29 @@ import { base } from '$app/paths';
 	import fullTree from '$lib/data/tree.json';
 
 	// --- Component Imports ---
-	let Tree: typeof import('$lib/components/Tree.svelte').default;
 	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
-	import Sidebar from '$lib/components/Sidebar.svelte';
+	let Sidebar: typeof import('$lib/components/Sidebar.svelte').default;
 
 import { isMobile } from '$lib/stores/device';
 import { get } from 'svelte/store';
 
 onMount(() => {
-	if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-		document.documentElement.classList.add('dark');
-	} else {
-		document.documentElement.classList.add('light');
+	console.log('[Debug] onMount - Checking prefers-color-scheme');
+	if (browser && window.matchMedia) {
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		console.log('[Debug] prefers-color-scheme: ', prefersDark ? 'dark' : 'light');
 	}
-
 	initializeState();
 	loadComponents();
 });
 
 async function loadComponents() {
-	const [{ default: TreeModule }, { default: QuestionCardModule }] = await Promise.all([
-		import('$lib/components/Tree.svelte'),
-		import('$lib/components/QuestionCard.svelte')
+	const [QuestionCardModule, SidebarModule] = await Promise.all([
+		import('$lib/components/QuestionCard.svelte'),
+		import('$lib/components/Sidebar.svelte')
 	]);
-	Tree = TreeModule;
-	QuestionCard = QuestionCardModule;
+	QuestionCard = QuestionCardModule.default;
+	Sidebar = SidebarModule.default;
 }
 
 async function initializeState() {
@@ -200,26 +199,20 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 		<div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
 	</div>
 {:else if headerReady}
-	<!-- ============================== -->
-	<!-- ✅ Desktop Layout (Sidebar + Questions) -->
-	<!-- ============================== -->
 	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
-			<!-- Sidebar: Navigation tree -->
-			{#if showSidebar}
-				<Sidebar
-					{Tree}
+			{#if Sidebar && showSidebar}
+				<svelte:component
+					this={Sidebar}
 					{treeData}
 					on:sectionclick={(e) => handleSectionClick(e.detail)}
 				/>
 			{/if}
 
-			<!-- Questions container -->
 			<section
 				bind:this={questionsContainer}
 				class="w-[65%] space-y-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scroll-smooth"
 				aria-label="Scrollable questions container"
-				style="will-change: transform;"
 			>
 				{#if QuestionCard}
 					{#each filteredQuestions as q}
@@ -233,49 +226,24 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 				{/if}
 			</section>
 		</div>
-
-	<!-- ============================== -->
-	<!-- ✅ Mobile Layout (Toggleable Sidebar + Questions) -->
-	<!-- ============================== -->
 	{:else if mobileReady}
-		<div class="relative max-w-5xl mx-auto px-0.0 pt-0.0 pb-0 overflow-x-hidden">
-			<button
-				class={`fixed top-120 z-50 bg-white/70 px-4 py-3 rounded-full shadow transition-transform duration-300 transform ${
-				showSidebar ? 'left-[65%] rotate-180' : 'left-0'
-				}`}
-				on:click={() => (showSidebar = !showSidebar)}
-				aria-label="Toggle Sidebar"
-			>
-				☰
-			</button>
-
-			{#if showSidebar}
-				<div
-					class="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm transition-opacity duration-300"
-					role="button"
-					tabindex="0"
-					on:click={() => (showSidebar = false)}
-					on:keydown={(e: KeyboardEvent) => {
-						if (e.key === 'Enter' || e.key === ' ') showSidebar = false;
-					}}
-				></div>
-			{/if}
-
-			{#if showSidebar}
-				<Sidebar
-					{Tree}
+		<div class="relative max-w-5xl mx-auto px-0 pt-0 pb-0 overflow-x-hidden">
+			{#if Sidebar}
+				<svelte:component
+					this={Sidebar}
 					{treeData}
 					mobile
 					visible={showSidebar}
 					on:sectionclick={(e) => handleSectionClick(e.detail)}
+					on:toggle={() => (showSidebar = !showSidebar)}
+					on:close={() => (showSidebar = false)}
 				/>
 			{/if}
 
 			<section
 				bind:this={questionsContainer}
-				class="w-full space-y-3 px-1 pt-1 flex-grow overflow-x-hidden overflow-y-auto max-h-[90vh] scroll-smooth"
+				class="w-full space-y-6 max-h-[90vh] overflow-y-auto overflow-x-hidden scroll-smooth px-1 pt-1 flex-grow"
 				aria-label="Scrollable questions container"
-				style="will-change: transform;"
 			>
 				{#each filteredQuestions as q}
 					<QuestionCard 
@@ -288,95 +256,3 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 		</div>
 	{/if}
 {/if}
-<style global>
-html,
-body {
-	height: 100vh;
-	overflow: hidden;
-}
-
-/* --- Light/Dark class-based theming overrides for nav/sidebar backgrounds --- */
-:global(.light) nav.bg-white\/70 {
-	background-color: rgba(255, 255, 255, 0.7);
-	color: black;
-}
-
-:global(.light) .fixed.top-120.bg-white\/70 {
-	background-color: rgba(255, 255, 255, 0.7);
-	color: black;
-}
-
-:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 {
-	background-color: rgba(255, 255, 255, 0.7);
-	color: black;
-}
-
-:global(.light) nav.bg-white\/70 .text-white,
-:global(.light) nav.bg-white\/70 .fill-white,
-:global(.light) nav.bg-white\/70 .stroke-white,
-:global(.light) .fixed.top-120.bg-white\/70 .text-white,
-:global(.light) .fixed.top-120.bg-white\/70 .fill-white,
-:global(.light) .fixed.top-120.bg-white\/70 .stroke-white,
-:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .text-white,
-:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .fill-white,
-:global(.light) .fixed.top-\[5\%\].left-0.bg-white\/70 .stroke-white {
-	color: black !important;
-	fill: black !important;
-	stroke: black !important;
-}
-
-@media (prefers-color-scheme: dark) {
-	nav.bg-white\/70 {
-		background-color: rgba(30, 30, 30, 0.7);
-	}
-
-	.fixed.top-120.bg-white\/70 {
-		background-color: rgba(30, 30, 30, 0.7);
-		color: white;
-	}
-
-	.fixed.top-\[5\%\].left-0.bg-white\/70 {
-		background-color: rgba(30, 30, 30, 0.7);
-	}
-
-	.bg-gray-400 {
-		background-color: #888;
-	}
-}
-
-:global(.dark) nav.bg-white\/70 {
-	background-color: rgba(30, 30, 30, 0.7);
-}
-
-:global(.dark) .fixed.top-120.bg-white\/70 {
-	background-color: rgba(30, 30, 30, 0.7);
-}
-
-:global(.dark) .fixed.top-\[5\%\].left-0.bg-white\/70 {
-	background-color: rgba(30, 30, 30, 0.7);
-}
-
-:global(.dark) .bg-gray-400 {
-	background-color: #888;
-}
-
-:global(nav.bg-white\/70) {
-	color: black;
-}
-
-:global(.fixed.top-120.bg-white\/70) {
-	color: black;
-}
-
-:global(.fixed.top-\[5\%\].left-0.bg-white\/70) {
-	color: black;
-}
-
-/* Ensure the mobile sidebar toggle icon appears white in dark mode */
-:global(html.dark .fixed.top-120.bg-white\/70),
-:global(body.dark .fixed.top-120.bg-white\/70) {
-	color: white !important;
-	fill: white !important;
-	stroke: white !important;
-}
-</style>

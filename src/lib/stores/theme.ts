@@ -6,7 +6,7 @@ const initial = (() => {
 	if (typeof localStorage !== 'undefined') {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored !== null) return stored === 'true';
-		return window.matchMedia('(prefers-color-scheme: dark)').matches;
+		return false;
 	}
 	return false;
 })();

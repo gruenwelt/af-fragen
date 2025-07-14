@@ -160,17 +160,11 @@
     border: 1px solid #d1d5db; /* Tailwind's border-gray-300 */
   }
 
-  .answer-text {
-    color: #374151; /* Tailwind's text-gray-700 */
-  }
 
   :global(.dark) .answer-border {
     border-color: #666;
   }
 
-  :global(.dark) .answer-text {
-    color: #ddd;
-  }
 
   :global(.dark) article.bg-white {
     background-color: #1e1e1e;

@@ -11,11 +11,10 @@
 	--color-bg-2: hsl(224, 44%, 95%);
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
-	--color-text: rgba(0, 0, 0, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	font-family: var(--font-body);
-	color: var(--color-text);
+	color: #111827; /* Tailwind text-gray-900 */
 }
 
 body {
@@ -65,7 +64,7 @@ pre {
 	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
 	padding: 0.5em;
 	overflow-x: auto;
-	color: var(--color-text);
+	color: #111827; /* Tailwind's text-gray-900 */
 }
 
 .text-column {
@@ -107,9 +106,9 @@ button:focus:not(:focus-visible) {
 
 .css
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -122,9 +121,9 @@ u {
 	--color-bg-0: hsl(210, 20%, 20%);
 	--color-bg-1: hsl(210, 20%, 15%);
 	--color-bg-2: hsl(210, 20%, 10%);
-	--color-text: rgba(255, 255, 255, 0.87);
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #8ab4f8;
+	color: #f9fafb; /* Tailwind text-gray-50 */
 }
 
 .dark body {
@@ -147,6 +146,51 @@ u {
 }
 
 
-.dark .text-white {
-	color: #fff;
+html {
+  touch-action: manipulation;
+}
+html,
+body,
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Dark mode overrides */
+.dark article.bg-white {
+  background-color: #1e1e1e;
+  border-color: #555;
+  color: #eee;
+}
+
+.dark .bg-white\/80 {
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.dark .bg-white {
+  background-color: #222;
+}
+
+.dark .bg-gray-400 {
+  background-color: #1e1e1e;
+}
+
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.dark button.bg-white {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+
+.light .bg-gray-400 {
+  background-color: #ffffffb3;
 }
