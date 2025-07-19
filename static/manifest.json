@@ -42,5 +42,19 @@
       "type": "image/png",
       "density": "4.0"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/home-mobile.jpg",
+      "sizes": "1170x2532",
+      "type": "image/jpeg",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshots/home-desktop.jpg",
+      "sizes": "2560x1444",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    }
   ]
 }
