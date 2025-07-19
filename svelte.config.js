@@ -14,7 +14,7 @@ const config = {
 			$app: path.resolve('.svelte-kit/types/src/app')
 		},
 		paths: {
-			base: '/af-fragen'
+			base: ''
 		},
 		prerender: {
 			entries: ['*', '/[...404]']

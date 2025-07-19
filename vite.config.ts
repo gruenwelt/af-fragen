@@ -13,7 +13,8 @@ export default defineConfig({
 		VitePWA({
 			registerType: 'autoUpdate',
 			workbox: {
-				maximumFileSizeToCacheInBytes: 3145728
+				maximumFileSizeToCacheInBytes: 3145728,
+				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json,txt}']
 			},
 			includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
 			manifest: {
