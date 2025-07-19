@@ -5,6 +5,12 @@
 	import '@fontsource/inter';
 
 	let { children } = $props();
+
+	if ('serviceWorker' in navigator) {
+	  window.addEventListener('load', () => {
+	    navigator.serviceWorker.register('/sw.js');
+	  });
+	}
 </script>
 
 <svelte:head>

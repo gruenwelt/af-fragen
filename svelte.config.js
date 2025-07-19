@@ -6,7 +6,9 @@ import path from 'path';
 const config = {
 	preprocess: preprocess(),
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			fallback: '200.html'
+		}),
 		alias: {
 			$lib: path.resolve('src/lib'),
 			$app: path.resolve('.svelte-kit/types/src/app')

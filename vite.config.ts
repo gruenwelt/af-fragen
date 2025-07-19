@@ -1,12 +1,46 @@
+import { VitePWA } from 'vite-plugin-pwa';
 import devtoolsJson from 'vite-plugin-devtools-json';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import adapter from '@sveltejs/adapter-static';
 
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
 		sveltekit(),
-		devtoolsJson()
-	],
+		devtoolsJson(),
+		VitePWA({
+			registerType: 'autoUpdate',
+			includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+			manifest: {
+				name: 'Funkfragen.de',
+				short_name: 'Funkfragen',
+				description: 'Trainiere mit Fragen zur deutschen Amateurfunkprüfung (N, E, A, B, V).',
+				theme_color: '#0f172a',
+				background_color: '#ffffff',
+				display: 'standalone',
+				scope: '/',
+				start_url: '/',
+				icons: [
+					{
+						src: 'pwa-192x192.png',
+						sizes: '192x192',
+						type: 'image/png'
+					},
+					{
+						src: 'pwa-512x512.png',
+						sizes: '512x512',
+						type: 'image/png'
+					},
+					{
+						src: 'pwa-512x512.png',
+						sizes: '512x512',
+						type: 'image/png',
+						purpose: 'any maskable'
+					}
+				]
+			}
+		})
+	]
 });
