@@ -7,7 +7,7 @@ const config = {
 	preprocess: preprocess(),
 	kit: {
 		adapter: adapter({
-			fallback: '200.html'
+			fallback: 'index.html'
 		}),
 		alias: {
 			$lib: path.resolve('src/lib'),

@@ -5,7 +5,42 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Fragenkatalog, Lernapp" />
   <meta property="og:title" content="Fragenkatalog – Funkfragen: Alle offiziellen Prüfungsfragen" />
   <meta property="og:description" content="Der komplette Fragenkatalog für die Amateurfunkprüfung: N, E, A, B, V – mit Themenfilter, Navigation und zufälliger Übungsfunktion." />
-  <script type="application/ld+json">{"@context": "https://schema.org","@type": "CollectionPage","name": "Fragenkatalog – Funkfragen","url": "https://funkfragen.de/fragen","description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (N, E, A, B, V) mit Themenfilter und Navigation.","inLanguage": "de","mainEntityOfPage": "https://funkfragen.de/fragen","about": {"@type": "EducationalOccupationalProgram","name": "Amateurfunkprüfung Deutschland","educationalLevel": ["N", "E", "A"]},"publisher": {"@type": "Organization","name": "Funkfragen"}}</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Funkfragen",
+      "url": "https://funkfragen.de",
+      "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de/fragen",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      }
+    },
+    {
+      "@type": "CollectionPage",
+      "name": "Fragenkatalog – Funkfragen",
+      "url": "https://funkfragen.de/fragen",
+      "description": "Kompletter Fragenkatalog zur deutschen Amateurfunkprüfung (N, E, A, B, V) mit Themenfilter und Navigation.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de/fragen",
+      "about": {
+        "@type": "EducationalOccupationalProgram",
+        "name": "Amateurfunkprüfung Deutschland",
+        "educationalLevel": ["N", "E", "A"]
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      }
+    }
+  ]
+}
+</script>
   {@html showNoIndexTag}
 </svelte:head>
 

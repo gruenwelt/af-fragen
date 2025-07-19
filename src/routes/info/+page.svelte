@@ -5,26 +5,44 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Informationen, Fragenkatalog, Amateurfunkzeugnis" />
   <meta property="og:title" content="Info – Funkfragen: Prüfungssimulator für Amateurfunk" />
   <meta property="og:description" content="Erfahre mehr über die Funktionalität, Datenquellen, Datenschutz und Lizenzbedingungen der Funkfragen Web-App." />
-  <script type="application/ld+json">{
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Funkfragen Info",
-    "url": "https://funkfragen.de/info",
-    "applicationCategory": "EducationalApplication",
-    "operatingSystem": "All",
-    "description": "Informationen über die Web-App zur Vorbereitung auf die Amateurfunkprüfung, zu Datenquellen, Lizenz, Datenschutz und rechtlichen Hinweisen.",
-    "inLanguage": "de",
-    "mainEntityOfPage": "https://funkfragen.de/info",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Funkfragen"
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Funkfragen",
+      "url": "https://funkfragen.de",
+      "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de/info",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      }
     },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "EUR"
+    {
+      "@type": "WebApplication",
+      "name": "Funkfragen Info",
+      "url": "https://funkfragen.de/info",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "description": "Informationen über die Web-App zur Vorbereitung auf die Amateurfunkprüfung, zu Datenquellen, Lizenz, Datenschutz und rechtlichen Hinweisen.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de/info",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
     }
-  }</script>
+  ]
+}
+</script>
   {#if $showNoIndex}
     <meta name="robots" content="noindex" />
   {/if}

@@ -20,41 +20,44 @@
   <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Online Test, Fragenkatalog, Amateurfunkzeugnis" />
   <meta property="og:title" content="Funkfragen – Online lernen für die Amateurfunkprüfung" />
   <meta property="og:description" content="Offizieller Fragenkatalog und Prüfungssimulator zur deutschen Amateurfunkprüfung (N, E, A, B, V) – interaktiv, kostenlos und ohne Anmeldung." />
-  <script type="application/ld+json">[
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Funkfragen",
-    "url": "https://funkfragen.de",
-    "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
-    "inLanguage": "de",
-    "mainEntityOfPage": "https://funkfragen.de",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Funkfragen"
-    }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Funkfragen Übungsmodus",
-    "url": "https://funkfragen.de",
-    "applicationCategory": "EducationalApplication",
-    "operatingSystem": "All",
-    "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
-    "inLanguage": "de",
-    "mainEntityOfPage": "https://funkfragen.de",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Funkfragen"
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Funkfragen",
+      "url": "https://funkfragen.de",
+      "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      }
     },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "EUR"
+    {
+      "@type": "WebApplication",
+      "name": "Funkfragen Übungsmodus",
+      "url": "https://funkfragen.de",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
+      "inLanguage": "de",
+      "mainEntityOfPage": "https://funkfragen.de",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Funkfragen"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
     }
-  }
-]</script>
+  ]
+}
+</script>
 </svelte:head>
 
 <div class="app">
