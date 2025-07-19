@@ -1,7 +1,6 @@
 <script lang="ts">
 import { page } from '$app/stores';
 import { browser } from '$app/environment';
-import logo from '$lib/images/svelte-logo.svg';
 import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
 import { isDarkMode } from '$lib/stores/theme';
