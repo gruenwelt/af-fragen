@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const projectRoot = path.resolve(__dirname, '..');
-const inputDir = path.join(projectRoot, 'static', 'svgs');
+const inputDir = path.join(projectRoot, 'src', 'lib', 'images', 'svgs');
 const outputDir = path.join(projectRoot, 'static', 'svgs-2x');
 
 // Create output directory if it doesn't exist
