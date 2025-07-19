@@ -17,7 +17,7 @@ const config = {
 			base: ''
 		},
 		prerender: {
-			entries: ['*', '/[...404]']
+			entries: ['*', '/', '/[...404]']
 		}
 	}
 };
