@@ -12,6 +12,9 @@ export default defineConfig({
 		devtoolsJson(),
 		VitePWA({
 			registerType: 'autoUpdate',
+			workbox: {
+				maximumFileSizeToCacheInBytes: 3145728
+			},
 			includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
 			manifest: {
 				name: 'Funkfragen.de',
