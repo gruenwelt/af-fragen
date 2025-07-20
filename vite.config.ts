@@ -15,8 +15,32 @@ export default defineConfig({
 			workbox: {
 				maximumFileSizeToCacheInBytes: 3145728,
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json,txt}', 'svgs-2x/*.svg'],
-				navigateFallback: 'index.html',
-				additionalManifestEntries: [{ url: 'index.html', revision: null }]
+				navigateFallback: '/offline.html',
+				additionalManifestEntries: [{ url: 'index.html', revision: null }],
+				runtimeCaching: [
+					{
+						urlPattern: /^https:\/\/funkfragen\.de\/.*$/,
+						handler: 'NetworkFirst',
+						options: {
+							cacheName: 'pages-cache',
+							expiration: {
+								maxEntries: 50,
+								maxAgeSeconds: 86400 // 1 day
+							}
+						}
+					},
+					{
+						urlPattern: /\.(?:js|css|woff2|svg|png|jpg|jpeg|webp|ico)$/,
+						handler: 'CacheFirst',
+						options: {
+							cacheName: 'assets-cache',
+							expiration: {
+								maxEntries: 100,
+								maxAgeSeconds: 604800 // 1 week
+							}
+						}
+					}
+				]
 			},
 			includeAssets: [
 				'favicon.svg',

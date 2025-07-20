@@ -10,14 +10,13 @@ const config = {
 			fallback: 'index.html'
 		}),
 		alias: {
-			$lib: path.resolve('src/lib'),
-			$app: path.resolve('.svelte-kit/types/src/app')
+			$lib: path.resolve('src/lib')
 		},
 		paths: {
 			base: ''
 		},
 		prerender: {
-			entries: ['*', '/', '/[...404]']
+			entries: ['*', '/', '/offline.html']
 		}
 	}
 };
