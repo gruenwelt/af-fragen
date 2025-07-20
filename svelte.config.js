@@ -16,7 +16,7 @@ const config = {
 			base: ''
 		},
 		prerender: {
-			entries: ['*', '/', '/offline.html']
+			entries: ['*', '/', '/offline.html', '/404.html']
 		}
 	}
 };
