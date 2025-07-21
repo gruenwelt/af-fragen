@@ -1,6 +1,9 @@
 {
   "name": "Funkfragen",
   "short_name": "Funkfragen",
+  "lang": "de",
+  "orientation": "portrait",
+  "scope": "/",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
