@@ -94,6 +94,11 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
-		overflow: auto; /* scroll content inside main */
+    overflow: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	main::-webkit-scrollbar {
+		display: none;
 	}
 </style>

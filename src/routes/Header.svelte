@@ -93,13 +93,6 @@ if (browser) {
 					<a href={`${currentPath}?class=V`}>V</a>
 				{/if}
 			</li>
-			<li aria-current={!isInfoPage && selectedClass === 'Alle' ? 'page' : undefined}>
-				{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
-				{:else}
-					<a href={`${currentPath}?class=Alle`}>Alle</a>
-				{/if}
-			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
@@ -213,13 +206,6 @@ if (browser) {
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
 							{:else}
 								<a href={`${currentPath}?class=V`}>V</a>
-							{/if}
-						</li>
-						<li aria-current={!isInfoPage && selectedClass === 'Alle' ? 'page' : undefined}>
-							{#if ($sessionStarted && selectedClass !== 'Alle') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">Alle</span>
-							{:else}
-								<a href={`${currentPath}?class=Alle`}>Alle</a>
 							{/if}
 						</li>
 					</ul>

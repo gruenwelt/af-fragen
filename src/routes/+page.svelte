@@ -405,3 +405,13 @@ let setSelected = (index: number) => {
     </div>
   </div>
 {/if}
+<style>
+  :global(html), :global(body) {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  :global(html::-webkit-scrollbar), :global(body::-webkit-scrollbar) {
+    display: none;
+  }
+</style>

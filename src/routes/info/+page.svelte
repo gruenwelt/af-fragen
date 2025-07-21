@@ -96,12 +96,30 @@ onMount(() => {
 		Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen<br>
 		3. Auflage, März 2024
 	</p>
+	<p>
+	<strong>Neu!: Offline-Nutzung der App</strong>
+	</p>
+	<p>
+	<u>Handy:</u><br>
+		1. Website im Browser öffnen<br>
+		2. „Zum Home-Bildschirm hinzufügen“<br>
+		3. App von dort öffnen, online bleiben<br>
+		4. „Los geht’s“ starten, zu „Fragen“ und „Info“ navigieren
+	</p>
+	<p>
+	<u>Desktop (Chrome):</u><br>
+		1. Website im Browser öffnen<br>
+		2. Auf Installationssymbol in Adressleiste klicken<br>
+	</p>
+	<p>
+		Danach ist die App offline nutzbar. Änderungen erfordern Internet.
+	</p>
 
 	<p>
 	  <strong>Funktionalität der App</strong>
 	</p>
 	<p>
-	  Über die oberen Filter lassen sich die Prüfungsteile „Technische Kenntnisse“ (unterteilt in N, E und A), „Betriebliche Kenntnisse“ (B) und „Kenntnisse von Vorschriften“ (V) auswählen. Die Auswahl „Alle“ zeigt Fragen aus allen Teilen gemeinsam.<br><br>
+	  Über die oberen Filter lassen sich die Prüfungsteile „Technische Kenntnisse“ (unterteilt in N, E und A), „Betriebliche Kenntnisse“ (B) und „Kenntnisse von Vorschriften“ (V) auswählen.<br><br>
 
 	  Der Abschnitt „Üben“ zeigt eine zufällige Liste von Fragen basierend auf dem gewählten Prüfungsteil und der Anzahl der gewünschten Fragen (wählbar: 25 – dem Prüfungsformat entsprechend, 100 oder 200). Die Antwortmöglichkeiten sind hier in zufälliger Reihenfolge angeordnet. Sobald ein Übungstest gestartet wurde, kann die Auswahl nicht mehr geändert werden, da die Fragen zu Beginn des Tests einmalig entsprechend der gewählten Auswahl gefiltert werden und während der gesamten Sitzung konsistent bleiben. Navigiert man während des Tests zu anderen Bereichen, merkt sich die App den Stand des Tests, sodass man später dorthin zurückkehren kann. Daher ist während einer laufenden Sitzung die Auswahl anderer Teile deaktiviert.<br><br>
 
@@ -175,8 +193,7 @@ onMount(() => {
 		
 		Svelte bietet eine besonders hohe Performance, geringe Ladezeiten und eine einfache, reaktive Programmierweise ohne unnötigen Overhead.
 	</p>
-
-	<p>
+    <p>
 	  <strong>Besonderer Dank</strong>
 	</p>
 	<p>

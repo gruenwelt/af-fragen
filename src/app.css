@@ -149,17 +149,6 @@ u {
 html {
   touch-action: manipulation;
 }
-html,
-body,
-* {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-html::-webkit-scrollbar,
-body::-webkit-scrollbar,
-*::-webkit-scrollbar {
-  display: none;
-}
 
 /* Dark mode overrides */
 .dark article.bg-white {
