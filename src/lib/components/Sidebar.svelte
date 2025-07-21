@@ -40,7 +40,7 @@
     {/if}
     {#if isVisible}
       <div
-        class={`sidebar-container fixed top-[5%] left-0 h-full w-[70%] max-h-[90%] translate-x-0 z-40 rounded-xl overflow-y-auto shadow-lg ${
+        class={`sidebar-container fixed top-[5%] left-0 h-full w-[70%] max-h-[90%] translate-x-0 z-40 rounded-xl overflow-y-auto scrollbar-hide ${
           $isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'
         } ${$isDarkMode ? 'border border-gray-600' : 'border border-gray-200'} p-4 transition-transform`}
       >
@@ -82,18 +82,18 @@
       </div>
     {/if}
     <button
-      class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full shadow-lg text-4xl flex items-center justify-center z-50 ${
-        $isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'
-      }`}
+      class={`fixed left-0 top-[66%] md:top-1/2 transform -translate-y-1/2 w-10 h-20 rounded-r-full shadow-lg text-4xl flex items-center justify-center z-50 transition-opacity duration-300 ${
+        isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      } ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'}`}
       on:click={toggleSidebar}
       aria-label="Toggle Sidebar"
     >
-      ☰
+      &gt;
     </button>
   </div>
 {:else}
   <div
-    class={`sidebar-container w-[35%] max-h-[90vh] z-40 rounded-xl overflow-y-auto shadow-lg ${
+    class={`sidebar-container w-[35%] max-h-[90vh] z-40 rounded-xl overflow-y-auto scrollbar-hide ${
       $isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'
     } ${$isDarkMode ? 'border border-gray-600' : 'border border-gray-200'} p-4 transition-transform`}
   >
@@ -134,3 +134,13 @@
     </ul>
   </div>
 {/if}
+
+<style>
+  :global(.sidebar-container) {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  :global(.sidebar-container::-webkit-scrollbar) {
+    display: none;
+  }
+</style>
