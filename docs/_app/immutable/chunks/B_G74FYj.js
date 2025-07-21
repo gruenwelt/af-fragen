@@ -1,0 +1,1 @@
+import{w as o}from"./CDChpoS6.js";const e="dark-mode",r=(()=>{if(typeof localStorage<"u"){const t=localStorage.getItem(e);return t!==null?t==="true":!0}return!0})(),n=o(r);n.subscribe(t=>{typeof document<"u"&&(document.documentElement.classList.toggle("dark",t),localStorage.setItem(e,String(t)))});export{n as i};
