@@ -206,4 +206,8 @@
   :global(.dark) article img {
     filter: invert(1) hue-rotate(180deg);
   }
+
+  :global(html.dark) article.border-\[color\:var\(--color-theme-1\)\] {
+    border-color: rgba(255, 62, 0, 0.5);
+  }
 </style>
