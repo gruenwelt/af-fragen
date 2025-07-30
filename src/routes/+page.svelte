@@ -68,9 +68,8 @@ import { base } from '$app/paths';
 // ==============================
 // Types
 // ==============================
-import type { Question } from '$lib/utils/questionLoader';
-
-type SessionAnswer = { questionNumber: string; selectedIndex: number; isCorrect: boolean };
+import type { Question } from '$lib/types';
+import type { SessionAnswer } from '$lib/types';
 
 // ==============================
 // Data & Derived Data

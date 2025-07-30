@@ -1,26 +1,4 @@
-export type Question = {
-  question: string;
-  questionHtml: string;
-  answer_a: string;
-  answerAHtml: string;
-  answer_b: string;
-  answerBHtml: string;
-  answer_c: string;
-  answerCHtml: string;
-  answer_d: string;
-  answerDHtml: string;
-  class: string;
-  picture_question?: string;
-  picture_a?: string;
-  picture_b?: string;
-  picture_c?: string;
-  picture_d?: string;
-  number: string;
-  section1?: string;
-  section2?: string;
-  section3?: string;
-  topLevelClass?: string;
-};
+import type { Question } from '$lib/types';
 
 export function collectQuestions(tree: any, path: string[] = []): Question[] {
   const sections = tree.sections ?? tree;

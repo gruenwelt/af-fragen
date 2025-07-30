@@ -1,3 +1,4 @@
+import type { PersistedSessionState } from '$lib/types';
 export function restoreSessionState() {
   try {
     const started = sessionStorage.getItem('af-session-started') === 'true';
@@ -20,12 +21,7 @@ export function persistSessionState({
   limitedQuestions,
   currentIndex,
   shuffledMap
-}: {
-  sessionAnswers: any[];
-  limitedQuestions: any[];
-  currentIndex: number;
-  shuffledMap: Record<string, any>;
-}) {
+}: PersistedSessionState) {
   sessionStorage.setItem('af-session-started', 'true');
   sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
   sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
