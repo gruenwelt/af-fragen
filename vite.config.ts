@@ -16,7 +16,11 @@ export default defineConfig({
 				maximumFileSizeToCacheInBytes: 3145728,
 				globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,json,txt}', 'svgs-2x/*.svg'],
 				navigateFallback: '/offline.html',
-				additionalManifestEntries: [{ url: 'index.html', revision: null }],
+				additionalManifestEntries: [
+					{ url: '/', revision: null },
+					{ url: '/fragen', revision: null },
+					{ url: '/info', revision: null }
+				],
 				runtimeCaching: [
 					{
 						urlPattern: /^https:\/\/funkfragen\.de\/.*$/,

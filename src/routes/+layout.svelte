@@ -8,10 +8,12 @@
 
 	import { registerSW } from 'virtual:pwa-register';
 
+if (typeof navigator !== 'undefined') {
 	registerSW({
 	  onNeedRefresh() {},
 	  onOfflineReady() {}
 	});
+}
 </script>
 
 <svelte:head>
