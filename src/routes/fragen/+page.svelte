@@ -256,6 +256,8 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 							{q}
 							isHighlighted={highlightedNumbers.includes(q.number)}
 							{base}
+							selectedAnswerIndex={0}
+							correctIndex={0}
 						/>
 					{/each}
 				{/if}
@@ -285,6 +287,8 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 						{q}
 						isHighlighted={highlightedNumbers.includes(q.number)}
 						{base}
+						selectedAnswerIndex={0}
+						correctIndex={0}
 					/>
 				{/each}
 			</section>

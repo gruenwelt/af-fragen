@@ -97,7 +97,7 @@ onMount(() => {
 		3. Auflage, März 2024
 	</p>
 	<p>
-	<strong>Neu!: Offline-Nutzung der App</strong>
+	<strong>Neu!: Offline-Nutzung der Web-App</strong>
 	</p>
 	<p>
 	<u>Handy:</u><br>
