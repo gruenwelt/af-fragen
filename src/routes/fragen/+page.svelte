@@ -297,43 +297,43 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 {/if}
 
 <style>
-  :global(.dark ::-webkit-scrollbar) {
+  :global(html.dark ::-webkit-scrollbar) {
     width: 8px;
   }
 
-  :global(.dark ::-webkit-scrollbar-thumb) {
+  :global(html.dark ::-webkit-scrollbar-thumb) {
     background-color: #fff;
     border-radius: 4px;
   }
 
-  :global(.dark ::-webkit-scrollbar-track) {
+  :global(html.dark ::-webkit-scrollbar-track) {
     background-color: #222;
   }
 
-  :global(.light ::-webkit-scrollbar) {
+  :global(html.light ::-webkit-scrollbar) {
     width: 8px;
   }
 
-  :global(.light ::-webkit-scrollbar-thumb) {
+  :global(html.light ::-webkit-scrollbar-thumb) {
     background-color: #bbb;
     border-radius: 4px;
   }
 
-  :global(.light ::-webkit-scrollbar-track) {
+  :global(html.light ::-webkit-scrollbar-track) {
     background-color: #eee;
   }
 
   /* Firefox scrollbar support */
-  :global(.dark),
-  :global(.light) {
+  :global(html.dark),
+  :global(html.light) {
     scrollbar-width: thin;
   }
 
-  :global(.dark) {
+  :global(html.dark) {
     scrollbar-color: #fff #222;
   }
 
-  :global(.light) {
+  :global(html.light) {
     scrollbar-color: #bbb #eee;
   }
 </style>

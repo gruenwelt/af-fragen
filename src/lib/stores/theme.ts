@@ -16,6 +16,7 @@ export const isDarkMode = writable(initial);
 isDarkMode.subscribe((value) => {
 	if (typeof document !== 'undefined') {
 		document.documentElement.classList.toggle('dark', value);
+		document.documentElement.classList.toggle('light', !value);
 		localStorage.setItem(STORAGE_KEY, String(value));
 	}
 });
