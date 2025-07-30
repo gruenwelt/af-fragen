@@ -117,22 +117,34 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-/**
- * Save the current session state to sessionStorage.
- * (To be moved to sessionState.ts)
- */
-function saveSessionState() {
+// --- Session state management (to be moved to sessionState.ts or sessionManager.ts) ---
+function saveSessionStateCustom({
+  sessionAnswersArg,
+  limitedQuestionsArg,
+  currentIndexArg,
+  shuffledMapArg
+}: {
+  sessionAnswersArg: typeof sessionAnswers,
+  limitedQuestionsArg: typeof limitedQuestions,
+  currentIndexArg: number,
+  shuffledMapArg: typeof shuffledMap
+}) {
   sessionStorage.setItem('af-session-started', 'true');
-  sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
-  sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
-  sessionStorage.setItem('af-current-index', currentIndex.toString());
-  sessionStorage.setItem('af-shuffled-map', JSON.stringify(shuffledMap));
+  sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswersArg));
+  sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestionsArg));
+  sessionStorage.setItem('af-current-index', currentIndexArg.toString());
+  sessionStorage.setItem('af-shuffled-map', JSON.stringify(shuffledMapArg));
 }
 
-/**
- * Clear all session-related keys from sessionStorage.
- * (To be moved to sessionManager.ts)
- */
+function saveSessionState() {
+  saveSessionStateCustom({
+    sessionAnswersArg: sessionAnswers,
+    limitedQuestionsArg: limitedQuestions,
+    currentIndexArg: currentIndex,
+    shuffledMapArg: shuffledMap
+  });
+}
+
 function clearSessionState() {
   sessionStorage.removeItem('af-session-started');
   sessionStorage.removeItem('af-session-answers');
@@ -142,59 +154,109 @@ function clearSessionState() {
 }
 
 /**
- * Skip the current question (when pressing next without answering).
- * Adds a skipped answer to sessionAnswers and wrongQuestions, saves state, and advances index.
+ * Skip the current question by providing all state as parameters.
+ * Returns the new state after skipping.
  */
-function skipCurrentQuestion() {
-  const q = limitedQuestions[currentIndex];
-  if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
+function skipCurrentQuestion({
+  sessionAnswersArg,
+  wrongQuestionsArg,
+  limitedQuestionsArg,
+  currentIndexArg
+}: {
+  sessionAnswersArg: SessionAnswer[],
+  wrongQuestionsArg: SessionAnswer[],
+  limitedQuestionsArg: Question[],
+  currentIndexArg: number
+}) {
+  const q = limitedQuestionsArg[currentIndexArg];
+  let sessionAnswersNew = sessionAnswersArg.slice();
+  let wrongQuestionsNew = wrongQuestionsArg.slice();
+  if (!sessionAnswersNew.some((a) => a.questionNumber === q.number)) {
     const skippedAnswer = {
       questionNumber: q.number,
       selectedIndex: -1,
       isCorrect: false
     };
-    sessionAnswers.push(skippedAnswer);
-    wrongQuestions.push(skippedAnswer);
+    sessionAnswersNew.push(skippedAnswer);
+    wrongQuestionsNew.push(skippedAnswer);
   }
-  saveSessionState();
-  currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
+  const nextIndex = Math.min(limitedQuestionsArg.length - 1, currentIndexArg + 1);
+  return { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew, currentIndex: nextIndex };
 }
 
 /**
- * Initializes a new session for the given class.
- * Handles loading question data, filtering, shuffling, initializing state, and saving to sessionStorage.
+ * Initializes a new session for the given class, returns the new session state.
+ * All dependencies passed as parameters for isolation.
  */
-async function initializeSession(selectedClassNow: string) {
-  isLoading = true;
-  await tick();
+async function initializeSession({
+  selectedClassNow,
+  questionLimitArg,
+  questionsArg,
+  allQuestionsArg
+}: {
+  selectedClassNow: string,
+  questionLimitArg: number,
+  questionsArg: any,
+  allQuestionsArg: Question[]
+}) {
+  let questionsLocal = questionsArg;
+  let allQuestionsLocal = allQuestionsArg;
   if (!QuestionCard) {
     const module = await import('$lib/components/QuestionCard.svelte');
     QuestionCard = module.default;
   }
-  if (!questions) {
+  if (!questionsLocal) {
     const data = get(page).data;
-    questions = data?.fragenkatalog;
-    if (!questions) {
+    questionsLocal = data?.fragenkatalog;
+    if (!questionsLocal) {
       const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
-      questions = module.default;
+      questionsLocal = module.default;
     }
     const { collectQuestions } = await import('$lib/utils/questionLoader');
-    allQuestions = collectQuestions(questions);
+    allQuestionsLocal = collectQuestions(questionsLocal);
   }
   const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
-  let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
-  filteredQuestions = target;
-  limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
-  sessionAnswers = [];
-  shuffledMap = {};
-  saveSessionState();
-  isLoading = false;
-  sessionStarted.set(true);
+  let target: Question[] = filterQuestionsByClass(allQuestionsLocal, selectedClassNow);
+  let filteredQuestionsLocal = target;
+  let limitedQuestionsLocal = [...filteredQuestionsLocal].sort(() => Math.random() - 0.5).slice(0, questionLimitArg);
+  let sessionAnswersLocal: SessionAnswer[] = [];
+  let shuffledMapLocal: typeof shuffledMap = {};
+  saveSessionStateCustom({
+    sessionAnswersArg: sessionAnswersLocal,
+    limitedQuestionsArg: limitedQuestionsLocal,
+    currentIndexArg: 0,
+    shuffledMapArg: shuffledMapLocal
+  });
+  return {
+    questions: questionsLocal,
+    allQuestions: allQuestionsLocal,
+    filteredQuestions: filteredQuestionsLocal,
+    limitedQuestions: limitedQuestionsLocal,
+    sessionAnswers: sessionAnswersLocal,
+    shuffledMap: shuffledMapLocal,
+    currentIndex: 0
+  };
 }
 
-function startSession() {
+async function startSession() {
   const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
-  initializeSession(selectedClassNow);
+  isLoading = true;
+  await tick();
+  const result = await initializeSession({
+    selectedClassNow,
+    questionLimitArg: questionLimit,
+    questionsArg: questions,
+    allQuestionsArg: allQuestions
+  });
+  questions = result.questions;
+  allQuestions = result.allQuestions;
+  filteredQuestions = result.filteredQuestions;
+  limitedQuestions = result.limitedQuestions;
+  sessionAnswers = result.sessionAnswers;
+  shuffledMap = result.shuffledMap;
+  currentIndex = result.currentIndex;
+  isLoading = false;
+  sessionStarted.set(true);
 }
 
 function showResultsOverlay() {
@@ -208,33 +270,53 @@ function showResultsOverlay() {
 $: isMobileValue = $isMobile;
 
 /**
- * Applies a restored session state to local variables.
- * Updates sessionAnswers, limitedQuestions, currentIndex, and shuffledMap.
+ * Returns a function that applies a restored session state to given setters, not bound to lexical scope.
  */
-function applySessionState(restored: {
-  sessionAnswers: typeof sessionAnswers,
-  limitedQuestions: typeof limitedQuestions,
-  currentIndex: number,
-  shuffledMap?: typeof shuffledMap
+function getApplySessionState({ setSessionAnswers, setLimitedQuestions, setCurrentIndex, setShuffledMap }: {
+  setSessionAnswers: (a: typeof sessionAnswers) => void,
+  setLimitedQuestions: (l: typeof limitedQuestions) => void,
+  setCurrentIndex: (i: number) => void,
+  setShuffledMap: (m: typeof shuffledMap) => void
 }) {
-  sessionAnswers = restored.sessionAnswers;
-  limitedQuestions = restored.limitedQuestions;
-  currentIndex = restored.currentIndex;
-  shuffledMap = restored.shuffledMap || {};
+  return function(restored: {
+    sessionAnswers: typeof sessionAnswers,
+    limitedQuestions: typeof limitedQuestions,
+    currentIndex: number,
+    shuffledMap?: typeof shuffledMap
+  }) {
+    setSessionAnswers(restored.sessionAnswers);
+    setLimitedQuestions(restored.limitedQuestions);
+    setCurrentIndex(restored.currentIndex);
+    setShuffledMap(restored.shuffledMap || {});
+  };
 }
 
 /**
  * Restores the session state from sessionStorage and initializes UI state.
  * Loads the QuestionCard component if needed.
+ * Accepts setter functions for side-effect isolation.
  */
-async function restoreAndInitializeSession() {
+async function restoreAndInitializeSessionCustom({
+  setSessionAnswers,
+  setLimitedQuestions,
+  setCurrentIndex,
+  setShuffledMap
+}: {
+  setSessionAnswers: (a: typeof sessionAnswers) => void,
+  setLimitedQuestions: (l: typeof limitedQuestions) => void,
+  setCurrentIndex: (i: number) => void,
+  setShuffledMap: (m: typeof shuffledMap) => void
+}) {
   const { restoreSessionState } = await import('$lib/utils/sessionState');
   const restored = restoreSessionState();
   if (restored) {
-    applySessionState(restored);
+    getApplySessionState({
+      setSessionAnswers,
+      setLimitedQuestions,
+      setCurrentIndex,
+      setShuffledMap
+    })(restored);
     sessionStarted.set(true);
-
-    // Ensure QuestionCard is available when restoring
     await tick();
     if (!QuestionCard) {
       const module = await import('$lib/components/QuestionCard.svelte');
@@ -244,11 +326,14 @@ async function restoreAndInitializeSession() {
 }
 
 onMount(() => {
-  // Restore session state from sessionStorage if available
   if (browser) {
-    restoreAndInitializeSession();
+    restoreAndInitializeSessionCustom({
+      setSessionAnswers: (a) => sessionAnswers = a,
+      setLimitedQuestions: (l) => limitedQuestions = l,
+      setCurrentIndex: (i) => currentIndex = i,
+      setShuffledMap: (m) => shuffledMap = m
+    });
   }
-
   setTimeout(() => {
     headerReady = true;
   }, 0);
@@ -307,36 +392,73 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.originalIndex === 0);
 
 /**
  * Evaluate if the selected answer is correct for the current question.
- * Returns a boolean.
+ * Returns a boolean. Accepts all data as arguments.
  */
-function evaluateAnswer(index: number, shuffledAnswers: ShuffledAnswer[]): boolean {
-  return shuffledAnswers[index]?.originalIndex === 0;
+function evaluateAnswer({
+  index,
+  shuffledAnswersArg
+}: {
+  index: number,
+  shuffledAnswersArg: ShuffledAnswer[]
+}): boolean {
+  return shuffledAnswersArg[index]?.originalIndex === 0;
 }
 
 /**
  * Updates the session state with the given answer.
- * Adds the answer to sessionAnswers, updates wrongQuestions if needed, saves state.
+ * Pure function, returns new state. Accepts a callback for side-effects (e.g. winCount increment).
  */
-function updateSessionWithAnswer(q: Question, index: number, isCorrect: boolean) {
-  const alreadyAnswered = sessionAnswers.find((a) => a.questionNumber === q.number);
+function updateSessionWithAnswer({
+  q,
+  index,
+  isCorrect,
+  sessionAnswersArg,
+  wrongQuestionsArg,
+  winCallback
+}: {
+  q: Question,
+  index: number,
+  isCorrect: boolean,
+  sessionAnswersArg: SessionAnswer[],
+  wrongQuestionsArg: SessionAnswer[],
+  winCallback?: () => void
+}) {
+  const alreadyAnswered = sessionAnswersArg.find((a) => a.questionNumber === q.number);
+  let sessionAnswersNew = sessionAnswersArg.slice();
+  let wrongQuestionsNew = wrongQuestionsArg.slice();
   if (!alreadyAnswered) {
     const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
-    sessionAnswers.push(answer);
-    saveSessionState();
+    sessionAnswersNew.push(answer);
     if (isCorrect) {
-      winCount++;
+      if (winCallback) winCallback();
     } else {
-      wrongQuestions.push(answer);
+      wrongQuestionsNew.push(answer);
     }
+    saveSessionStateCustom({
+      sessionAnswersArg: sessionAnswersNew,
+      limitedQuestionsArg: limitedQuestions,
+      currentIndexArg: currentIndex,
+      shuffledMapArg: shuffledMap
+    });
   }
+  return { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew };
 }
 
 let setSelected = (index: number) => {
   const q = limitedQuestions[currentIndex];
   if (!q) return;
   selectedAnswerIndex = index;
-  const isCorrect = evaluateAnswer(index, shuffledAnswers);
-  updateSessionWithAnswer(q, index, isCorrect);
+  const isCorrect = evaluateAnswer({ index, shuffledAnswersArg: shuffledAnswers });
+  const { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew } = updateSessionWithAnswer({
+    q,
+    index,
+    isCorrect,
+    sessionAnswersArg: sessionAnswers,
+    wrongQuestionsArg: wrongQuestions,
+    winCallback: () => { winCount++; }
+  });
+  sessionAnswers = sessionAnswersNew;
+  wrongQuestions = wrongQuestionsNew;
   if (browser) {
     sessionStorage.setItem(`answer-${q.number}`, index.toString());
   }
@@ -410,7 +532,18 @@ let setSelected = (index: number) => {
         <!-- Fixed Next Button -->
         <button
           class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
-          on:click={skipCurrentQuestion}
+          on:click={() => {
+            const { sessionAnswers: sa, wrongQuestions: wq, currentIndex: ci } = skipCurrentQuestion({
+              sessionAnswersArg: sessionAnswers,
+              wrongQuestionsArg: wrongQuestions,
+              limitedQuestionsArg: limitedQuestions,
+              currentIndexArg: currentIndex
+            });
+            sessionAnswers = sa;
+            wrongQuestions = wq;
+            currentIndex = ci;
+            saveSessionState();
+          }}
           disabled={currentIndex >= limitedQuestions.length - 1}
         >
           →
