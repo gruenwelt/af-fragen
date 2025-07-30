@@ -60,9 +60,9 @@ import { isMobile } from '$lib/stores/device';
 import { isDarkMode } from '$lib/stores/theme';
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 import { browser } from '$app/environment';
-import { base } from '$app/paths';
 import { sessionStarted } from '$lib/stores/session';
 import type { ShuffledAnswer } from '$lib/utils/shufflingAnswers';
+import { base } from '$app/paths';
 // Use questions from layout data
 
 // ==============================
@@ -96,8 +96,8 @@ let allQuestions: Question[] = [];
 const questionLimits = [25, 100, 200];
 let filteredQuestions: Question[] = [];
 let isLoading = false;
-let selectedClass: string = 'Alle';
-let questionsContainer: HTMLElement | null = null;
+// let selectedClass: string = 'Alle';
+// let questionsContainer: HTMLElement | null = null;
 let sessionEnded = false;
 let reviewingWrongAnswers = false;
 let sessionAnswers: SessionAnswer[] = [];
@@ -117,38 +117,84 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-function startSession() {
-  isLoading = true;
-  const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
-  tick().then(async () => {
-    if (!QuestionCard) {
-      const module = await import('$lib/components/QuestionCard.svelte');
-      QuestionCard = module.default;
-    }
-    if (!questions) {
-      const data = get(page).data;
-      questions = data?.fragenkatalog;
-      if (!questions) {
-        const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
-        questions = module.default;
-      }
-      const { collectQuestions } = await import('$lib/utils/questionLoader');
-      allQuestions = collectQuestions(questions);
-    }
+/**
+ * Save the current session state to sessionStorage.
+ * (To be moved to sessionState.ts)
+ */
+function saveSessionState() {
+  sessionStorage.setItem('af-session-started', 'true');
+  sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+  sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
+  sessionStorage.setItem('af-current-index', currentIndex.toString());
+  sessionStorage.setItem('af-shuffled-map', JSON.stringify(shuffledMap));
+}
 
-    const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
-    let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
-    filteredQuestions = target;
-    limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
-    sessionAnswers = [];
-    shuffledMap = {};
-    sessionStorage.setItem('af-session-started', 'true');
-    sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
-    sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
-    sessionStorage.setItem('af-current-index', currentIndex.toString());
-    isLoading = false;
-    sessionStarted.set(true);
-  });
+/**
+ * Clear all session-related keys from sessionStorage.
+ * (To be moved to sessionManager.ts)
+ */
+function clearSessionState() {
+  sessionStorage.removeItem('af-session-started');
+  sessionStorage.removeItem('af-session-answers');
+  sessionStorage.removeItem('af-limited-questions');
+  sessionStorage.removeItem('af-current-index');
+  sessionStorage.removeItem('af-shuffled-map');
+}
+
+/**
+ * Skip the current question (when pressing next without answering).
+ * Adds a skipped answer to sessionAnswers and wrongQuestions, saves state, and advances index.
+ */
+function skipCurrentQuestion() {
+  const q = limitedQuestions[currentIndex];
+  if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
+    const skippedAnswer = {
+      questionNumber: q.number,
+      selectedIndex: -1,
+      isCorrect: false
+    };
+    sessionAnswers.push(skippedAnswer);
+    wrongQuestions.push(skippedAnswer);
+  }
+  saveSessionState();
+  currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
+}
+
+/**
+ * Initializes a new session for the given class.
+ * Handles loading question data, filtering, shuffling, initializing state, and saving to sessionStorage.
+ */
+async function initializeSession(selectedClassNow: string) {
+  isLoading = true;
+  await tick();
+  if (!QuestionCard) {
+    const module = await import('$lib/components/QuestionCard.svelte');
+    QuestionCard = module.default;
+  }
+  if (!questions) {
+    const data = get(page).data;
+    questions = data?.fragenkatalog;
+    if (!questions) {
+      const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
+      questions = module.default;
+    }
+    const { collectQuestions } = await import('$lib/utils/questionLoader');
+    allQuestions = collectQuestions(questions);
+  }
+  const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
+  let target: Question[] = filterQuestionsByClass(allQuestions, selectedClassNow);
+  filteredQuestions = target;
+  limitedQuestions = [...filteredQuestions].sort(() => Math.random() - 0.5).slice(0, questionLimit);
+  sessionAnswers = [];
+  shuffledMap = {};
+  saveSessionState();
+  isLoading = false;
+  sessionStarted.set(true);
+}
+
+function startSession() {
+  const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
+  initializeSession(selectedClassNow);
 }
 
 function showResultsOverlay() {
@@ -161,27 +207,46 @@ function showResultsOverlay() {
 // Mobile detection state
 $: isMobileValue = $isMobile;
 
+/**
+ * Applies a restored session state to local variables.
+ * Updates sessionAnswers, limitedQuestions, currentIndex, and shuffledMap.
+ */
+function applySessionState(restored: {
+  sessionAnswers: typeof sessionAnswers,
+  limitedQuestions: typeof limitedQuestions,
+  currentIndex: number,
+  shuffledMap?: typeof shuffledMap
+}) {
+  sessionAnswers = restored.sessionAnswers;
+  limitedQuestions = restored.limitedQuestions;
+  currentIndex = restored.currentIndex;
+  shuffledMap = restored.shuffledMap || {};
+}
+
+/**
+ * Restores the session state from sessionStorage and initializes UI state.
+ * Loads the QuestionCard component if needed.
+ */
+async function restoreAndInitializeSession() {
+  const { restoreSessionState } = await import('$lib/utils/sessionState');
+  const restored = restoreSessionState();
+  if (restored) {
+    applySessionState(restored);
+    sessionStarted.set(true);
+
+    // Ensure QuestionCard is available when restoring
+    await tick();
+    if (!QuestionCard) {
+      const module = await import('$lib/components/QuestionCard.svelte');
+      QuestionCard = module.default;
+    }
+  }
+}
+
 onMount(() => {
   // Restore session state from sessionStorage if available
   if (browser) {
-    (async () => {
-      const { restoreSessionState } = await import('$lib/utils/sessionState');
-      const restored = restoreSessionState();
-      if (restored) {
-        sessionAnswers = restored.sessionAnswers;
-        limitedQuestions = restored.limitedQuestions;
-        currentIndex = restored.currentIndex;
-        shuffledMap = restored.shuffledMap || {};
-        sessionStarted.set(true);
-
-        // Ensure QuestionCard is available when restoring
-        await tick();
-        if (!QuestionCard) {
-          const module = await import('$lib/components/QuestionCard.svelte');
-          QuestionCard = module.default;
-        }
-      }
-    })();
+    restoreAndInitializeSession();
   }
 
   setTimeout(() => {
@@ -215,14 +280,10 @@ $: if (browser && allQuestions.length > 0) {
   })();
 }
 
-// Show correct highlight when an answer is selected
-$: showCorrect = selectedAnswerIndex !== null;
 
 // limitedQuestions will be set when session starts or resets
 let limitedQuestions: Question[] = [];
 
-// Use all session answers for wrong answer review, not just those in limitedQuestions
-$: relevantSessionAnswers = sessionAnswers;
 
 // Shuffle answers whenever question changes, but avoid reshuffling if already saved
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
@@ -243,29 +304,39 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 // Index of correct answer in shuffledAnswers
 $: correctIndex = shuffledAnswers.findIndex(a => a.originalIndex === 0);
 
-let setSelected = (index: number) => {
-  const q = limitedQuestions[currentIndex];
-  if (!q) return;
 
-  selectedAnswerIndex = index;
-  const isCorrect = shuffledAnswers[index]?.originalIndex === 0;
+/**
+ * Evaluate if the selected answer is correct for the current question.
+ * Returns a boolean.
+ */
+function evaluateAnswer(index: number, shuffledAnswers: ShuffledAnswer[]): boolean {
+  return shuffledAnswers[index]?.originalIndex === 0;
+}
 
+/**
+ * Updates the session state with the given answer.
+ * Adds the answer to sessionAnswers, updates wrongQuestions if needed, saves state.
+ */
+function updateSessionWithAnswer(q: Question, index: number, isCorrect: boolean) {
   const alreadyAnswered = sessionAnswers.find((a) => a.questionNumber === q.number);
   if (!alreadyAnswered) {
     const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
     sessionAnswers.push(answer);
-    // Persist session state to sessionStorage
-    (async () => {
-      const { persistSessionState } = await import('$lib/utils/sessionState');
-      persistSessionState({ sessionAnswers, limitedQuestions, currentIndex, shuffledMap });
-    })();
+    saveSessionState();
     if (isCorrect) {
       winCount++;
     } else {
       wrongQuestions.push(answer);
     }
   }
+}
 
+let setSelected = (index: number) => {
+  const q = limitedQuestions[currentIndex];
+  if (!q) return;
+  selectedAnswerIndex = index;
+  const isCorrect = evaluateAnswer(index, shuffledAnswers);
+  updateSessionWithAnswer(q, index, isCorrect);
   if (browser) {
     sessionStorage.setItem(`answer-${q.number}`, index.toString());
   }
@@ -287,7 +358,6 @@ let setSelected = (index: number) => {
     <div class="flex flex-col max-w-2xl w-full mx-auto min-h-screen px-4">
       {#if limitedQuestions.length > 0}
         <section
-          bind:this={questionsContainer}
           class="w-full flex justify-center items-start pt-[10px]"
           aria-label="Scrollable questions container"
         >
@@ -298,10 +368,10 @@ let setSelected = (index: number) => {
                   <svelte:component
                     this={QuestionCard}
                     q={limitedQuestions[currentIndex]}
-                    {base}
                     {shuffledAnswers}
                     {selectedAnswerIndex}
                     {correctIndex}
+                    base={base}
                     onSelect={(i: number) => selectedAnswerIndex === null && setSelected(i)}
                   />
                 {/if}
@@ -321,7 +391,9 @@ let setSelected = (index: number) => {
           <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
             <button
               class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white"
-              on:click={showResultsOverlay}
+              on:click={() => {
+                showResultsOverlay();
+              }}
             >
               X
             </button>
@@ -338,20 +410,7 @@ let setSelected = (index: number) => {
         <!-- Fixed Next Button -->
         <button
           class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
-          on:click={() => {
-            const q = limitedQuestions[currentIndex];
-            if (!sessionAnswers.some((a) => a.questionNumber === q.number)) {
-              const skippedAnswer = {
-                questionNumber: q.number,
-                selectedIndex: -1,
-                isCorrect: false
-              };
-              sessionAnswers.push(skippedAnswer);
-              wrongQuestions.push(skippedAnswer);
-            }
-            sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
-            currentIndex = Math.min(limitedQuestions.length - 1, currentIndex + 1);
-          }}
+          on:click={skipCurrentQuestion}
           disabled={currentIndex >= limitedQuestions.length - 1}
         >
           →
@@ -398,10 +457,7 @@ let setSelected = (index: number) => {
             selectedAnswerIndex = null;
             limitedQuestions = [];
             shuffledMap = {};
-            sessionStorage.removeItem('af-session-started');
-            sessionStorage.removeItem('af-session-answers');
-            sessionStorage.removeItem('af-limited-questions');
-            sessionStorage.removeItem('af-current-index');
+            clearSessionState();
             sessionStarted.set(false);
             showResults = false;
           }}
