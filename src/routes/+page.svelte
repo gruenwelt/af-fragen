@@ -171,7 +171,15 @@ onMount(() => {
         sessionAnswers = restored.sessionAnswers;
         limitedQuestions = restored.limitedQuestions;
         currentIndex = restored.currentIndex;
+        shuffledMap = restored.shuffledMap || {};
         sessionStarted.set(true);
+
+        // Ensure QuestionCard is available when restoring
+        await tick();
+        if (!QuestionCard) {
+          const module = await import('$lib/components/QuestionCard.svelte');
+          QuestionCard = module.default;
+        }
       }
     })();
   }
@@ -216,21 +224,20 @@ let limitedQuestions: Question[] = [];
 // Use all session answers for wrong answer review, not just those in limitedQuestions
 $: relevantSessionAnswers = sessionAnswers;
 
-// Shuffle answers whenever question changes, but keep shuffle per question
+// Shuffle answers whenever question changes, but avoid reshuffling if already saved
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
   const q = limitedQuestions[currentIndex];
   const previous = sessionAnswers.find(a => a.questionNumber === q.number);
-  if (!shuffledMap[q.number]) {
+  if (shuffledMap[q.number]) {
+    shuffledAnswers = shuffledMap[q.number];
+  } else {
     (async () => {
       const { getShuffledAnswers } = await import('$lib/utils/shufflingAnswers');
       shuffledMap[q.number] = getShuffledAnswers(q);
       shuffledAnswers = shuffledMap[q.number];
-      selectedAnswerIndex = previous ? previous.selectedIndex : null;
     })();
-  } else {
-    shuffledAnswers = shuffledMap[q.number];
-    selectedAnswerIndex = previous ? previous.selectedIndex : null;
   }
+  selectedAnswerIndex = previous ? previous.selectedIndex : null;
 }
 
 // Index of correct answer in shuffledAnswers
@@ -250,7 +257,7 @@ let setSelected = (index: number) => {
     // Persist session state to sessionStorage
     (async () => {
       const { persistSessionState } = await import('$lib/utils/sessionState');
-      persistSessionState({ sessionAnswers, limitedQuestions, currentIndex });
+      persistSessionState({ sessionAnswers, limitedQuestions, currentIndex, shuffledMap });
     })();
     if (isCorrect) {
       winCount++;
