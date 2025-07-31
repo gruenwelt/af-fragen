@@ -61,8 +61,14 @@ import { isDarkMode } from '$lib/stores/theme';
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 import { browser } from '$app/environment';
 import { sessionStarted } from '$lib/stores/session';
-import type { ShuffledAnswer } from '$lib/utils/shufflingAnswers';
+import type { ShuffledAnswer } from '$lib/types';
 import { base } from '$app/paths';
+import {
+  saveSessionState,
+  clearSessionState,
+  saveSessionStateCustom,
+  getApplySessionState
+} from '$lib/utils/sessionState';
 // Use questions from layout data
 
 // ==============================
@@ -116,41 +122,6 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-// --- Session state management (to be moved to sessionState.ts or sessionManager.ts) ---
-function saveSessionStateCustom({
-  sessionAnswersArg,
-  limitedQuestionsArg,
-  currentIndexArg,
-  shuffledMapArg
-}: {
-  sessionAnswersArg: typeof sessionAnswers,
-  limitedQuestionsArg: typeof limitedQuestions,
-  currentIndexArg: number,
-  shuffledMapArg: typeof shuffledMap
-}) {
-  sessionStorage.setItem('af-session-started', 'true');
-  sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswersArg));
-  sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestionsArg));
-  sessionStorage.setItem('af-current-index', currentIndexArg.toString());
-  sessionStorage.setItem('af-shuffled-map', JSON.stringify(shuffledMapArg));
-}
-
-function saveSessionState() {
-  saveSessionStateCustom({
-    sessionAnswersArg: sessionAnswers,
-    limitedQuestionsArg: limitedQuestions,
-    currentIndexArg: currentIndex,
-    shuffledMapArg: shuffledMap
-  });
-}
-
-function clearSessionState() {
-  sessionStorage.removeItem('af-session-started');
-  sessionStorage.removeItem('af-session-answers');
-  sessionStorage.removeItem('af-limited-questions');
-  sessionStorage.removeItem('af-current-index');
-  sessionStorage.removeItem('af-shuffled-map');
-}
 
 /**
  * Skip the current question by providing all state as parameters.
@@ -200,10 +171,6 @@ async function initializeSession({
 }) {
   let questionsLocal = questionsArg;
   let allQuestionsLocal = allQuestionsArg;
-  if (!QuestionCard) {
-    const module = await import('$lib/components/QuestionCard.svelte');
-    QuestionCard = module.default;
-  }
   if (!questionsLocal) {
     const data = get(page).data;
     questionsLocal = data?.fragenkatalog;
@@ -268,71 +235,24 @@ function showResultsOverlay() {
 // Mobile detection state
 $: isMobileValue = $isMobile;
 
-/**
- * Returns a function that applies a restored session state to given setters, not bound to lexical scope.
- */
-function getApplySessionState({ setSessionAnswers, setLimitedQuestions, setCurrentIndex, setShuffledMap }: {
-  setSessionAnswers: (a: typeof sessionAnswers) => void,
-  setLimitedQuestions: (l: typeof limitedQuestions) => void,
-  setCurrentIndex: (i: number) => void,
-  setShuffledMap: (m: typeof shuffledMap) => void
-}) {
-  return function(restored: {
-    sessionAnswers: typeof sessionAnswers,
-    limitedQuestions: typeof limitedQuestions,
-    currentIndex: number,
-    shuffledMap?: typeof shuffledMap
-  }) {
-    setSessionAnswers(restored.sessionAnswers);
-    setLimitedQuestions(restored.limitedQuestions);
-    setCurrentIndex(restored.currentIndex);
-    setShuffledMap(restored.shuffledMap || {});
-  };
-}
-
-/**
- * Restores the session state from sessionStorage and initializes UI state.
- * Loads the QuestionCard component if needed.
- * Accepts setter functions for side-effect isolation.
- */
-async function restoreAndInitializeSessionCustom({
-  setSessionAnswers,
-  setLimitedQuestions,
-  setCurrentIndex,
-  setShuffledMap
-}: {
-  setSessionAnswers: (a: typeof sessionAnswers) => void,
-  setLimitedQuestions: (l: typeof limitedQuestions) => void,
-  setCurrentIndex: (i: number) => void,
-  setShuffledMap: (m: typeof shuffledMap) => void
-}) {
-  const { restoreSessionState } = await import('$lib/utils/sessionState');
-  const restored = restoreSessionState();
-  if (restored) {
-    getApplySessionState({
-      setSessionAnswers,
-      setLimitedQuestions,
-      setCurrentIndex,
-      setShuffledMap
-    })(restored);
-    sessionStarted.set(true);
-    await tick();
-    if (!QuestionCard) {
-      const module = await import('$lib/components/QuestionCard.svelte');
-      QuestionCard = module.default;
-    }
-  }
-}
 
 onMount(() => {
   if (browser) {
-    restoreAndInitializeSessionCustom({
-      setSessionAnswers: (a) => sessionAnswers = a,
-      setLimitedQuestions: (l) => limitedQuestions = l,
-      setCurrentIndex: (i) => currentIndex = i,
-      setShuffledMap: (m) => shuffledMap = m
+    // Eagerly load QuestionCard if not already loaded
+    if (!QuestionCard) {
+      import('$lib/components/QuestionCard.svelte').then((module) => {
+        QuestionCard = module.default;
+      });
+    }
+
+    getApplySessionState({
+      setSessionAnswers: (a: SessionAnswer[]) => sessionAnswers = a,
+      setLimitedQuestions: (l: Question[]) => limitedQuestions = l,
+      setCurrentIndex: (i: number) => currentIndex = i,
+      setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => shuffledMap = m
     });
   }
+
   setTimeout(() => {
     headerReady = true;
   }, 0);
@@ -541,7 +461,12 @@ let setSelected = (index: number) => {
             sessionAnswers = sa;
             wrongQuestions = wq;
             currentIndex = ci;
-            saveSessionState();
+            saveSessionState(
+              sessionAnswers,
+              limitedQuestions,
+              currentIndex,
+              shuffledMap
+            );
           }}
           disabled={currentIndex >= limitedQuestions.length - 1}
         >

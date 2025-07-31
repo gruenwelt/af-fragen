@@ -34,9 +34,3 @@ export type PersistedSessionState = {
 
 export type RestoredSessionState = PersistedSessionState | null;
 
-export type SessionAnswerType = SessionAnswer;
-export type ShuffledAnswerType = ShuffledAnswer;
-export type QuestionType = Question;
-export type SessionStateType = SessionState;
-export type PersistedSessionStateType = PersistedSessionState;
-export type RestoredSessionStateType = RestoredSessionState;
