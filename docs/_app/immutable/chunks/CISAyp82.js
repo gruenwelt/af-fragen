@@ -1,0 +1,1 @@
+function s(e){return[...["a","b","c","d"].map((r,n)=>({answer:r,html:e[`answer${r.toUpperCase()}Html`],picture:e[`picture_${r}`],originalIndex:n}))].sort(()=>Math.random()-.5)}export{s as getShuffledAnswers};
