@@ -1,3 +1,4 @@
+import { getApplySessionState } from '$lib/utils/sessionState';
 import { saveSessionState } from '$lib/utils/sessionState';
 export async function initializeSession({
   selectedClassNow,
@@ -304,4 +305,22 @@ export function resetSession({
   clearSessionState();
   setSessionStarted(false);
   setShowResults(false);
+}
+export function restoreSessionState({
+  setSessionAnswers,
+  setLimitedQuestions,
+  setCurrentIndex,
+  setShuffledMap
+}: {
+  setSessionAnswers: (v: SessionAnswer[]) => void;
+  setLimitedQuestions: (v: Question[]) => void;
+  setCurrentIndex: (v: number) => void;
+  setShuffledMap: (v: Record<string, ShuffledAnswer[]>) => void;
+}) {
+  getApplySessionState({
+    setSessionAnswers,
+    setLimitedQuestions,
+    setCurrentIndex,
+    setShuffledMap
+  });
 }

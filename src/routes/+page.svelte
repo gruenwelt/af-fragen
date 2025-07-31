@@ -122,7 +122,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession } from '$lib/utils/sessionManager';
+import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession, restoreSessionState } from '$lib/utils/sessionManager';
 
 // ==============================
 // Lifecycle & Reactivity
@@ -141,7 +141,7 @@ onMount(() => {
       });
     }
 
-    getApplySessionState({
+    restoreSessionState({
       setSessionAnswers: (a: SessionAnswer[]) => sessionAnswers = a,
       setLimitedQuestions: (l: Question[]) => limitedQuestions = l,
       setCurrentIndex: (i: number) => currentIndex = i,
