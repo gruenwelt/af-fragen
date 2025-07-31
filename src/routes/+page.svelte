@@ -55,6 +55,7 @@
 
 import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
+import NavigationButtons from '$lib/components/Buttons.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -263,18 +264,13 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
           {winCount}
           on:showResults={() => showResults = true}
         />
-        <!-- Fixed Previous Button -->
-        <button
-          class={`fixed left-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
-          on:click={() => currentIndex = Math.max(0, currentIndex - 1)}
-          disabled={currentIndex === 0}
-        >
-          ←
-        </button>
-        <!-- Fixed Next Button -->
-        <button
-          class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
-          on:click={() =>
+        <NavigationButtons
+          {currentIndex}
+          {questionLimit}
+          isDarkMode={$isDarkMode}
+          sessionActive={$sessionStarted}
+          on:prev={() => currentIndex = Math.max(0, currentIndex - 1)}
+          on:next={() =>
             handleSkipQuestion({
               sessionAnswers,
               wrongQuestions,
@@ -286,10 +282,7 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
               setCurrentIndex: (v) => currentIndex = v
             })
           }
-          disabled={currentIndex >= limitedQuestions.length - 1}
-        >
-          →
-        </button>
+        />
       {/if}
     </div>
   {/if}
