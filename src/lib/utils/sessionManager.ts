@@ -377,3 +377,7 @@ export async function getOrShuffleAnswers({
     return shuffled;
   }
 }
+
+export function calculateWinCount(answers: SessionAnswer[]): number {
+  return answers.filter((a) => a.isCorrect).length;
+}

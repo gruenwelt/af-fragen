@@ -63,12 +63,7 @@ import { browser } from '$app/environment';
 import { sessionStarted } from '$lib/stores/session';
 import type { ShuffledAnswer } from '$lib/types';
 import { base } from '$app/paths';
-import {
-  saveSessionState,
-  clearSessionState,
-  saveSessionStateCustom,
-  getApplySessionState
-} from '$lib/utils/sessionState';
+// Session state utilities removed as unused
 // Use questions from layout data
 
 // ==============================
@@ -98,11 +93,8 @@ let allQuestions: Question[] = [];
 // ==============================
 // State
 // ==============================
-const questionLimits = [25, 100, 200];
 let filteredQuestions: Question[] = [];
 let isLoading = false;
-// let selectedClass: string = 'Alle';
-// let questionsContainer: HTMLElement | null = null;
 let sessionEnded = false;
 let reviewingWrongAnswers = false;
 let sessionAnswers: SessionAnswer[] = [];
@@ -185,7 +177,6 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 $: correctIndex = getCorrectIndex(shuffledAnswers);
 
 
-import { evaluateAnswer } from '$lib/utils/sessionManager';
 
 
 import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionManager';
