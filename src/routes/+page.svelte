@@ -56,6 +56,7 @@
 import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
+import ResultsOverlay from '$lib/components/ResultsOverlay.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -178,8 +179,9 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 // Index of correct answer in shuffledAnswers
 $: correctIndex = getCorrectIndex(shuffledAnswers);
 
-
-
+// Pass percentage and passed reactive statements
+$: passPercentage = Math.round((winCount / questionLimit) * 100);
+$: passed = winCount >= 19 && passPercentage >= 76;
 
 import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionManager';
 </script>
@@ -291,51 +293,25 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
 
 
 {#if showResults}
-  <div class="fixed inset-0 z-[999] flex items-center justify-center px-4 bg-black/30 backdrop-blur-sm transition-opacity duration-300">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100 min-h-[416px] flex flex-col justify-center items-center">
-      {#if winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76}
-        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">🎉 Super gemacht! Du hast bestanden!</p>
-      {:else if Math.round((winCount / questionLimit) * 100) >= 60}
-        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">😌 Noch nicht ganz – aber du bist fast am Ziel!</p>
-      {:else if Math.round((winCount / questionLimit) * 100) < 25}
-        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">📚 Vielleicht hilft noch etwas Lernen?</p>
-      {:else}
-        <p class="text-lg font-bold mt-6 mb-8 leading-relaxed">💡 Leider nicht bestanden!</p>
-      {/if}
-
-      <p class="text-3xl font-bold mb-10 leading-snug {winCount >= 19 && Math.round((winCount / questionLimit) * 100) >= 76 ? 'text-green-600' : 'text-[color:var(--color-theme-1)]'}">
-        {winCount} richtige Antworten ({Math.round((winCount / questionLimit) * 100)}%)
-      </p>
-
-      <div class="flex justify-around mt-10 gap-6">
-        <button
-          class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
-          on:click={() => showResults = false}
-        >
-          ←
-        </button>
-        <button
-          class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
-          on:click={() =>
-            resetSession({
-              setSessionEnded: (v) => sessionEnded = v,
-              setSessionAnswers: (v) => sessionAnswers = v,
-              setCurrentIndex: (v) => currentIndex = v,
-              setWrongQuestions: (v) => wrongQuestions = v,
-              setReviewingWrongAnswers: (v) => reviewingWrongAnswers = v,
-              setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
-              setLimitedQuestions: (v) => limitedQuestions = v,
-              setShuffledMap: (v) => shuffledMap = v,
-              setSessionStarted: (v) => sessionStarted.set(v),
-              setShowResults: (v) => showResults = v
-            })
-          }
-        >
-          X
-        </button>
-      </div>
-    </div>
-  </div>
+  <ResultsOverlay
+    {winCount}
+    {questionLimit}
+    on:close={() => showResults = false}
+    on:restart={() =>
+      resetSession({
+        setSessionEnded: (v) => sessionEnded = v,
+        setSessionAnswers: (v) => sessionAnswers = v,
+        setCurrentIndex: (v) => currentIndex = v,
+        setWrongQuestions: (v) => wrongQuestions = v,
+        setReviewingWrongAnswers: (v) => reviewingWrongAnswers = v,
+        setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
+        setLimitedQuestions: (v) => limitedQuestions = v,
+        setShuffledMap: (v) => shuffledMap = v,
+        setSessionStarted: (v) => sessionStarted.set(v),
+        setShowResults: (v) => showResults = v
+      })
+    }
+  />
 {/if}
 <style>
   :global(html), :global(body) {
