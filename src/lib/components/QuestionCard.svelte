@@ -89,24 +89,23 @@
     {#each shuffledAnswers as ans, idx}
       <button
         type="button"
-        class={
-          [
-            'answer-box',
-            'answer-border',
-            'answer-text',
-            selectedAnswerIndex !== null
-              ? selectedAnswerIndex === idx
-                ? correctIndex !== null
-                  ? idx === correctIndex
-                    ? 'bg-green-600'
-                    : 'bg-theme-color'
+        class={[
+          'answer-box',
+          'answer-border',
+          'answer-text',
+          (!onSelect || selectedAnswerIndex !== null) ? 'cursor-default' : 'cursor-pointer',
+          selectedAnswerIndex !== null
+            ? selectedAnswerIndex === idx
+              ? correctIndex !== null
+                ? idx === correctIndex
+                  ? 'bg-green-600'
                   : 'bg-theme-color'
-                : idx === correctIndex
-                ? 'bg-green-600'
-                : 'border-gray-200'
+                : 'bg-theme-color'
+              : idx === correctIndex
+              ? 'bg-green-600'
               : 'border-gray-200'
-          ].join(' ')
-        }
+            : 'border-gray-200'
+        ].join(' ')}
         disabled={!onSelect || selectedAnswerIndex !== null}
         on:click={() => onSelect(idx)}
         aria-pressed={selectedAnswerIndex === idx}
