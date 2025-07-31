@@ -1,3 +1,4 @@
+import { saveSessionState } from '$lib/utils/sessionState';
 export async function initializeSession({
   selectedClassNow,
   questionLimitArg,
@@ -52,6 +53,7 @@ import { page } from '$app/stores';
 
 import { saveSessionStateCustom } from '$lib/utils/sessionState';
 import type { SessionAnswer, Question, ShuffledAnswer } from '$lib/types';
+import { clearSessionState } from '$lib/utils/sessionState';
 
 export function skipCurrentQuestion({
   sessionAnswersArg,
@@ -233,4 +235,73 @@ export async function startSession({
   setCurrentIndex(result.currentIndex);
   setIsLoading(false);
   onSessionStart();
+}
+export function handleSkipQuestion({
+  sessionAnswers,
+  wrongQuestions,
+  limitedQuestions,
+  currentIndex,
+  shuffledMap,
+  setSessionAnswers,
+  setWrongQuestions,
+  setCurrentIndex
+}: {
+  sessionAnswers: SessionAnswer[];
+  wrongQuestions: SessionAnswer[];
+  limitedQuestions: Question[];
+  currentIndex: number;
+  shuffledMap: Record<string, ShuffledAnswer[]>;
+  setSessionAnswers: (v: SessionAnswer[]) => void;
+  setWrongQuestions: (v: SessionAnswer[]) => void;
+  setCurrentIndex: (v: number) => void;
+}) {
+  const { sessionAnswers: sa, wrongQuestions: wq, currentIndex: ci } = skipCurrentQuestion({
+    sessionAnswersArg: sessionAnswers,
+    wrongQuestionsArg: wrongQuestions,
+    limitedQuestionsArg: limitedQuestions,
+    currentIndexArg: currentIndex
+  });
+
+  setSessionAnswers(sa);
+  setWrongQuestions(wq);
+  setCurrentIndex(ci);
+
+  saveSessionState(sa, limitedQuestions, ci, shuffledMap);
+}
+
+
+export function resetSession({
+  setSessionEnded,
+  setSessionAnswers,
+  setCurrentIndex,
+  setWrongQuestions,
+  setReviewingWrongAnswers,
+  setSelectedAnswerIndex,
+  setLimitedQuestions,
+  setShuffledMap,
+  setSessionStarted,
+  setShowResults
+}: {
+  setSessionEnded: (v: boolean) => void;
+  setSessionAnswers: (v: SessionAnswer[]) => void;
+  setCurrentIndex: (v: number) => void;
+  setWrongQuestions: (v: SessionAnswer[]) => void;
+  setReviewingWrongAnswers: (v: boolean) => void;
+  setSelectedAnswerIndex: (v: number | null) => void;
+  setLimitedQuestions: (v: Question[]) => void;
+  setShuffledMap: (v: Record<string, ShuffledAnswer[]>) => void;
+  setSessionStarted: (v: boolean) => void;
+  setShowResults: (v: boolean) => void;
+}) {
+  setSessionEnded(false);
+  setSessionAnswers([]);
+  setCurrentIndex(0);
+  setWrongQuestions([]);
+  setReviewingWrongAnswers(false);
+  setSelectedAnswerIndex(null);
+  setLimitedQuestions([]);
+  setShuffledMap({});
+  clearSessionState();
+  setSessionStarted(false);
+  setShowResults(false);
 }

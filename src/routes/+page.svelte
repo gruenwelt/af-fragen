@@ -122,7 +122,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-import { skipCurrentQuestion, showResultsOverlay, startSession } from '$lib/utils/sessionManager';
+import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession } from '$lib/utils/sessionManager';
 
 // ==============================
 // Lifecycle & Reactivity
@@ -309,23 +309,18 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
         <!-- Fixed Next Button -->
         <button
           class={`fixed right-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
-          on:click={() => {
-            const { sessionAnswers: sa, wrongQuestions: wq, currentIndex: ci } = skipCurrentQuestion({
-              sessionAnswersArg: sessionAnswers,
-              wrongQuestionsArg: wrongQuestions,
-              limitedQuestionsArg: limitedQuestions,
-              currentIndexArg: currentIndex
-            });
-            sessionAnswers = sa;
-            wrongQuestions = wq;
-            currentIndex = ci;
-            saveSessionState(
+          on:click={() =>
+            handleSkipQuestion({
               sessionAnswers,
+              wrongQuestions,
               limitedQuestions,
               currentIndex,
-              shuffledMap
-            );
-          }}
+              shuffledMap,
+              setSessionAnswers: (v) => sessionAnswers = v,
+              setWrongQuestions: (v) => wrongQuestions = v,
+              setCurrentIndex: (v) => currentIndex = v
+            })
+          }
           disabled={currentIndex >= limitedQuestions.length - 1}
         >
           →
@@ -363,19 +358,20 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
         </button>
         <button
           class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
-          on:click={() => {
-            sessionEnded = false;
-            sessionAnswers = [];
-            currentIndex = 0;
-            wrongQuestions = [];
-            reviewingWrongAnswers = false;
-            selectedAnswerIndex = null;
-            limitedQuestions = [];
-            shuffledMap = {};
-            clearSessionState();
-            sessionStarted.set(false);
-            showResults = false;
-          }}
+          on:click={() =>
+            resetSession({
+              setSessionEnded: (v) => sessionEnded = v,
+              setSessionAnswers: (v) => sessionAnswers = v,
+              setCurrentIndex: (v) => currentIndex = v,
+              setWrongQuestions: (v) => wrongQuestions = v,
+              setReviewingWrongAnswers: (v) => reviewingWrongAnswers = v,
+              setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
+              setLimitedQuestions: (v) => limitedQuestions = v,
+              setShuffledMap: (v) => shuffledMap = v,
+              setSessionStarted: (v) => sessionStarted.set(v),
+              setShowResults: (v) => showResults = v
+            })
+          }
         >
           X
         </button>
