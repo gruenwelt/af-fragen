@@ -122,7 +122,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession, restoreSessionState } from '$lib/utils/sessionManager';
+import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession, restoreSessionState, incrementWinCount, updateFilteredQuestions, getCorrectIndex, getOrShuffleAnswers } from '$lib/utils/sessionManager';
 
 // ==============================
 // Lifecycle & Reactivity
@@ -157,27 +157,13 @@ onMount(() => {
 // Selected class from query params (reactive)
 $: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
 
-// Update filteredQuestions reactively based on selectedClass (from query param)
 $: if (browser && allQuestions.length > 0) {
-  // Ensure ?class param is present
-  if (window && window.location && window.location.search !== undefined) {
-    const currentParams = new URLSearchParams(window.location.search);
-    if (!currentParams.has('class')) {
-      currentParams.set('class', '1');
-      const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-      window.history.replaceState({}, '', newUrl);
-    }
-  }
-  // Now, update filteredQuestions whenever selectedClass changes
-  isLoading = true;
-  (async () => {
-    const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
-    let target: Question[] = filterQuestionsByClass(allQuestions, selectedClass);
-    setTimeout(() => {
-      filteredQuestions = target;
-      isLoading = false;
-    }, 300);
-  })();
+  updateFilteredQuestions({
+    allQuestions,
+    selectedClass,
+    setFilteredQuestions: (v) => filteredQuestions = v,
+    setIsLoading: (v) => isLoading = v
+  });
 }
 
 
@@ -185,24 +171,18 @@ $: if (browser && allQuestions.length > 0) {
 let limitedQuestions: Question[] = [];
 
 
-// Shuffle answers whenever question changes, but avoid reshuffling if already saved
+// Shuffle answers or get from map; set selectedAnswerIndex from previous answer
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
   const q = limitedQuestions[currentIndex];
   const previous = sessionAnswers.find(a => a.questionNumber === q.number);
-  if (shuffledMap[q.number]) {
-    shuffledAnswers = shuffledMap[q.number];
-  } else {
-    (async () => {
-      const { getShuffledAnswers } = await import('$lib/utils/shufflingAnswers');
-      shuffledMap[q.number] = getShuffledAnswers(q);
-      shuffledAnswers = shuffledMap[q.number];
-    })();
-  }
-  selectedAnswerIndex = previous ? previous.selectedIndex : null;
+  (async () => {
+    shuffledAnswers = await getOrShuffleAnswers({ q, shuffledMap });
+    selectedAnswerIndex = previous ? previous.selectedIndex : null;
+  })();
 }
 
 // Index of correct answer in shuffledAnswers
-$: correctIndex = shuffledAnswers.findIndex(a => a.originalIndex === 0);
+$: correctIndex = getCorrectIndex(shuffledAnswers);
 
 
 import { evaluateAnswer } from '$lib/utils/sessionManager';
@@ -271,7 +251,7 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
                         setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
                         setSessionAnswers: (v) => sessionAnswers = v,
                         setWrongQuestions: (v) => wrongQuestions = v,
-                        incrementWinCount: () => { winCount++; }
+                        incrementWinCount: () => incrementWinCount(winCount, (v) => winCount = v)
                       })
                     }
                   />

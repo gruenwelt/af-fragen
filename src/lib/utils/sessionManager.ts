@@ -324,3 +324,56 @@ export function restoreSessionState({
     setShuffledMap
   });
 }
+// Utility function to increment win count
+export function incrementWinCount(current: number, set: (v: number) => void) {
+  set(current + 1);
+}
+// Update filtered questions based on class and update URL if needed
+export async function updateFilteredQuestions({
+  allQuestions,
+  selectedClass,
+  setFilteredQuestions,
+  setIsLoading
+}: {
+  allQuestions: Question[];
+  selectedClass: string;
+  setFilteredQuestions: (q: Question[]) => void;
+  setIsLoading: (v: boolean) => void;
+}) {
+  if (typeof window !== 'undefined' && window.location?.search !== undefined) {
+    const currentParams = new URLSearchParams(window.location.search);
+    if (!currentParams.has('class')) {
+      currentParams.set('class', '1');
+      const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }
+
+  setIsLoading(true);
+  const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
+  const target = filterQuestionsByClass(allQuestions, selectedClass);
+  setTimeout(() => {
+    setFilteredQuestions(target);
+    setIsLoading(false);
+  }, 300);
+}
+export function getCorrectIndex(shuffled: ShuffledAnswer[]): number {
+  return shuffled.findIndex(a => a.originalIndex === 0);
+}
+
+export async function getOrShuffleAnswers({
+  q,
+  shuffledMap
+}: {
+  q: Question;
+  shuffledMap: Record<string, ShuffledAnswer[]>;
+}): Promise<ShuffledAnswer[]> {
+  if (shuffledMap[q.number]) {
+    return shuffledMap[q.number];
+  } else {
+    const { getShuffledAnswers } = await import('$lib/utils/shufflingAnswers');
+    const shuffled = getShuffledAnswers(q);
+    shuffledMap[q.number] = shuffled;
+    return shuffled;
+  }
+}
