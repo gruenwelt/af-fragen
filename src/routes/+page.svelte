@@ -54,6 +54,7 @@
 // ==============================
 
 import QuestionButtons from '$lib/components/Buttons.svelte';
+import SessionFooter from '$lib/components/SessionFooter.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -114,7 +115,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-import { skipCurrentQuestion, showResultsOverlay, startSession, handleSkipQuestion, resetSession, restoreSessionState, incrementWinCount, updateFilteredQuestions, getCorrectIndex, getOrShuffleAnswers } from '$lib/utils/sessionManager';
+import { skipCurrentQuestion, startSession, handleSkipQuestion, resetSession, restoreSessionState, incrementWinCount, updateFilteredQuestions, getCorrectIndex, getOrShuffleAnswers } from '$lib/utils/sessionManager';
 
 // ==============================
 // Lifecycle & Reactivity
@@ -256,22 +257,12 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
         </section>
       {/if}
       {#if limitedQuestions.length > 0}
-        <div class="fixed bottom-[10px] left-1/2 md:left-1/2 -translate-x-1/2 md:-translate-x-1/2 bg-white/80 backdrop-blur px-4 rounded-full shadow flex justify-between items-center z-50 w-[calc(60%)] max-w-full md:w-[calc(60%)] md:max-w-xl">
-          <div class="w-[25%] flex justify-start items-center text-sm ml-1">
-            {currentIndex + 1} / {limitedQuestions.length}
-          </div>
-          <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
-            {winCount}
-          </div>
-          <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
-            <button
-              class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white"
-              on:click={() => showResultsOverlay((v) => showResults = v)}
-            >
-              X
-            </button>
-          </div>
-        </div>
+        <SessionFooter
+          {currentIndex}
+          {limitedQuestions}
+          {winCount}
+          on:showResults={() => showResults = true}
+        />
         <!-- Fixed Previous Button -->
         <button
           class={`fixed left-4 top-[66%] md:top-1/2 transform -translate-y-1/2 w-20 h-20 rounded-full ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-[rgba(255,255,255,0.7)]'} shadow-lg z-50 text-4xl cursor-pointer`}
