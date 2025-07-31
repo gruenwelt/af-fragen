@@ -123,36 +123,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // ==============================
 
 
-/**
- * Skip the current question by providing all state as parameters.
- * Returns the new state after skipping.
- */
-function skipCurrentQuestion({
-  sessionAnswersArg,
-  wrongQuestionsArg,
-  limitedQuestionsArg,
-  currentIndexArg
-}: {
-  sessionAnswersArg: SessionAnswer[],
-  wrongQuestionsArg: SessionAnswer[],
-  limitedQuestionsArg: Question[],
-  currentIndexArg: number
-}) {
-  const q = limitedQuestionsArg[currentIndexArg];
-  let sessionAnswersNew = sessionAnswersArg.slice();
-  let wrongQuestionsNew = wrongQuestionsArg.slice();
-  if (!sessionAnswersNew.some((a) => a.questionNumber === q.number)) {
-    const skippedAnswer = {
-      questionNumber: q.number,
-      selectedIndex: -1,
-      isCorrect: false
-    };
-    sessionAnswersNew.push(skippedAnswer);
-    wrongQuestionsNew.push(skippedAnswer);
-  }
-  const nextIndex = Math.min(limitedQuestionsArg.length - 1, currentIndexArg + 1);
-  return { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew, currentIndex: nextIndex };
-}
+import { skipCurrentQuestion, showResultsOverlay } from '$lib/utils/sessionManager';
 
 /**
  * Initializes a new session for the given class, returns the new session state.
@@ -225,9 +196,6 @@ async function startSession() {
   sessionStarted.set(true);
 }
 
-function showResultsOverlay() {
-  showResults = true;
-}
 // ==============================
 // Lifecycle & Reactivity
 // ==============================
@@ -309,59 +277,10 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 $: correctIndex = shuffledAnswers.findIndex(a => a.originalIndex === 0);
 
 
-/**
- * Evaluate if the selected answer is correct for the current question.
- * Returns a boolean. Accepts all data as arguments.
- */
-function evaluateAnswer({
-  index,
-  shuffledAnswersArg
-}: {
-  index: number,
-  shuffledAnswersArg: ShuffledAnswer[]
-}): boolean {
-  return shuffledAnswersArg[index]?.originalIndex === 0;
-}
+import { evaluateAnswer } from '$lib/utils/sessionManager';
 
-/**
- * Updates the session state with the given answer.
- * Pure function, returns new state. Accepts a callback for side-effects (e.g. winCount increment).
- */
-function updateSessionWithAnswer({
-  q,
-  index,
-  isCorrect,
-  sessionAnswersArg,
-  wrongQuestionsArg,
-  winCallback
-}: {
-  q: Question,
-  index: number,
-  isCorrect: boolean,
-  sessionAnswersArg: SessionAnswer[],
-  wrongQuestionsArg: SessionAnswer[],
-  winCallback?: () => void
-}) {
-  const alreadyAnswered = sessionAnswersArg.find((a) => a.questionNumber === q.number);
-  let sessionAnswersNew = sessionAnswersArg.slice();
-  let wrongQuestionsNew = wrongQuestionsArg.slice();
-  if (!alreadyAnswered) {
-    const answer = { questionNumber: q.number, selectedIndex: index, isCorrect };
-    sessionAnswersNew.push(answer);
-    if (isCorrect) {
-      if (winCallback) winCallback();
-    } else {
-      wrongQuestionsNew.push(answer);
-    }
-    saveSessionStateCustom({
-      sessionAnswersArg: sessionAnswersNew,
-      limitedQuestionsArg: limitedQuestions,
-      currentIndexArg: currentIndex,
-      shuffledMapArg: shuffledMap
-    });
-  }
-  return { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew };
-}
+
+import { updateSessionWithAnswer } from '$lib/utils/sessionManager';
 
 let setSelected = (index: number) => {
   const q = limitedQuestions[currentIndex];
@@ -374,7 +293,10 @@ let setSelected = (index: number) => {
     isCorrect,
     sessionAnswersArg: sessionAnswers,
     wrongQuestionsArg: wrongQuestions,
-    winCallback: () => { winCount++; }
+    winCallback: () => { winCount++; },
+    limitedQuestionsArg: limitedQuestions,
+    currentIndexArg: currentIndex,
+    shuffledMapArg: shuffledMap
   });
   sessionAnswers = sessionAnswersNew;
   wrongQuestions = wrongQuestionsNew;
@@ -432,9 +354,7 @@ let setSelected = (index: number) => {
           <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
             <button
               class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white"
-              on:click={() => {
-                showResultsOverlay();
-              }}
+              on:click={() => showResultsOverlay((v) => showResults = v)}
             >
               X
             </button>
