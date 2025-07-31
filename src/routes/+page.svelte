@@ -122,79 +122,7 @@ let wrongQuestions: SessionAnswer[] = [];
 // Functions and Utilities
 // ==============================
 
-
-import { skipCurrentQuestion, showResultsOverlay } from '$lib/utils/sessionManager';
-
-/**
- * Initializes a new session for the given class, returns the new session state.
- * All dependencies passed as parameters for isolation.
- */
-async function initializeSession({
-  selectedClassNow,
-  questionLimitArg,
-  questionsArg,
-  allQuestionsArg
-}: {
-  selectedClassNow: string,
-  questionLimitArg: number,
-  questionsArg: any,
-  allQuestionsArg: Question[]
-}) {
-  let questionsLocal = questionsArg;
-  let allQuestionsLocal = allQuestionsArg;
-  if (!questionsLocal) {
-    const data = get(page).data;
-    questionsLocal = data?.fragenkatalog;
-    if (!questionsLocal) {
-      const module = await import('$lib/data/fragenkatalog3b_prerendered.json');
-      questionsLocal = module.default;
-    }
-    const { collectQuestions } = await import('$lib/utils/questionLoader');
-    allQuestionsLocal = collectQuestions(questionsLocal);
-  }
-  const { filterQuestionsByClass } = await import('$lib/utils/filterByClass');
-  let target: Question[] = filterQuestionsByClass(allQuestionsLocal, selectedClassNow);
-  let filteredQuestionsLocal = target;
-  let limitedQuestionsLocal = [...filteredQuestionsLocal].sort(() => Math.random() - 0.5).slice(0, questionLimitArg);
-  let sessionAnswersLocal: SessionAnswer[] = [];
-  let shuffledMapLocal: typeof shuffledMap = {};
-  saveSessionStateCustom({
-    sessionAnswersArg: sessionAnswersLocal,
-    limitedQuestionsArg: limitedQuestionsLocal,
-    currentIndexArg: 0,
-    shuffledMapArg: shuffledMapLocal
-  });
-  return {
-    questions: questionsLocal,
-    allQuestions: allQuestionsLocal,
-    filteredQuestions: filteredQuestionsLocal,
-    limitedQuestions: limitedQuestionsLocal,
-    sessionAnswers: sessionAnswersLocal,
-    shuffledMap: shuffledMapLocal,
-    currentIndex: 0
-  };
-}
-
-async function startSession() {
-  const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
-  isLoading = true;
-  await tick();
-  const result = await initializeSession({
-    selectedClassNow,
-    questionLimitArg: questionLimit,
-    questionsArg: questions,
-    allQuestionsArg: allQuestions
-  });
-  questions = result.questions;
-  allQuestions = result.allQuestions;
-  filteredQuestions = result.filteredQuestions;
-  limitedQuestions = result.limitedQuestions;
-  sessionAnswers = result.sessionAnswers;
-  shuffledMap = result.shuffledMap;
-  currentIndex = result.currentIndex;
-  isLoading = false;
-  sessionStarted.set(true);
-}
+import { skipCurrentQuestion, showResultsOverlay, startSession } from '$lib/utils/sessionManager';
 
 // ==============================
 // Lifecycle & Reactivity
@@ -280,30 +208,7 @@ $: correctIndex = shuffledAnswers.findIndex(a => a.originalIndex === 0);
 import { evaluateAnswer } from '$lib/utils/sessionManager';
 
 
-import { updateSessionWithAnswer } from '$lib/utils/sessionManager';
-
-let setSelected = (index: number) => {
-  const q = limitedQuestions[currentIndex];
-  if (!q) return;
-  selectedAnswerIndex = index;
-  const isCorrect = evaluateAnswer({ index, shuffledAnswersArg: shuffledAnswers });
-  const { sessionAnswers: sessionAnswersNew, wrongQuestions: wrongQuestionsNew } = updateSessionWithAnswer({
-    q,
-    index,
-    isCorrect,
-    sessionAnswersArg: sessionAnswers,
-    wrongQuestionsArg: wrongQuestions,
-    winCallback: () => { winCount++; },
-    limitedQuestionsArg: limitedQuestions,
-    currentIndexArg: currentIndex,
-    shuffledMapArg: shuffledMap
-  });
-  sessionAnswers = sessionAnswersNew;
-  wrongQuestions = wrongQuestionsNew;
-  if (browser) {
-    sessionStorage.setItem(`answer-${q.number}`, index.toString());
-  }
-};
+import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionManager';
 </script>
 
 
@@ -313,7 +218,26 @@ let setSelected = (index: number) => {
   </div>
 {:else if headerReady}
   {#if !$sessionStarted}
-    <QuestionButtons {questionLimit} on:setLimit={(e) => questionLimit = e.detail} on:startSession={startSession} />
+    <QuestionButtons
+      {questionLimit}
+      on:setLimit={(e) => questionLimit = e.detail}
+      on:startSession={() =>
+        startSession({
+          questionLimit,
+          questionsArg: questions,
+          allQuestionsArg: allQuestions,
+          setQuestions: (v) => questions = v,
+          setAllQuestions: (v) => allQuestions = v,
+          setFilteredQuestions: (v) => filteredQuestions = v,
+          setLimitedQuestions: (v) => limitedQuestions = v,
+          setSessionAnswers: (v) => sessionAnswers = v,
+          setShuffledMap: (v) => shuffledMap = v,
+          setCurrentIndex: (v) => currentIndex = v,
+          setIsLoading: (v) => isLoading = v,
+          onSessionStart: () => sessionStarted.set(true)
+        })
+      }
+    />
   {:else if sessionStarted && !sessionEnded}
     <!-- ============================== -->
     <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
@@ -335,7 +259,21 @@ let setSelected = (index: number) => {
                     {selectedAnswerIndex}
                     {correctIndex}
                     base={base}
-                    onSelect={(i: number) => selectedAnswerIndex === null && setSelected(i)}
+                    onSelect={(i: number) =>
+                      selectedAnswerIndex === null && setSelectedAnswer({
+                        index: i,
+                        limitedQuestions,
+                        currentIndex,
+                        shuffledAnswers,
+                        sessionAnswers,
+                        wrongQuestions,
+                        shuffledMap,
+                        setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
+                        setSessionAnswers: (v) => sessionAnswers = v,
+                        setWrongQuestions: (v) => wrongQuestions = v,
+                        incrementWinCount: () => { winCount++; }
+                      })
+                    }
                   />
                 {/if}
               {/key}
