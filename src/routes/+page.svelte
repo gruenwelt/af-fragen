@@ -191,6 +191,9 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
   {#if !$sessionStarted}
     <QuestionButtons
       {questionLimit}
+      {currentIndex}
+      isDarkMode={$isDarkMode}
+      sessionActive={$sessionStarted}
       on:setLimit={(e) => questionLimit = e.detail}
       on:startSession={() =>
         startSession({
