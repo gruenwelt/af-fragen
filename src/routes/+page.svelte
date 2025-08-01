@@ -44,7 +44,7 @@
     ]
   }
   </script>
-  {#if $showNoIndex}
+  {#if $noIndexMeta}
     <meta name="robots" content="noindex" />
   {/if}
 </svelte:head>
@@ -53,16 +53,22 @@
 // ==============================
 // Imports
 // ==============================
+
+// Svelte core
 import { onMount, tick } from 'svelte';
 import { derived, get } from 'svelte/store';
+
+// App-specific
 import { page } from '$app/stores';
 import { browser } from '$app/environment';
 import { base } from '$app/paths';
 
+// Stores
 import { sessionStarted } from '$lib/stores/session';
 import { isDarkMode } from '$lib/stores/theme';
 import { isMobile } from '$lib/stores/device';
 
+// Components
 import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
@@ -71,6 +77,7 @@ import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 import SessionLayout from '$lib/components/SessionLayout.svelte';
 import StartControls from '$lib/components/StartControls.svelte';
 
+// Utils
 import {
   skipCurrentQuestion,
   startSession,
@@ -100,10 +107,9 @@ import {
   syncShuffledState
 } from '$lib/utils/sessionLifecycle';
 
-// ==============================
 // Types
-// ==============================
 import type { Question, SessionAnswer, ShuffledAnswer } from '$lib/types';
+
 
 // ==============================
 // State
@@ -126,6 +132,7 @@ let isLoading = false;
 let questionLimit = 25;
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 
+
 // ==============================
 // Derived State
 // ==============================
@@ -135,6 +142,21 @@ import {
   didPass
 } from '$lib/utils/sessionHelpers';
 
+let winCount: number;
+let passPercentage: number;
+let passed: boolean;
+let isMobileValue: boolean;
+let selectedClass: string;
+
+const noIndexMeta = derived(page, ($page) => {
+  if (!browser || !$page?.url?.searchParams) return false;
+  return $page.url.searchParams.has('class');
+});
+
+
+// ==============================
+// Event Handlers
+// ==============================
 function handleSelect(index: number) {
   handleAnswerSelect(
     index,
@@ -170,16 +192,6 @@ function handleNext() {
 }
 
 
-$: winCount = getWinCount(sessionAnswers);
-$: passPercentage = getPassPercentage(winCount, questionLimit);
-$: passed = didPass(winCount, passPercentage);
-$: isMobileValue = $isMobile;
-$: selectedClass = getSelectedClass();
-const showNoIndex = derived(page, ($page) => {
-  if (!browser || !$page?.url?.searchParams) return false;
-  return $page.url.searchParams.has('class');
-});
-
 // ==============================
 // Session Setup
 // ==============================
@@ -198,6 +210,7 @@ const handleStartSession = createHandleStartSession({
   setSessionStarted: (v) => sessionStarted.set(v)
 });
 
+
 // ==============================
 // Lifecycle
 // ==============================
@@ -213,9 +226,16 @@ onMount(() => {
   );
 });
 
+
 // ==============================
-// Reactivity
+// Reactive Statements
 // ==============================
+$: winCount = getWinCount(sessionAnswers);
+$: passPercentage = getPassPercentage(winCount, questionLimit);
+$: passed = didPass(winCount, passPercentage);
+$: isMobileValue = $isMobile;
+$: selectedClass = getSelectedClass();
+
 $: if (browser && allQuestions.length > 0) {
   updateFilteredState(
     allQuestions,
