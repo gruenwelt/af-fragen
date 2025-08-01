@@ -242,7 +242,7 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 			</section>
 		</div>
 	{:else if mobileReady}
-		<div class="relative max-w-5xl mx-auto px-0 pt-0 pb-0 overflow-x-hidden">
+		<div class="relative max-w-5xl mx-auto px-0 pt-0 pb-0 overflow-x-hidden overflow-hidden h-screen">
 			{#if Sidebar}
 				<svelte:component
 					this={Sidebar}
