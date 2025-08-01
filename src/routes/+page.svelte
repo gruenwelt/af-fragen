@@ -90,7 +90,7 @@ import {
   handleAnswerSelect,
   handlePrevQuestion,
   handleNextQuestion,
-  handleShowResults
+  handleShowResults as handleShow
 } from '$lib/utils/sessionControls';
 
 import {
@@ -134,6 +134,41 @@ import {
   getPassPercentage,
   didPass
 } from '$lib/utils/sessionHelpers';
+
+function handleSelect(index: number) {
+  handleAnswerSelect(
+    index,
+    selectedAnswerIndex,
+    limitedQuestions,
+    currentIndex,
+    shuffledAnswers,
+    sessionAnswers,
+    wrongQuestions,
+    shuffledMap,
+    (v) => selectedAnswerIndex = v,
+    (v) => sessionAnswers = v,
+    (v) => wrongQuestions = v,
+    (v) => winCount = v
+  );
+}
+
+function handlePrev() {
+  handlePrevQuestion(currentIndex, (v) => currentIndex = v);
+}
+
+function handleNext() {
+  handleNextQuestion(
+    sessionAnswers,
+    wrongQuestions,
+    limitedQuestions,
+    currentIndex,
+    shuffledMap,
+    (v) => sessionAnswers = v,
+    (v) => wrongQuestions = v,
+    (v) => currentIndex = v
+  );
+}
+
 
 $: winCount = getWinCount(sessionAnswers);
 $: passPercentage = getPassPercentage(winCount, questionLimit);
@@ -226,32 +261,10 @@ $: correctIndex = getCorrectIndex(shuffledAnswers);
       {selectedAnswerIndex}
       {correctIndex}
       {base}
-      onSelect={(i) => handleAnswerSelect(
-        i,
-        selectedAnswerIndex,
-        limitedQuestions,
-        currentIndex,
-        shuffledAnswers,
-        sessionAnswers,
-        wrongQuestions,
-        shuffledMap,
-        (v) => selectedAnswerIndex = v,
-        (v) => sessionAnswers = v,
-        (v) => wrongQuestions = v,
-        (v) => winCount = v
-      )}
-      onPrev={() => handlePrevQuestion(currentIndex, (v) => currentIndex = v)}
-      onNext={() => handleNextQuestion(
-        sessionAnswers,
-        wrongQuestions,
-        limitedQuestions,
-        currentIndex,
-        shuffledMap,
-        (v) => sessionAnswers = v,
-        (v) => wrongQuestions = v,
-        (v) => currentIndex = v
-      )}
-      onShowResults={() => handleShowResults((v) => showResults = v)}
+      onSelect={handleSelect}
+      onPrev={handlePrev}
+      onNext={handleNext}
+      onShowResults={() => handleShow((v) => showResults = v)}
     />
   {/if}
 {/if}
