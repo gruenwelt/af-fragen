@@ -93,6 +93,13 @@ import {
   handleShowResults
 } from '$lib/utils/sessionControls';
 
+import {
+  initializeOnMount,
+  getSelectedClass,
+  updateFilteredState,
+  syncShuffledState
+} from '$lib/utils/sessionLifecycle';
+
 // ==============================
 // Types
 // ==============================
@@ -122,11 +129,17 @@ let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default |
 // ==============================
 // Derived State
 // ==============================
-$: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
-$: passPercentage = Math.round((winCount / questionLimit) * 100);
-$: passed = winCount >= 19 && passPercentage >= 76;
+import {
+  getWinCount,
+  getPassPercentage,
+  didPass
+} from '$lib/utils/sessionHelpers';
+
+$: winCount = getWinCount(sessionAnswers);
+$: passPercentage = getPassPercentage(winCount, questionLimit);
+$: passed = didPass(winCount, passPercentage);
 $: isMobileValue = $isMobile;
-$: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
+$: selectedClass = getSelectedClass();
 const showNoIndex = derived(page, ($page) => {
   if (!browser || !$page?.url?.searchParams) return false;
   return $page.url.searchParams.has('class');
@@ -154,45 +167,38 @@ const handleStartSession = createHandleStartSession({
 // Lifecycle
 // ==============================
 onMount(() => {
-  if (browser) {
-    if (!QuestionCard) {
-      import('$lib/components/QuestionCard.svelte').then((module) => {
-        QuestionCard = module.default;
-      });
-    }
-
-    restoreSessionState({
-      setSessionAnswers: (a) => sessionAnswers = a,
-      setLimitedQuestions: (l) => limitedQuestions = l,
-      setCurrentIndex: (i) => currentIndex = i,
-      setShuffledMap: (m) => shuffledMap = m
-    });
-  }
-
-  setTimeout(() => {
-    headerReady = true;
-  }, 0);
+  initializeOnMount(
+    QuestionCard,
+    (v) => QuestionCard = v,
+    (v) => sessionAnswers = v,
+    (v) => limitedQuestions = v,
+    (v) => currentIndex = v,
+    (v) => shuffledMap = v,
+    (v) => headerReady = v
+  );
 });
 
 // ==============================
 // Reactivity
 // ==============================
 $: if (browser && allQuestions.length > 0) {
-  updateFilteredQuestions({
+  updateFilteredState(
     allQuestions,
     selectedClass,
-    setFilteredQuestions: (v) => filteredQuestions = v,
-    setIsLoading: (v) => isLoading = v
-  });
+    (v) => filteredQuestions = v,
+    (v) => isLoading = v
+  );
 }
 
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
-  const q = limitedQuestions[currentIndex];
-  const previous = sessionAnswers.find(a => a.questionNumber === q.number);
-  (async () => {
-    shuffledAnswers = await getOrShuffleAnswers({ q, shuffledMap });
-    selectedAnswerIndex = previous ? previous.selectedIndex : null;
-  })();
+  syncShuffledState(
+    limitedQuestions,
+    currentIndex,
+    sessionAnswers,
+    shuffledMap,
+    (v) => shuffledAnswers = v,
+    (v) => selectedAnswerIndex = v
+  );
 }
 
 $: correctIndex = getCorrectIndex(shuffledAnswers);
