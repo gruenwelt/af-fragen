@@ -1,54 +1,3 @@
-<svelte:head>
-  <title>Übungsmodus – Amateurfunkprüfung Simulator (N, E, A, B, V)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge." />
-  <link rel="canonical" href="https://funkfragen.de/" />
-  <meta name="keywords" content="Amateurfunk, Prüfungssimulator, Funkprüfung, Klasse N, Klasse E, Klasse A, Klasse B, Klasse V, Prüfungsfragen, Lernapp, Testmodus, Fragenkatalog, Amateurfunkzeugnis" />
-  <meta property="og:title" content="Üben – Funkfragen: Prüfungssimulator für Amateurfunk" />
-  <meta property="og:description" content="Simuliere die deutsche Amateurfunkprüfung im Übungsmodus: Wähle zufällige Fragen zur deutschen Amateurfunkprüfung (N, E, A, B, V) und bereite dich gezielt vor." />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "name": "Funkfragen",
-        "url": "https://funkfragen.de",
-        "description": "Trainiere für die deutsche Amateurfunkprüfung der Klassen N, E, A, B und V mit offiziellen Fragen im Übungsmodus oder als Fragenkatalog.",
-        "inLanguage": "de",
-        "mainEntityOfPage": "https://funkfragen.de",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Funkfragen"
-        }
-      },
-      {
-        "@type": "WebApplication",
-        "name": "Funkfragen Übungsmodus",
-        "url": "https://funkfragen.de",
-        "applicationCategory": "EducationalApplication",
-        "operatingSystem": "All",
-        "description": "Simuliere die deutsche Amateurfunkprüfung für die Klassen N, E, A, B und V. Wähle 25, 100 oder 200 Fragen im Übungsmodus mit zufälliger Reihenfolge.",
-        "inLanguage": "de",
-        "mainEntityOfPage": "https://funkfragen.de",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Funkfragen"
-        },
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "EUR"
-        }
-      }
-    ]
-  }
-  </script>
-  {#if $noIndexMeta}
-    <meta name="robots" content="noindex" />
-  {/if}
-</svelte:head>
-
 <script lang="ts">
 // ==============================
 // Imports
@@ -69,6 +18,7 @@ import { isDarkMode } from '$lib/stores/theme';
 import { isMobile } from '$lib/stores/device';
 
 // Components
+import SeoHead from '$lib/components/SeoHead.svelte';
 import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
@@ -259,6 +209,7 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 $: correctIndex = getCorrectIndex(shuffledAnswers);
 </script>
 
+<SeoHead />
 
 {#if isLoading}
   <LoadingSpinner />
