@@ -381,3 +381,49 @@ export async function getOrShuffleAnswers({
 export function calculateWinCount(answers: SessionAnswer[]): number {
   return answers.filter((a) => a.isCorrect).length;
 }
+
+// Factory function to create a handler for starting a session
+export function createHandleStartSession({
+  questionLimit,
+  questions,
+  allQuestions,
+  setQuestions,
+  setAllQuestions,
+  setFilteredQuestions,
+  setLimitedQuestions,
+  setSessionAnswers,
+  setShuffledMap,
+  setCurrentIndex,
+  setIsLoading,
+  setSessionStarted
+}: {
+  questionLimit: number;
+  questions: any;
+  allQuestions: Question[];
+  setQuestions: (v: any) => void;
+  setAllQuestions: (v: Question[]) => void;
+  setFilteredQuestions: (v: Question[]) => void;
+  setLimitedQuestions: (v: Question[]) => void;
+  setSessionAnswers: (v: SessionAnswer[]) => void;
+  setShuffledMap: (v: Record<string, ShuffledAnswer[]>) => void;
+  setCurrentIndex: (v: number) => void;
+  setIsLoading: (v: boolean) => void;
+  setSessionStarted: (v: boolean) => void;
+}) {
+  return () => {
+    startSession({
+      questionLimit,
+      questionsArg: questions,
+      allQuestionsArg: allQuestions,
+      setQuestions,
+      setAllQuestions,
+      setFilteredQuestions,
+      setLimitedQuestions,
+      setSessionAnswers,
+      setShuffledMap,
+      setCurrentIndex,
+      setIsLoading,
+      onSessionStart: () => setSessionStarted(true)
+    });
+  };
+}

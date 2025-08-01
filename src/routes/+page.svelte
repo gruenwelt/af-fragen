@@ -121,6 +121,25 @@ let wrongQuestions: SessionAnswer[] = [];
 // ==============================
 
 import { skipCurrentQuestion, startSession, handleSkipQuestion, resetSession, restoreSessionState, incrementWinCount, updateFilteredQuestions, getCorrectIndex, getOrShuffleAnswers } from '$lib/utils/sessionManager';
+import { createHandleStartSession } from '$lib/utils/sessionManager';
+
+// ==============================
+// Create handleStartSession using factory
+// ==============================
+const handleStartSession = createHandleStartSession({
+  questionLimit,
+  questions,
+  allQuestions,
+  setQuestions: (v) => questions = v,
+  setAllQuestions: (v) => allQuestions = v,
+  setFilteredQuestions: (v) => filteredQuestions = v,
+  setLimitedQuestions: (v) => limitedQuestions = v,
+  setSessionAnswers: (v) => sessionAnswers = v,
+  setShuffledMap: (v) => shuffledMap = v,
+  setCurrentIndex: (v) => currentIndex = v,
+  setIsLoading: (v) => isLoading = v,
+  setSessionStarted: (v) => sessionStarted.set(v)
+});
 
 // ==============================
 // Lifecycle & Reactivity
@@ -197,22 +216,7 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
     <StartControls
       {questionLimit}
       onSetLimit={(limit) => questionLimit = limit}
-      onStartSession={() =>
-        startSession({
-          questionLimit,
-          questionsArg: questions,
-          allQuestionsArg: allQuestions,
-          setQuestions: (v) => questions = v,
-          setAllQuestions: (v) => allQuestions = v,
-          setFilteredQuestions: (v) => filteredQuestions = v,
-          setLimitedQuestions: (v) => limitedQuestions = v,
-          setSessionAnswers: (v) => sessionAnswers = v,
-          setShuffledMap: (v) => shuffledMap = v,
-          setCurrentIndex: (v) => currentIndex = v,
-          setIsLoading: (v) => isLoading = v,
-          onSessionStart: () => sessionStarted.set(true)
-        })
-      }
+      onStartSession={handleStartSession}
     />
   {:else if sessionStarted && !sessionEnded}
     <SessionLayout
