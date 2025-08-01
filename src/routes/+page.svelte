@@ -57,6 +57,7 @@ import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
 import ResultsOverlay from '$lib/components/ResultsOverlay.svelte';
+import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -188,9 +189,7 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
 
 
 {#if isLoading}
-  <div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-    <div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
-  </div>
+  <LoadingSpinner />
 {:else if headerReady}
   {#if !$sessionStarted}
     <QuestionButtons

@@ -47,6 +47,7 @@
 <script lang="ts">
 	let headerReady = false;
 	// --- External Imports ---
+import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 import { onMount, tick } from 'svelte';
 import { page } from '$app/stores';
 import { derived } from 'svelte/store';
@@ -112,28 +113,7 @@ async function initializeState() {
 }
 
 	// --- Types ---
-	type Question = {
-		question: string;
-		questionHtml: string;
-		answer_a: string;
-		answerAHtml: string;
-		answer_b: string;
-		answerBHtml: string;
-		answer_c: string;
-		answerCHtml: string;
-		answer_d: string;
-		answerDHtml: string;
-		class: string;
-		number: string;
-		picture_question?: string;
-		picture_a?: string;
-		picture_b?: string;
-		picture_c?: string;
-		picture_d?: string;
-		section1?: string;
-		section2?: string;
-		section3?: string;
-	};
+	import type { Question } from '$lib/types';
 
 	// --- Utility Functions ---
 
@@ -230,9 +210,7 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 </script>
 
 {#if isLoading}
-	<div class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-		<div class="w-4 h-4 bg-gray-400 rounded-full animate-pulse"></div>
-	</div>
+	<LoadingSpinner />
 {:else if headerReady}
 	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
