@@ -58,6 +58,8 @@ import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
 import ResultsOverlay from '$lib/components/ResultsOverlay.svelte';
 import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+import SessionLayout from '$lib/components/SessionLayout.svelte';
+import StartControls from '$lib/components/StartControls.svelte';
 let headerReady = false;
 import { onMount, tick } from 'svelte';
 import { isMobile } from '$lib/stores/device';
@@ -192,13 +194,10 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
   <LoadingSpinner />
 {:else if headerReady}
   {#if !$sessionStarted}
-    <QuestionButtons
+    <StartControls
       {questionLimit}
-      {currentIndex}
-      isDarkMode={$isDarkMode}
-      sessionActive={$sessionStarted}
-      on:setLimit={(e) => questionLimit = e.detail}
-      on:startSession={() =>
+      onSetLimit={(limit) => questionLimit = limit}
+      onStartSession={() =>
         startSession({
           questionLimit,
           questionsArg: questions,
@@ -216,76 +215,47 @@ import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionMa
       }
     />
   {:else if sessionStarted && !sessionEnded}
-    <!-- ============================== -->
-    <!-- ✅ Unified Question Layout (Desktop & Mobile) -->
-    <!-- ============================== -->
-    <div class="flex flex-col max-w-2xl w-full mx-auto min-h-screen px-4">
-      {#if limitedQuestions.length > 0}
-        <section
-          class="w-full flex justify-center items-start pt-[10px]"
-          aria-label="Scrollable questions container"
-        >
-          <div class="w-full flex justify-center pb-[200px]">
-            <div class="w-full max-w-2xl">
-              {#key currentIndex}
-                {#if QuestionCard}
-                  <svelte:component
-                    this={QuestionCard}
-                    q={limitedQuestions[currentIndex]}
-                    {shuffledAnswers}
-                    {selectedAnswerIndex}
-                    {correctIndex}
-                    base={base}
-                    onSelect={(i: number) =>
-                      selectedAnswerIndex === null && setSelectedAnswer({
-                        index: i,
-                        limitedQuestions,
-                        currentIndex,
-                        shuffledAnswers,
-                        sessionAnswers,
-                        wrongQuestions,
-                        shuffledMap,
-                        setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
-                        setSessionAnswers: (v) => sessionAnswers = v,
-                        setWrongQuestions: (v) => wrongQuestions = v,
-                        incrementWinCount: () => incrementWinCount(winCount, (v) => winCount = v)
-                      })
-                    }
-                  />
-                {/if}
-              {/key}
-            </div>
-          </div>
-        </section>
-      {/if}
-      {#if limitedQuestions.length > 0}
-        <SessionFooter
-          {currentIndex}
-          {limitedQuestions}
-          {winCount}
-          on:showResults={() => showResults = true}
-        />
-        <NavigationButtons
-          {currentIndex}
-          {questionLimit}
-          isDarkMode={$isDarkMode}
-          sessionActive={$sessionStarted}
-          on:prev={() => currentIndex = Math.max(0, currentIndex - 1)}
-          on:next={() =>
-            handleSkipQuestion({
-              sessionAnswers,
-              wrongQuestions,
-              limitedQuestions,
-              currentIndex,
-              shuffledMap,
-              setSessionAnswers: (v) => sessionAnswers = v,
-              setWrongQuestions: (v) => wrongQuestions = v,
-              setCurrentIndex: (v) => currentIndex = v
-            })
-          }
-        />
-      {/if}
-    </div>
+    <SessionLayout
+      {limitedQuestions}
+      {currentIndex}
+      {winCount}
+      {questionLimit}
+      isDarkMode={$isDarkMode}
+      {QuestionCard}
+      {shuffledAnswers}
+      {selectedAnswerIndex}
+      {correctIndex}
+      {base}
+      onSelect={(i: number) =>
+        selectedAnswerIndex === null && setSelectedAnswer({
+          index: i,
+          limitedQuestions,
+          currentIndex,
+          shuffledAnswers,
+          sessionAnswers,
+          wrongQuestions,
+          shuffledMap,
+          setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
+          setSessionAnswers: (v) => sessionAnswers = v,
+          setWrongQuestions: (v) => wrongQuestions = v,
+          incrementWinCount: () => incrementWinCount(winCount, (v) => winCount = v)
+        })
+      }
+      onPrev={() => currentIndex = Math.max(0, currentIndex - 1)}
+      onNext={() =>
+        handleSkipQuestion({
+          sessionAnswers,
+          wrongQuestions,
+          limitedQuestions,
+          currentIndex,
+          shuffledMap,
+          setSessionAnswers: (v) => sessionAnswers = v,
+          setWrongQuestions: (v) => wrongQuestions = v,
+          setCurrentIndex: (v) => currentIndex = v
+        })
+      }
+      onShowResults={() => showResults = true}
+    />
   {/if}
 {/if}
 
