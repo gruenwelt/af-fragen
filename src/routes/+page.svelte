@@ -50,8 +50,18 @@
 </svelte:head>
 
 <script lang="ts">
+// ==============================
 // Imports
 // ==============================
+import { onMount, tick } from 'svelte';
+import { derived, get } from 'svelte/store';
+import { page } from '$app/stores';
+import { browser } from '$app/environment';
+import { base } from '$app/paths';
+
+import { sessionStarted } from '$lib/stores/session';
+import { isDarkMode } from '$lib/stores/theme';
+import { isMobile } from '$lib/stores/device';
 
 import QuestionButtons from '$lib/components/Buttons.svelte';
 import SessionFooter from '$lib/components/SessionFooter.svelte';
@@ -60,71 +70,63 @@ import ResultsOverlay from '$lib/components/ResultsOverlay.svelte';
 import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 import SessionLayout from '$lib/components/SessionLayout.svelte';
 import StartControls from '$lib/components/StartControls.svelte';
-let headerReady = false;
-import { onMount, tick } from 'svelte';
-import { isMobile } from '$lib/stores/device';
-import { isDarkMode } from '$lib/stores/theme';
-let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
-import { browser } from '$app/environment';
-import { sessionStarted } from '$lib/stores/session';
-import type { ShuffledAnswer } from '$lib/types';
-import { base } from '$app/paths';
-// Session state utilities removed as unused
-// Use questions from layout data
+
+import {
+  skipCurrentQuestion,
+  startSession,
+  handleSkipQuestion,
+  resetSession,
+  restoreSessionState,
+  incrementWinCount,
+  updateFilteredQuestions,
+  getCorrectIndex,
+  getOrShuffleAnswers,
+  updateSessionWithAnswer,
+  setSelectedAnswer,
+  createHandleStartSession
+} from '$lib/utils/sessionManager';
 
 // ==============================
 // Types
 // ==============================
-import type { Question } from '$lib/types';
-import type { SessionAnswer } from '$lib/types';
-
-// ==============================
-// Data & Derived Data
-// ==============================
-// Dynamic imports will be used for collectQuestions and filterQuestionsByClass
-import { page } from '$app/stores';
-import { derived, get } from 'svelte/store';
-const showNoIndex = derived(page, ($page) => {
-  // Guard against accessing searchParams during prerendering (when $page.url may not be available)
-  if (!browser || !$page?.url?.searchParams) return false;
-  return $page.url.searchParams.has('class');
-});
-
-// Dark mode tracking
-// Questions and allQuestions will be initialized reactively before session starts
-let questions: any = null;
-let allQuestions: Question[] = [];
-
+import type { Question, SessionAnswer, ShuffledAnswer } from '$lib/types';
 
 // ==============================
 // State
 // ==============================
+let headerReady = false;
+let questions: any = null;
+let allQuestions: Question[] = [];
 let filteredQuestions: Question[] = [];
-let isLoading = false;
-let sessionEnded = false;
-let reviewingWrongAnswers = false;
+let limitedQuestions: Question[] = [];
 let sessionAnswers: SessionAnswer[] = [];
 let currentIndex = 0;
 let showResults = false;
-
-// Make winCount reactive to sessionAnswers
-$: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
-
-let questionLimit = 25;
-let shuffledAnswers: ShuffledAnswer[] = [];
-export let selectedAnswerIndex: number | null = null;
+let selectedAnswerIndex: number | null = null;
 let shuffledMap: Record<string, ShuffledAnswer[]> = {};
 let wrongQuestions: SessionAnswer[] = [];
+let shuffledAnswers: ShuffledAnswer[] = [];
+let sessionEnded = false;
+let reviewingWrongAnswers = false;
+let isLoading = false;
+let questionLimit = 25;
+let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
 
 // ==============================
-// Functions and Utilities
+// Derived State
 // ==============================
-
-import { skipCurrentQuestion, startSession, handleSkipQuestion, resetSession, restoreSessionState, incrementWinCount, updateFilteredQuestions, getCorrectIndex, getOrShuffleAnswers } from '$lib/utils/sessionManager';
-import { createHandleStartSession } from '$lib/utils/sessionManager';
+$: winCount = sessionAnswers.filter((a) => a.isCorrect).length;
+$: passPercentage = Math.round((winCount / questionLimit) * 100);
+$: passed = winCount >= 19 && passPercentage >= 76;
+$: isMobileValue = $isMobile;
+$: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
+const showNoIndex = derived(page, ($page) => {
+  if (!browser || !$page?.url?.searchParams) return false;
+  return $page.url.searchParams.has('class');
+});
 
 // ==============================
-// Create handleStartSession using factory
+// Session Setup
 // ==============================
 const handleStartSession = createHandleStartSession({
   questionLimit,
@@ -142,16 +144,10 @@ const handleStartSession = createHandleStartSession({
 });
 
 // ==============================
-// Lifecycle & Reactivity
+// Lifecycle
 // ==============================
-
-// Mobile detection state
-$: isMobileValue = $isMobile;
-
-
 onMount(() => {
   if (browser) {
-    // Eagerly load QuestionCard if not already loaded
     if (!QuestionCard) {
       import('$lib/components/QuestionCard.svelte').then((module) => {
         QuestionCard = module.default;
@@ -159,10 +155,10 @@ onMount(() => {
     }
 
     restoreSessionState({
-      setSessionAnswers: (a: SessionAnswer[]) => sessionAnswers = a,
-      setLimitedQuestions: (l: Question[]) => limitedQuestions = l,
-      setCurrentIndex: (i: number) => currentIndex = i,
-      setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => shuffledMap = m
+      setSessionAnswers: (a) => sessionAnswers = a,
+      setLimitedQuestions: (l) => limitedQuestions = l,
+      setCurrentIndex: (i) => currentIndex = i,
+      setShuffledMap: (m) => shuffledMap = m
     });
   }
 
@@ -171,9 +167,9 @@ onMount(() => {
   }, 0);
 });
 
-// Selected class from query params (reactive)
-$: selectedClass = browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
-
+// ==============================
+// Reactivity
+// ==============================
 $: if (browser && allQuestions.length > 0) {
   updateFilteredQuestions({
     allQuestions,
@@ -183,12 +179,6 @@ $: if (browser && allQuestions.length > 0) {
   });
 }
 
-
-// limitedQuestions will be set when session starts or resets
-let limitedQuestions: Question[] = [];
-
-
-// Shuffle answers or get from map; set selectedAnswerIndex from previous answer
 $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limitedQuestions.length) {
   const q = limitedQuestions[currentIndex];
   const previous = sessionAnswers.find(a => a.questionNumber === q.number);
@@ -198,14 +188,7 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
   })();
 }
 
-// Index of correct answer in shuffledAnswers
 $: correctIndex = getCorrectIndex(shuffledAnswers);
-
-// Pass percentage and passed reactive statements
-$: passPercentage = Math.round((winCount / questionLimit) * 100);
-$: passed = winCount >= 19 && passPercentage >= 76;
-
-import { updateSessionWithAnswer, setSelectedAnswer } from '$lib/utils/sessionManager';
 </script>
 
 
