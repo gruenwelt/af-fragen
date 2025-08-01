@@ -86,6 +86,13 @@ import {
   createHandleStartSession
 } from '$lib/utils/sessionManager';
 
+import {
+  handleAnswerSelect,
+  handlePrevQuestion,
+  handleNextQuestion,
+  handleShowResults
+} from '$lib/utils/sessionControls';
+
 // ==============================
 // Types
 // ==============================
@@ -213,35 +220,32 @@ $: correctIndex = getCorrectIndex(shuffledAnswers);
       {selectedAnswerIndex}
       {correctIndex}
       {base}
-      onSelect={(i: number) =>
-        selectedAnswerIndex === null && setSelectedAnswer({
-          index: i,
-          limitedQuestions,
-          currentIndex,
-          shuffledAnswers,
-          sessionAnswers,
-          wrongQuestions,
-          shuffledMap,
-          setSelectedAnswerIndex: (v) => selectedAnswerIndex = v,
-          setSessionAnswers: (v) => sessionAnswers = v,
-          setWrongQuestions: (v) => wrongQuestions = v,
-          incrementWinCount: () => incrementWinCount(winCount, (v) => winCount = v)
-        })
-      }
-      onPrev={() => currentIndex = Math.max(0, currentIndex - 1)}
-      onNext={() =>
-        handleSkipQuestion({
-          sessionAnswers,
-          wrongQuestions,
-          limitedQuestions,
-          currentIndex,
-          shuffledMap,
-          setSessionAnswers: (v) => sessionAnswers = v,
-          setWrongQuestions: (v) => wrongQuestions = v,
-          setCurrentIndex: (v) => currentIndex = v
-        })
-      }
-      onShowResults={() => showResults = true}
+      onSelect={(i) => handleAnswerSelect(
+        i,
+        selectedAnswerIndex,
+        limitedQuestions,
+        currentIndex,
+        shuffledAnswers,
+        sessionAnswers,
+        wrongQuestions,
+        shuffledMap,
+        (v) => selectedAnswerIndex = v,
+        (v) => sessionAnswers = v,
+        (v) => wrongQuestions = v,
+        (v) => winCount = v
+      )}
+      onPrev={() => handlePrevQuestion(currentIndex, (v) => currentIndex = v)}
+      onNext={() => handleNextQuestion(
+        sessionAnswers,
+        wrongQuestions,
+        limitedQuestions,
+        currentIndex,
+        shuffledMap,
+        (v) => sessionAnswers = v,
+        (v) => wrongQuestions = v,
+        (v) => currentIndex = v
+      )}
+      onShowResults={() => handleShowResults((v) => showResults = v)}
     />
   {/if}
 {/if}
