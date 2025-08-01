@@ -67,16 +67,16 @@ if (browser) {
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
 				{:else}
-					<a href={`${currentPath}?class=2`}>E</a>
+					<a href={`${currentPath}?class=2`}>N→E</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
 				{:else}
-					<a href={`${currentPath}?class=3`}>A</a>
+					<a href={`${currentPath}?class=3`}>E→A</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === 'B' ? 'page' : undefined}>
@@ -182,16 +182,16 @@ if (browser) {
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
 							{:else}
-								<a href={`${currentPath}?class=2`}>E</a>
+								<a href={`${currentPath}?class=2`}>N→E</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">A</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
 							{:else}
-								<a href={`${currentPath}?class=3`}>A</a>
+								<a href={`${currentPath}?class=3`}>E→A</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === 'B' ? 'page' : undefined}>
