@@ -119,7 +119,3 @@ export function handleNext(
     setCurrentIndex
   );
 }
-
-export function handleShow(setShowResults: (v: boolean) => void) {
-  handleShowResults(setShowResults);
-}

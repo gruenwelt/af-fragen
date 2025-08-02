@@ -44,17 +44,18 @@ import {
 } from '$lib/utils/sessionManager';
 
 import {
-  handleAnswerSelect,
   handlePrevQuestion,
   handleNextQuestion,
-  handleShowResults as handleShow
+  handleShowResults,
+  handleSelect as handleSelectWrapper
 } from '$lib/utils/sessionControls';
 
 import {
   initializeOnMount,
   getSelectedClass,
   updateFilteredState,
-  syncShuffledState
+  syncShuffledState,
+  runSessionOnMount
 } from '$lib/utils/sessionLifecycle';
 
 // Types
@@ -92,7 +93,8 @@ let previousAnswerCount = 0;
 import {
   getWinCount,
   getPassPercentage,
-  didPass
+  didPass,
+  getSessionMetrics
 } from '$lib/utils/sessionHelpers';
 
 let winCount: number;
@@ -111,7 +113,7 @@ const noIndexMeta = derived(page, ($page) => {
 // Event Handlers
 // ==============================
 function handleSelect(index: number) {
-  handleAnswerSelect(
+  handleSelectWrapper(
     index,
     selectedAnswerIndex,
     limitedQuestions,
@@ -169,25 +171,20 @@ const handleStartSession = createHandleStartSession({
 // ==============================
 // Lifecycle
 // ==============================
-onMount(() => {
-  initializeOnMount(
-    QuestionCard,
-    (v) => QuestionCard = v,
-    (v) => sessionAnswers = v,
-    (v) => limitedQuestions = v,
-    (v) => currentIndex = v,
-    (v) => shuffledMap = v,
-    (v) => headerReady = v
-  );
-});
+runSessionOnMount(
+  QuestionCard,
+  (v) => QuestionCard = v,
+  (v) => sessionAnswers = v,
+  (v) => limitedQuestions = v,
+  (v) => currentIndex = v,
+  (v) => shuffledMap = v,
+  (v) => headerReady = v
+);
 
 
-// ==============================
-// Reactive Statements
-// ==============================
-$: winCount = getWinCount(sessionAnswers);
-$: passPercentage = getPassPercentage(winCount, questionLimit);
-$: passed = didPass(winCount, passPercentage);
+$: {
+  ({ winCount, passPercentage, passed } = getSessionMetrics(sessionAnswers, questionLimit));
+}
 $: isMobileValue = $isMobile;
 $: selectedClass = getSelectedClass();
 
@@ -259,7 +256,7 @@ $: {
       onSelect={handleSelect}
       onPrev={handlePrev}
       onNext={handleNext}
-      onShowResults={() => handleShow((v) => showResults = v)}
+      onShowResults={() => handleShowResults((v) => showResults = v)}
     />
   {/if}
 {/if}

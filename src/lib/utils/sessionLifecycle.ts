@@ -1,3 +1,4 @@
+import { onMount } from 'svelte';
 
 
 import { browser } from '$app/environment';
@@ -66,4 +67,25 @@ export async function syncShuffledState(
   const shuffled = await getOrShuffleAnswers({ q, shuffledMap });
   setShuffledAnswers(shuffled);
   setSelectedAnswerIndex(previous ? previous.selectedIndex : null);
+}
+export function runSessionOnMount(
+  QuestionCard: any,
+  setQuestionCard: (q: any) => void,
+  setSessionAnswers: (a: SessionAnswer[]) => void,
+  setLimitedQuestions: (q: Question[]) => void,
+  setCurrentIndex: (i: number) => void,
+  setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => void,
+  setHeaderReady: (v: boolean) => void
+) {
+  onMount(() => {
+    initializeOnMount(
+      QuestionCard,
+      setQuestionCard,
+      setSessionAnswers,
+      setLimitedQuestions,
+      setCurrentIndex,
+      setShuffledMap,
+      setHeaderReady
+    );
+  });
 }
