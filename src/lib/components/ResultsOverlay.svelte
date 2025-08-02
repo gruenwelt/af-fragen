@@ -1,5 +1,3 @@
-
-
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
 
@@ -30,16 +28,16 @@
 
     <div class="flex justify-around mt-10 gap-6">
       <button
-        class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
+        class="w-48 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
         on:click={() => dispatch('close')}
       >
-        ←
+        Überblick
       </button>
       <button
-        class="w-24 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
+        class="w-48 h-14 py-2 rounded-full text-base font-medium shadow transition-all cursor-pointer bg-[color:var(--color-theme-1)] text-white"
         on:click={() => dispatch('restart')}
       >
-        X
+        Beenden
       </button>
     </div>
   </div>
