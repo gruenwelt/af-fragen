@@ -97,10 +97,5 @@ if (typeof navigator !== 'undefined') {
 		margin: 0 auto;
 		box-sizing: border-box;
     overflow: auto;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-	main::-webkit-scrollbar {
-		display: none;
 	}
 </style>

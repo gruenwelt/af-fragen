@@ -104,7 +104,6 @@ button:focus:not(:focus-visible) {
 	white-space: nowrap;
 }
 
-.css
 html, body {
   margin: 0;
   padding: 0;
@@ -182,4 +181,15 @@ html {
 
 .light .bg-gray-400 {
   background-color: #ffffffb3;
+}
+
+
+html, body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }

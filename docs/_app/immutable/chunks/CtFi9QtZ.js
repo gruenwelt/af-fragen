@@ -1,0 +1,1 @@
+import{w as o}from"./DJqzowgF.js";const e="dark-mode",r=(()=>{if(typeof localStorage<"u"){const t=localStorage.getItem(e);return t!==null?t==="true":!0}return!0})(),n=o(r);n.subscribe(t=>{typeof document<"u"&&(document.documentElement.classList.toggle("dark",t),document.documentElement.classList.toggle("light",!t),localStorage.setItem(e,String(t)))});export{n as i};
