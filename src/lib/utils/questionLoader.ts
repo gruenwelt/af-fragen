@@ -1,3 +1,4 @@
+export type { Question } from '$lib/types';
 import type { Question } from '$lib/types';
 
 export function collectQuestions(tree: any, path: string[] = []): Question[] {

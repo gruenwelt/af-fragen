@@ -16,6 +16,7 @@ export type Question = {
   answer_b: string;
   answer_c: string;
   correctAnswer: string;
+  topLevelClass: string;
 };
 
 export type SessionState = {
