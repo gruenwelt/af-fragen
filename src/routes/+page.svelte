@@ -81,6 +81,7 @@ let reviewingWrongAnswers = false;
 let isLoading = false;
 let questionLimit = 25;
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
+let resultsTriggered = false;
 
 
 // ==============================
@@ -157,7 +158,10 @@ const handleStartSession = createHandleStartSession({
   setShuffledMap: (v) => shuffledMap = v,
   setCurrentIndex: (v) => currentIndex = v,
   setIsLoading: (v) => isLoading = v,
-  setSessionStarted: (v) => sessionStarted.set(v)
+  setSessionStarted: (v) => {
+    resultsTriggered = false;
+    sessionStarted.set(v);
+  }
 });
 
 
@@ -207,6 +211,20 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 }
 
 $: correctIndex = getCorrectIndex(shuffledAnswers);
+
+// Show results overlay after last answer with delay
+$: if (
+  $sessionStarted &&
+  sessionAnswers.length === limitedQuestions.length &&
+  !sessionEnded &&
+  !showResults &&
+  !resultsTriggered
+) {
+  resultsTriggered = true;
+  setTimeout(() => {
+    showResults = true;
+  }, 400);
+}
 </script>
 
 <SeoHead />
@@ -247,7 +265,8 @@ $: correctIndex = getCorrectIndex(shuffledAnswers);
     {winCount}
     {questionLimit}
     on:close={() => showResults = false}
-    on:restart={() =>
+    on:restart={() => {
+      resultsTriggered = false;
       resetSession({
         setSessionEnded: (v) => sessionEnded = v,
         setSessionAnswers: (v) => sessionAnswers = v,
@@ -259,8 +278,8 @@ $: correctIndex = getCorrectIndex(shuffledAnswers);
         setShuffledMap: (v) => shuffledMap = v,
         setSessionStarted: (v) => sessionStarted.set(v),
         setShowResults: (v) => showResults = v
-      })
-    }
+      });
+    }}
   />
 {/if}
 <style>
