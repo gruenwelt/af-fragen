@@ -1,5 +1,16 @@
-import { getApplySessionState } from '$lib/utils/sessionState';
-import { saveSessionState } from '$lib/utils/sessionState';
+import { tick } from 'svelte';
+import { get } from 'svelte/store';
+import { onMount } from 'svelte';
+import { page } from '$app/stores';
+import { browser } from '$app/environment';
+
+
+import type {
+  SessionAnswer,
+  Question,
+  ShuffledAnswer,
+  PersistedSessionState
+} from '$lib/types';
 export async function initializeSession({
   selectedClassNow,
   questionLimitArg,
@@ -48,13 +59,6 @@ export async function initializeSession({
     currentIndex: 0
   };
 }
-import { tick } from 'svelte';
-import { get } from 'svelte/store';
-import { page } from '$app/stores';
-
-import { saveSessionStateCustom } from '$lib/utils/sessionState';
-import type { SessionAnswer, Question, ShuffledAnswer } from '$lib/types';
-import { clearSessionState } from '$lib/utils/sessionState';
 
 export function skipCurrentQuestion({
   sessionAnswersArg,
@@ -306,6 +310,7 @@ export function resetSession({
   setSessionStarted(false);
   setShowResults(false);
 }
+// Wrapper to apply restored session state to stores
 export function restoreSessionState({
   setSessionAnswers,
   setLimitedQuestions,
@@ -317,7 +322,7 @@ export function restoreSessionState({
   setCurrentIndex: (v: number) => void;
   setShuffledMap: (v: Record<string, ShuffledAnswer[]>) => void;
 }) {
-  getApplySessionState({
+  return getApplySessionState({
     setSessionAnswers,
     setLimitedQuestions,
     setCurrentIndex,
@@ -426,4 +431,329 @@ export function createHandleStartSession({
       onSessionStart: () => setSessionStarted(true)
     });
   };
+}
+
+export function handleAnswerSelect(
+  i: number,
+  selectedAnswerIndex: number | null,
+  limitedQuestions: Question[],
+  currentIndex: number,
+  shuffledAnswers: ShuffledAnswer[],
+  sessionAnswers: SessionAnswer[],
+  wrongQuestions: SessionAnswer[],
+  shuffledMap: Record<string, ShuffledAnswer[]>,
+  setSelectedAnswerIndex: (v: number) => void,
+  setSessionAnswers: (v: SessionAnswer[]) => void,
+  setWrongQuestions: (v: SessionAnswer[]) => void,
+  setWinCount: (v: number) => void
+) {
+  if (selectedAnswerIndex !== null) return;
+  setSelectedAnswer({
+    index: i,
+    limitedQuestions,
+    currentIndex,
+    shuffledAnswers,
+    sessionAnswers,
+    wrongQuestions,
+    shuffledMap,
+    setSelectedAnswerIndex,
+    setSessionAnswers,
+    setWrongQuestions,
+    incrementWinCount: () => incrementWinCount(sessionAnswers.filter(a => a.isCorrect).length, setWinCount)
+  });
+}
+
+export function handlePrevQuestion(
+  currentIndex: number,
+  setCurrentIndex: (v: number) => void
+) {
+  setCurrentIndex(Math.max(0, currentIndex - 1));
+}
+
+export function handleNextQuestion(
+  sessionAnswers: SessionAnswer[],
+  wrongQuestions: SessionAnswer[],
+  limitedQuestions: Question[],
+  currentIndex: number,
+  shuffledMap: Record<string, ShuffledAnswer[]>,
+  setSessionAnswers: (v: SessionAnswer[]) => void,
+  setWrongQuestions: (v: SessionAnswer[]) => void,
+  setCurrentIndex: (v: number) => void
+) {
+  handleSkipQuestion({
+    sessionAnswers,
+    wrongQuestions,
+    limitedQuestions,
+    currentIndex,
+    shuffledMap,
+    setSessionAnswers,
+    setWrongQuestions,
+    setCurrentIndex
+  });
+}
+
+export function handleShowResults(setShowResults: (v: boolean) => void) {
+  setShowResults(true);
+}
+
+export function handleSelect(
+  index: number,
+  selectedAnswerIndex: number | null,
+  limitedQuestions: Question[],
+  currentIndex: number,
+  shuffledAnswers: ShuffledAnswer[],
+  sessionAnswers: SessionAnswer[],
+  wrongQuestions: SessionAnswer[],
+  shuffledMap: Record<string, ShuffledAnswer[]>,
+  setSelectedAnswerIndex: (v: number) => void,
+  setSessionAnswers: (v: SessionAnswer[]) => void,
+  setWrongQuestions: (v: SessionAnswer[]) => void,
+  setWinCount: (v: number) => void
+) {
+  handleAnswerSelect(
+    index,
+    selectedAnswerIndex,
+    limitedQuestions,
+    currentIndex,
+    shuffledAnswers,
+    sessionAnswers,
+    wrongQuestions,
+    shuffledMap,
+    setSelectedAnswerIndex,
+    setSessionAnswers,
+    setWrongQuestions,
+    setWinCount
+  );
+}
+
+export function handlePrev(currentIndex: number, setCurrentIndex: (v: number) => void) {
+  handlePrevQuestion(currentIndex, setCurrentIndex);
+}
+
+export function handleNext(
+  sessionAnswers: SessionAnswer[],
+  wrongQuestions: SessionAnswer[],
+  limitedQuestions: Question[],
+  currentIndex: number,
+  shuffledMap: Record<string, ShuffledAnswer[]>,
+  setSessionAnswers: (v: SessionAnswer[]) => void,
+  setWrongQuestions: (v: SessionAnswer[]) => void,
+  setCurrentIndex: (v: number) => void
+) {
+  handleNextQuestion(
+    sessionAnswers,
+    wrongQuestions,
+    limitedQuestions,
+    currentIndex,
+    shuffledMap,
+    setSessionAnswers,
+    setWrongQuestions,
+    setCurrentIndex
+  );
+}
+
+
+
+export function getWinCount(sessionAnswers: SessionAnswer[]): number {
+  return sessionAnswers.filter((a) => a.isCorrect).length;
+}
+
+export function getPassPercentage(winCount: number, questionLimit: number): number {
+  return Math.round((winCount / questionLimit) * 100);
+}
+
+export function didPass(winCount: number, passPercentage: number): boolean {
+  return winCount >= 19 && passPercentage >= 76;
+}
+
+export function getSessionMetrics(answers: SessionAnswer[], questionLimit: number) {
+  const winCount = getWinCount(answers);
+  const passPercentage = getPassPercentage(winCount, questionLimit);
+  const passed = didPass(winCount, passPercentage);
+  return { winCount, passPercentage, passed };
+}
+
+
+
+
+export function initializeOnMount(
+  QuestionCard: any,
+  setQuestionCard: (q: any) => void,
+  setSessionAnswers: (a: SessionAnswer[]) => void,
+  setLimitedQuestions: (q: Question[]) => void,
+  setCurrentIndex: (i: number) => void,
+  setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => void,
+  setHeaderReady: (v: boolean) => void
+) {
+  if (browser) {
+    if (!QuestionCard) {
+      import('$lib/components/QuestionCard.svelte').then((module) => {
+        setQuestionCard(module.default);
+      });
+    }
+
+    restoreSessionState({
+      setSessionAnswers,
+      setLimitedQuestions,
+      setCurrentIndex,
+      setShuffledMap
+    });
+  }
+
+  setTimeout(() => {
+    setHeaderReady(true);
+  }, 0);
+}
+
+export function getSelectedClass(): string {
+  return browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
+}
+
+export function updateFilteredState(
+  allQuestions: Question[],
+  selectedClass: string,
+  setFilteredQuestions: (q: Question[]) => void,
+  setIsLoading: (v: boolean) => void
+) {
+  updateFilteredQuestions({
+    allQuestions,
+    selectedClass,
+    setFilteredQuestions,
+    setIsLoading
+  });
+}
+
+export async function syncShuffledState(
+  limitedQuestions: Question[],
+  currentIndex: number,
+  sessionAnswers: SessionAnswer[],
+  shuffledMap: Record<string, ShuffledAnswer[]>,
+  setShuffledAnswers: (a: ShuffledAnswer[]) => void,
+  setSelectedAnswerIndex: (i: number | null) => void
+) {
+  const q = limitedQuestions[currentIndex];
+  const previous = sessionAnswers.find(a => a.questionNumber === q.number);
+  const shuffled = await getOrShuffleAnswers({ q, shuffledMap });
+  setShuffledAnswers(shuffled);
+  setSelectedAnswerIndex(previous ? previous.selectedIndex : null);
+}
+export function runSessionOnMount(
+  QuestionCard: any,
+  setQuestionCard: (q: any) => void,
+  setSessionAnswers: (a: SessionAnswer[]) => void,
+  setLimitedQuestions: (q: Question[]) => void,
+  setCurrentIndex: (i: number) => void,
+  setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => void,
+  setHeaderReady: (v: boolean) => void
+) {
+  onMount(() => {
+    initializeOnMount(
+      QuestionCard,
+      setQuestionCard,
+      setSessionAnswers,
+      setLimitedQuestions,
+      setCurrentIndex,
+      setShuffledMap,
+      setHeaderReady
+    );
+  });
+}
+
+
+// --- Session State Persistence Functions ---
+
+export function restoreSessionStateRaw() {
+  try {
+    const started = sessionStorage.getItem('af-session-started') === 'true';
+    if (!started) return null;
+
+    return {
+      sessionAnswers: JSON.parse(sessionStorage.getItem('af-session-answers') || '[]'),
+      limitedQuestions: JSON.parse(sessionStorage.getItem('af-limited-questions') || '[]'),
+      currentIndex: parseInt(sessionStorage.getItem('af-current-index') || '0'),
+      shuffledMap: JSON.parse(sessionStorage.getItem('af-shuffled-map') || '{}')
+    };
+  } catch (e) {
+    console.warn('Failed to restore session state', e);
+    return null;
+  }
+}
+
+export function persistSessionState({
+  sessionAnswers,
+  limitedQuestions,
+  currentIndex,
+  shuffledMap
+}: PersistedSessionState) {
+  sessionStorage.setItem('af-session-started', 'true');
+  sessionStorage.setItem('af-session-answers', JSON.stringify(sessionAnswers));
+  sessionStorage.setItem('af-limited-questions', JSON.stringify(limitedQuestions));
+  sessionStorage.setItem('af-current-index', currentIndex.toString());
+  sessionStorage.setItem('af-shuffled-map', JSON.stringify(shuffledMap));
+}
+
+export function clearSessionState() {
+  sessionStorage.removeItem('af-session-started');
+  sessionStorage.removeItem('af-session-answers');
+  sessionStorage.removeItem('af-limited-questions');
+  sessionStorage.removeItem('af-current-index');
+  sessionStorage.removeItem('af-shuffled-map');
+}
+
+// Save session state with custom argument names
+export function saveSessionStateCustom({
+  sessionAnswersArg,
+  limitedQuestionsArg,
+  currentIndexArg,
+  shuffledMapArg
+}: {
+  sessionAnswersArg: SessionAnswer[];
+  limitedQuestionsArg: Question[];
+  currentIndexArg: number;
+  shuffledMapArg: Record<string, ShuffledAnswer[]>;
+}) {
+  persistSessionState({
+    sessionAnswers: sessionAnswersArg,
+    limitedQuestions: limitedQuestionsArg,
+    currentIndex: currentIndexArg,
+    shuffledMap: shuffledMapArg
+  });
+}
+
+// Save session state with positional arguments
+export function saveSessionState(
+  sessionAnswers: SessionAnswer[],
+  limitedQuestions: Question[],
+  currentIndex: number,
+  shuffledMap: Record<string, ShuffledAnswer[]>
+) {
+  saveSessionStateCustom({
+    sessionAnswersArg: sessionAnswers,
+    limitedQuestionsArg: limitedQuestions,
+    currentIndexArg: currentIndex,
+    shuffledMapArg: shuffledMap
+  });
+}
+
+// Apply session state to handlers
+export function getApplySessionState({
+  setSessionAnswers,
+  setLimitedQuestions,
+  setCurrentIndex,
+  setShuffledMap
+}: {
+  setSessionAnswers: (a: SessionAnswer[]) => void;
+  setLimitedQuestions: (q: Question[]) => void;
+  setCurrentIndex: (i: number) => void;
+  setShuffledMap: (m: Record<string, ShuffledAnswer[]>) => void;
+}) {
+  const restored = restoreSessionStateRaw();
+  if (!restored) return false;
+
+  setSessionAnswers(restored.sessionAnswers);
+  setLimitedQuestions(restored.limitedQuestions);
+  setCurrentIndex(restored.currentIndex);
+  setShuffledMap(restored.shuffledMap);
+
+  return true;
 }

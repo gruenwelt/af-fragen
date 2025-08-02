@@ -40,23 +40,21 @@ import {
   getOrShuffleAnswers,
   updateSessionWithAnswer,
   setSelectedAnswer,
-  createHandleStartSession
-} from '$lib/utils/sessionManager';
-
-import {
+  createHandleStartSession,
   handlePrevQuestion,
   handleNextQuestion,
   handleShowResults,
-  handleSelect as handleSelectWrapper
-} from '$lib/utils/sessionControls';
-
-import {
+  handleSelect as handleSelectWrapper,
   initializeOnMount,
   getSelectedClass,
   updateFilteredState,
   syncShuffledState,
-  runSessionOnMount
-} from '$lib/utils/sessionLifecycle';
+  runSessionOnMount,
+  getWinCount,
+  getPassPercentage,
+  didPass,
+  getSessionMetrics
+} from '$lib/utils/sessionLogic';
 
 // Types
 import type { Question, SessionAnswer, ShuffledAnswer } from '$lib/types';
@@ -90,13 +88,6 @@ let previousAnswerCount = 0;
 // ==============================
 // Derived State
 // ==============================
-import {
-  getWinCount,
-  getPassPercentage,
-  didPass,
-  getSessionMetrics
-} from '$lib/utils/sessionHelpers';
-
 let winCount: number;
 let passPercentage: number;
 let passed: boolean;
