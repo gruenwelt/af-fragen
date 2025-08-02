@@ -24,7 +24,7 @@ import SessionFooter from '$lib/components/SessionFooter.svelte';
 import NavigationButtons from '$lib/components/Buttons.svelte';
 import ResultsOverlay from '$lib/components/ResultsOverlay.svelte';
 import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
-import SessionLayout from '$lib/components/SessionLayout.svelte';
+import Session from '$lib/components/Session.svelte';
 import StartControls from '$lib/components/StartControls.svelte';
 
 // Utils
@@ -239,7 +239,7 @@ $: if (
       onStartSession={handleStartSession}
     />
   {:else if sessionStarted && !sessionEnded}
-    <SessionLayout
+    <Session
       {limitedQuestions}
       {currentIndex}
       {winCount}
