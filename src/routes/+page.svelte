@@ -81,7 +81,9 @@ let reviewingWrongAnswers = false;
 let isLoading = false;
 let questionLimit = 25;
 let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default | null = null;
-let resultsTriggered = false;
+let wasAlreadyComplete = false;
+let wasAlreadyCompletePreviously = false;
+let previousAnswerCount = 0;
 
 
 // ==============================
@@ -159,7 +161,6 @@ const handleStartSession = createHandleStartSession({
   setCurrentIndex: (v) => currentIndex = v,
   setIsLoading: (v) => isLoading = v,
   setSessionStarted: (v) => {
-    resultsTriggered = false;
     sessionStarted.set(v);
   }
 });
@@ -213,17 +214,22 @@ $: if (limitedQuestions.length > 0 && currentIndex >= 0 && currentIndex < limite
 $: correctIndex = getCorrectIndex(shuffledAnswers);
 
 // Show results overlay after last answer with delay
-$: if (
-  $sessionStarted &&
-  sessionAnswers.length === limitedQuestions.length &&
-  !sessionEnded &&
-  !showResults &&
-  !resultsTriggered
-) {
-  resultsTriggered = true;
-  setTimeout(() => {
-    showResults = true;
-  }, 400);
+$: {
+  const isComplete = sessionAnswers.length === limitedQuestions.length;
+  const justFinished =
+    isComplete &&
+    previousAnswerCount < limitedQuestions.length &&
+    !sessionEnded &&
+    $sessionStarted &&
+    !showResults;
+
+  if (justFinished) {
+    setTimeout(() => {
+      showResults = true;
+    }, 400);
+  }
+
+  previousAnswerCount = sessionAnswers.length;
 }
 </script>
 
@@ -266,7 +272,7 @@ $: if (
     {questionLimit}
     on:close={() => showResults = false}
     on:restart={() => {
-      resultsTriggered = false;
+      wasAlreadyCompletePreviously = false;
       resetSession({
         setSessionEnded: (v) => sessionEnded = v,
         setSessionAnswers: (v) => sessionAnswers = v,
