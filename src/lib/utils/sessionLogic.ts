@@ -609,6 +609,12 @@ export function getSelectedClass(): string {
   return browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
 }
 
+export function getTimeLimitMinutes(selectedClass: string, questionLimit: number): number | null {
+  if (questionLimit !== 25) return null;
+  // Class '3' corresponds to E->A based on existing filters
+  return selectedClass === '3' ? 60 : 45;
+}
+
 export function updateFilteredState(
   allQuestions: Question[],
   selectedClass: string,

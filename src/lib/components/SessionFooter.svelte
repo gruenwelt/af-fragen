@@ -3,6 +3,7 @@
   export let currentIndex: number;
   export let limitedQuestions: any[] = [];
   export let winCount: number;
+  export let timer: string | null = null;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -17,10 +18,21 @@
       {currentIndex + 1} / {limitedQuestions.length}
     </div>
 
-    <!-- Score -->
-    <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
-      {winCount}
-    </div>
+    {#if timer}
+      <div class="w-[25%] flex justify-center items-center text-sm whitespace-nowrap truncate font-bold" aria-live="polite">
+        {timer}
+      </div>
+    {/if}
+
+    {#if timer}
+      <div class="w-[25%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
+        {winCount}
+      </div>
+    {:else}
+      <div class="w-[50%] flex justify-center items-center text-sm text-green-600 whitespace-nowrap truncate font-bold">
+        {winCount}
+      </div>
+    {/if}
 
     <!-- Results Button -->
     <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
