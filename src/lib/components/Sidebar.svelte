@@ -88,7 +88,7 @@
       on:click={toggleSidebar}
       aria-label="Toggle Sidebar"
     >
-      &gt;
+      &rsaquo;
     </button>
   </div>
 {:else}

@@ -24,6 +24,8 @@ import { base } from '$app/paths';
 	let QuestionCard: typeof import('$lib/components/QuestionCard.svelte').default;
 	let Sidebar: typeof import('$lib/components/Sidebar.svelte').default;
 
+import PdfPanel from '$lib/components/PdfPanel.svelte';
+
 import { isMobile } from '$lib/stores/device';
 import { get } from 'svelte/store';
 
@@ -170,6 +172,7 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 {#if isLoading}
 	<LoadingSpinner />
 {:else if headerReady}
+	<PdfPanel src="/Hilfsmittel_12062024-2.pdf" title="Hilfsmittel" />
 	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
 			{#if Sidebar && showSidebar}
