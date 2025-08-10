@@ -18,16 +18,22 @@ git clone https://github.com/gruenwelt/af-fragen.git
 cd af-fragen
 ```
 
-2. **Abhängigkeiten installieren**
+2. **Static Adapter installieren**
+
+```bash
+npm i -D @sveltejs/adapter-static
+```
+
+3. **Abhängigkeiten installieren**
 
 ```bash
 npm install
 ```
 
-3. **Lokalen Entwicklungsserver starten**
+4. **Lokalen Entwicklungsserver starten**
 
 ```bash
-npm run dev
+npm run dev -- --host 0.0.0.0
 ```
 
 > Die Anwendung ist dann erreichbar unter: [http://localhost:5173](http://localhost:5173)
@@ -41,5 +47,5 @@ npm run dev
 
 2. **Generierte Seite lokal ansehen (nach Build):**
   ```bash
-  npm run preview
+  npm run preview -- --host 0.0.0.0
   ```
