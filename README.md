@@ -18,10 +18,11 @@ git clone https://github.com/gruenwelt/af-fragen.git
 cd af-fragen
 ```
 
-2. **Static Adapter installieren**
+2. **Static Adapter und JS PDF installieren**
 
 ```bash
 npm i -D @sveltejs/adapter-static
+npm i pdfjs-dist
 ```
 
 3. **Abhängigkeiten installieren**

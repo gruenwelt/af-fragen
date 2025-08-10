@@ -37,11 +37,20 @@
     <!-- Results Button -->
     <div class="w-[25%] flex justify-end items-center pr-0 mr-[-20px]">
       <button
-        class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white"
+        class="w-12 h-12 rounded-full bg-red-500 text-lg font-bold cursor-pointer text-white flex items-center justify-center"
         on:click={() => dispatch('showResults')}
         aria-label="Show results"
       >
-        X
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             fill="none" 
+             viewBox="0 0 24 24" 
+             stroke-width="2" 
+             stroke="currentColor" 
+             class="w-6 h-6">
+          <path stroke-linecap="round" 
+                stroke-linejoin="round" 
+                d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </button>
     </div>
   </footer>
