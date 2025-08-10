@@ -91,6 +91,16 @@ onMount(() => {
 	    Amateurfunkausbildung – DARC
 	  </a>.
 	</p>
+	<p>
+	  <strong>Prüfungsdauer je Prüfungsteil</strong>
+	</p>
+	<p>
+	  Vorschriften (Prüfungsteil V) – 25 Fragen, max. Prüfungsdauer 45 Minuten<br>
+	  Betriebliche Kenntnisse (Prüfungsteil B) – 25 Fragen, max. Prüfungsdauer 45 Minuten<br>
+	  Technik für Klasse N (Prüfungsteil N) – 25 Fragen, max. Prüfungsdauer 45 Minuten<br>
+	  Technik für Klasse E (Prüfungsteil E) – 25 Fragen, max. Prüfungsdauer 45 Minuten<br>
+	  Technik für Klasse A (Prüfungsteil A) – 25 Fragen, max. Prüfungsdauer 60 Minuten
+	</p>
 
 	<p>
 	  <strong>Daten</strong>
