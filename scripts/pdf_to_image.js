@@ -141,10 +141,10 @@ function collectAndRename(outDir, format) {
   return uniq;
 }
 
-async function cropImages(outDir, files, trimTopBottom = 3, trimLeftRight = 7) {
-  // Keep central region: (100 - 2*trim)% in both dimensions
-  const keepX = Math.max(1, 100 - trimLeftRight * 2);
-  const keepY = Math.max(1, 100 - trimTopBottom * 2);
+async function cropImages(outDir, files, trimTop = 3, trimBottom = 3, trimLeft = 10, trimRight = 7) {
+  // Keep central region: (100 - trimLeft - trimRight)% width and (100 - trimTop - trimBottom)% height
+  const keepX = Math.max(1, 100 - trimLeft - trimRight);
+  const keepY = Math.max(1, 100 - trimTop - trimBottom);
   const geometry = `${keepX}%x${keepY}%+0+0`;
 
   // Try to crop each file in-place using mogrify. If mogrify is missing, warn once and skip.
@@ -193,7 +193,7 @@ async function convertOne(pdfAbs, opts) {
   await runPdftoppm(pdfAbs, outPrefix, opts);
 
   const files = collectAndRename(outDir, opts.format);
-  await cropImages(outDir, files, 3, 7);
+  await cropImages(outDir, files, 3, 3, 7, 10);
   const publicBase = `/pdf-images/${baseName}`;
   writeManifest(outDir, publicBase, files);
   console.log(`   Done: ${files.length} pages`);
