@@ -37,10 +37,22 @@
 
   // State for PDF.js rendering
   let renderContainer: HTMLDivElement | null = null;
+  let pagesContainer: HTMLDivElement | null = null;
   let isRendering = false;
   let cancelRender = false;
   let fitToWidth = true; // render each page to fit container width
   let resizeTimeout: number | null = null;
+
+  // Zoom state
+  let userScale = 1;            // persistent zoom (multiplies fit-to-width)
+  let liveScale = 1;            // transient scale used during pinch gesture
+  let isPinching = false;       // whether we are in an active pinch
+  const MIN_SCALE = 0.5;
+  const MAX_SCALE = 3;
+
+  function clamp(n: number, lo: number, hi: number) {
+    return Math.max(lo, Math.min(hi, n));
+  }
 
   async function renderPdf() {
     if (!browser || !pdfReady || !open || !src || !renderContainer) return;
@@ -49,7 +61,7 @@
     cancelRender = false;
 
     // clear previous content
-    renderContainer.innerHTML = '';
+    if (pagesContainer) pagesContainer.innerHTML = '';
 
     try {
       const task = _getDocument(src);
@@ -65,9 +77,10 @@
 
         // Base viewport at scale 1 to get intrinsic page size
         const baseViewport = page.getViewport({ scale: 1 });
-        const scale = fitToWidth && containerWidth
+        const baseScale = fitToWidth && containerWidth
           ? containerWidth / baseViewport.width
           : 1;
+        const scale = baseScale * userScale;
         const viewport = page.getViewport({ scale });
 
         const canvas = document.createElement('canvas');
@@ -88,7 +101,10 @@
         const renderTask = page.render({ canvasContext: ctx, viewport, canvas });
         await renderTask.promise;
         if (cancelRender) break;
-        renderContainer.appendChild(canvas);
+        pagesContainer?.appendChild(canvas);
+      }
+      if (renderContainer) {
+        renderContainer.style.removeProperty('--zoom');
       }
     } catch (e) {
       console.error('PDF render error', e);
@@ -132,6 +148,72 @@
       cancelRender = false;
       renderPdf();
     }, 150);
+  }
+
+  // Trackpad pinch (Ctrl+wheel) zoom
+  function onWheel(e: WheelEvent) {
+    if (!open) return;
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const factor = Math.exp(-e.deltaY * 0.0015); // smooth zoom
+      userScale = clamp(userScale * factor, MIN_SCALE, MAX_SCALE);
+      cancelRender = true;
+      if (resizeTimeout) window.clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        cancelRender = false;
+        renderPdf();
+      }, 120);
+    }
+  }
+
+  // Touch pinch zoom via Pointer Events
+  const pointers = new Map<number, {x:number, y:number}>();
+  let pinchStartDist = 0;
+  let pinchStartScale = 1;
+
+  function dist(a:{x:number,y:number}, b:{x:number,y:number}) {
+    const dx = a.x - b.x; const dy = a.y - b.y; return Math.hypot(dx, dy);
+  }
+
+  function onPointerDown(e: PointerEvent) {
+    if (!open) return;
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 2) {
+      const [p1, p2] = [...pointers.values()];
+      pinchStartDist = dist(p1, p2);
+      pinchStartScale = userScale;
+      isPinching = true;
+    }
+  }
+
+  function onPointerMove(e: PointerEvent) {
+    if (!open) return;
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (isPinching && pointers.size === 2 && renderContainer) {
+      const [p1, p2] = [...pointers.values()];
+      const d = dist(p1, p2);
+      const factor = d / Math.max(1, pinchStartDist);
+      liveScale = clamp(pinchStartScale * factor, MIN_SCALE, MAX_SCALE);
+      // live visual feedback via CSS transform; re-render on end
+      renderContainer.style.setProperty('--zoom', String(liveScale));
+    }
+  }
+
+  function onPointerUpOrCancel(e: PointerEvent) {
+    if (!open) return;
+    pointers.delete(e.pointerId);
+    if (isPinching && pointers.size < 2) {
+      isPinching = false;
+      if (liveScale !== userScale) {
+        userScale = liveScale;
+        cancelRender = false;
+        renderPdf();
+      } else if (renderContainer) {
+        renderContainer.style.removeProperty('--zoom');
+      }
+    }
   }
 
   onMount(() => {
@@ -181,7 +263,18 @@
     >
 
       <div class="pdfpanel-body text-inherit">
-        <div class={`pdfjs-container ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'}`} bind:this={renderContainer}></div>
+        <div
+          class={`pdfjs-container ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'}`}
+          bind:this={renderContainer}
+          on:wheel|nonpassive={onWheel}
+          on:pointerdown={onPointerDown}
+          on:pointermove={onPointerMove}
+          on:pointerup={onPointerUpOrCancel}
+          on:pointercancel={onPointerUpOrCancel}
+          style={`--zoom: ${isPinching ? liveScale : 1}`}
+        >
+          <div class="pdfpages" bind:this={pagesContainer}></div>
+        </div>
       </div>
     </div>
   </div>
@@ -208,7 +301,7 @@
     top: 0;
     height: 100%;
     width: 100%;
-    max-width: 720px;
+    max-width: 960px;
     display: flex;
     flex-direction: column;
     background: var(--color-bg, #fff);
@@ -232,6 +325,12 @@
     height: 100%;
     overflow: auto;
     background: var(--color-bg, #fff);
+    touch-action: pan-x pan-y;
+  }
+  .pdfpages {
+    transform: scale(var(--zoom, 1));
+    transform-origin: 0 0;
+    will-change: transform;
   }
   :global(.pdfjs-container canvas) {
     display: block;
@@ -244,5 +343,8 @@
 
   @media (min-width: 640px) {
     .pdfpanel { width: 720px; }
+  }
+  @media (min-width: 1024px) {
+    .pdfpanel { width: 960px; }
   }
 </style>
