@@ -1,6 +1,7 @@
 <script lang="ts">
   import SessionFooter from '$lib/components/SessionFooter.svelte';
   import NavigationButtons from '$lib/components/Buttons.svelte';
+  import PdfPanel from '$lib/components/PdfPanel.svelte';
   import type { Question, ShuffledAnswer, SessionAnswer } from '$lib/types';
   import { onMount, onDestroy } from 'svelte';
   import { getSelectedClass, getTimeLimitMinutes } from '$lib/utils/sessionLogic';
@@ -129,5 +130,6 @@
       on:prev={() => onPrev()}
       on:next={() => onNext()}
     />
+    <PdfPanel src="/Hilfsmittel_12062024-2.pdf" title="Hilfsmittel" />
   {/if}
 </div>
