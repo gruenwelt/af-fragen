@@ -91,15 +91,25 @@ const manifest: string = '/pdf-images/Hilfsmittel_12062024-2/manifest.json';
         {:else if mError}
           <div class="pdfpanel-empty">{mError}</div>
         {:else if mImages && mImages.length}
-          {#each mImages as imgSrc, i}
+          {#if mImages.length > 0}
+            <!-- Render first page without lazy loading -->
             <img
               class="panel-image"
-              src={imgSrc}
-              alt={`Seite ${i + 1}`}
-              loading="lazy"
+              src={mImages[0]}
+              alt="Seite 1"
               decoding="async"
             />
-          {/each}
+            <!-- Render remaining pages lazily -->
+            {#each mImages.slice(1) as imgSrc, i}
+              <img
+                class="panel-image"
+                src={imgSrc}
+                alt={`Seite ${i + 2}`}
+                loading="lazy"
+                decoding="async"
+              />
+            {/each}
+          {/if}
         {:else}
           <div class="pdfpanel-empty">Keine Bilder gefunden.</div>
         {/if}
@@ -131,7 +141,7 @@ const manifest: string = '/pdf-images/Hilfsmittel_12062024-2/manifest.json';
   .pdfpanel { position: absolute; right: 0; top: 0; height: 100%; width: 100%; max-width: 960px; display: flex; flex-direction: column; }
   .pdfpanel-body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; display: flex; flex-direction: column; }
 
-  .panel-image { display: block; width: 100%; height: auto; margin: 0 0 1rem 0; }
+  .panel-image { display: block; width: 100%; height: auto; margin: 0 0 1px 0; }
   img.panel-image { max-width: 100%; height: auto; -webkit-user-drag: none; user-select: none; }
 
   :global(.pdfpanel-empty) { padding: 1rem; font-size: 0.9rem; opacity: 0.7; }
