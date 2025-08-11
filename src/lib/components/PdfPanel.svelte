@@ -263,6 +263,16 @@
     >
 
       <div class="pdfpanel-body text-inherit">
+        <button
+          type="button"
+          class="pdfpanel-close absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+          on:click={close}
+          aria-label="Schließen"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
         <div
           class={`pdfjs-container ${$isDarkMode ? 'bg-[#1e1e1e]' : 'bg-white'}`}
           bind:this={renderContainer}
@@ -346,5 +356,12 @@
   }
   @media (min-width: 1024px) {
     .pdfpanel { width: 960px; }
+  }
+
+  .pdfpanel-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 10;
   }
 </style>
