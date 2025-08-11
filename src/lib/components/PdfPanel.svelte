@@ -231,7 +231,7 @@
   <button
     class={`fixed right-0 top-1/3 -translate-y-1/2 z-[10000]
          w-10 h-20 rounded-l-full shadow-lg
-         flex items-center justify-center text-4xl
+         flex items-center justify-center text-4xl cursor-pointer
          transition-opacity duration-300 motion-reduce:transition-none
          ${$isDarkMode
            ? 'bg-[#1e1e1e] text-gray-200 hover:bg-[#2a2a2a]'
@@ -265,11 +265,11 @@
       <div class="pdfpanel-body text-inherit">
         <button
           type="button"
-          class="pdfpanel-close absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+          class="pdfpanel-close absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none cursor-pointer"
           on:click={close}
           aria-label="Schließen"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="#374151" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -364,4 +364,5 @@
     right: 0.5rem;
     z-index: 10;
   }
+  .pdfpanel-close svg, .pdfpanel-close svg path { cursor: pointer; }
 </style>
