@@ -4,6 +4,8 @@
   export let currentIndex: number;
   export let isDarkMode: boolean;
   export let sessionActive: boolean;
+  export let showToggle: boolean;
+  export let open: boolean;
 
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
@@ -65,4 +67,14 @@
   >
     →
   </button>
+
+  {#if showToggle && !open}
+    <button
+      class="fixed right-4 top-[75%] md:top-[60%] transform -translate-y-1/2 w-20 h-20 rounded-full bg-[rgba(255,255,255,0.7)] shadow-lg z-50 text-4xl cursor-pointer"
+      on:click={() => dispatch('toggle')}
+      aria-label="Toggle PDF panel"
+    >
+      📄
+    </button>
+  {/if}
 {/if}

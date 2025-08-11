@@ -1,14 +1,17 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { isDarkMode } from '$lib/stores/theme';
   import { onMount, onDestroy } from 'svelte';
   import { fly } from 'svelte/transition';
-  import { isDarkMode } from '$lib/stores/theme';
   import { browser } from '$app/environment';
 
+  const dispatch = createEventDispatcher();
+  export let showToggle: boolean = true;
+  export let open: boolean = false;
+
   // Panel state
-  let open = false;
   export let src = '';
   export let title = 'Dokument';
-  export let showToggle = true;
 
   // Image/manifest state
   type PageMeta = { url: string; width?: number; height?: number };
@@ -258,23 +261,6 @@
   });
 </script>
 
-{#if showToggle && !open}
-  <button
-    class={`fixed right-0 top-1/3 -translate-y-1/2 z-[10000]
-         w-10 h-20 rounded-l-full shadow-lg
-         flex items-center justify-center text-4xl cursor-pointer
-         transition-opacity duration-300 motion-reduce:transition-none
-         ${$isDarkMode
-           ? 'bg-[#1e1e1e] text-gray-200 hover:bg-[#2a2a2a]'
-           : 'bg-white text-gray-700 hover:bg-gray-50'}
-         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500`}
-    on:click={() => (open = true)}
-    aria-label="Bilder öffnen"
-  >
-    ‹
-  </button>
-{/if}
-
 {#if open}
   <div class="pdfpanel-overlay" aria-hidden="true">
     <button type="button" class="pdfpanel-backdrop" aria-label="Schließen" on:click={close}></button>
@@ -333,6 +319,23 @@
       </div>
     </div>
   </div>
+{/if}
+
+{#if showToggle && !open}
+  <button
+    class={`fixed right-0 top-1/3 -translate-y-1/2 z-[10000]
+         w-10 h-20 rounded-l-full shadow-lg
+         flex items-center justify-center text-4xl cursor-pointer
+         transition-opacity duration-300 motion-reduce:transition-none
+         ${$isDarkMode
+           ? 'bg-[#1e1e1e] text-gray-200 hover:bg-[#2a2a2a]'
+           : 'bg-white text-gray-700 hover:bg-gray-50'}
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500`}
+    on:click={() => { open = true; dispatch('toggle'); }}
+    aria-label="Bilder öffnen"
+  >
+    ‹
+  </button>
 {/if}
 
 <style>
