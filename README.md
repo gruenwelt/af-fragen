@@ -8,6 +8,7 @@ Prüfungsfragen zum Erwerb von Amateurfunkprüfungsbescheinigungen
 
 - [Node.js](https://nodejs.org/) (empfohlen: Version 18 oder höher)
 - [Git](https://git-scm.com/)
+- `pdftoppm` aus Poppler (poppler-utils) wird für das PDF-zu-Bilder-Skript benötigt
 
 ### Schritte
 
@@ -18,11 +19,10 @@ git clone https://github.com/gruenwelt/af-fragen.git
 cd af-fragen
 ```
 
-2. **Static Adapter und JS PDF installieren**
+2. **Static Adapter installieren**
 
 ```bash
 npm i -D @sveltejs/adapter-static
-npm i pdfjs-dist
 ```
 
 3. **Abhängigkeiten installieren**
@@ -30,6 +30,8 @@ npm i pdfjs-dist
 ```bash
 npm install
 ```
+
+> Vor dem Build wird automatisch `npm run prebuild` ausgeführt, um Bilder für PDFs im Verzeichnis `static/` zu generieren.
 
 4. **Lokalen Entwicklungsserver starten**
 
@@ -42,11 +44,15 @@ npm run dev -- --host 0.0.0.0
 ### Weitere Befehle
 
 1. **Build für Produktion erzeugen:**
-  ```bash
-  npm run build
-  ```
+
+```bash
+npm run build
+```
+
+> Dabei wird die PDF-Konvertierung automatisch ausgeführt.
 
 2. **Generierte Seite lokal ansehen (nach Build):**
-  ```bash
-  npm run preview -- --host 0.0.0.0
-  ```
+
+```bash
+npm run preview -- --host 0.0.0.0
+```
