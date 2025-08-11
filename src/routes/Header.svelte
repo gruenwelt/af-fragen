@@ -21,7 +21,7 @@ let selectedClass = '';
 
 $: currentSearch = browser ? $page.url.search : '';
 $: currentPath = browser ? $page.url.pathname : '';
-$: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? '1' : '1';
+$: selectedClass = browser ? new URLSearchParams(currentSearch).get('class') ?? 'V' : 'V';
 $: isInfoPage = browser && currentPath === base + '/info';
 $: $sessionStarted;
 $: $isDarkMode;
