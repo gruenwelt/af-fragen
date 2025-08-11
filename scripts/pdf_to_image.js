@@ -10,9 +10,13 @@
  * Output structure (for static/Hilfsmittel_12062024-2.pdf):
  *   static/pdf-images/Hilfsmittel_12062024-2/
  *     page-001.jpg, page-002.jpg, ...
- *     manifest.json  -> { pages: [{ url: "/pdf-images/Hilfsmittel_12062024-2/page-001.jpg" }, ...] }
+ *     manifest.json  -> { pages: [ "/pdf-images/Hilfsmittel_12062024-2/page-001.jpg", ... ] }
  *
- * Requirements on dev machine: `pdftoppm` from Poppler (poppler-utils).
+ * Notes:
+ *   - Skips the first three pages of each PDF (starts conversion from page 4) using pdftoppm's -f 4 option.
+ *   - Trims 3% from top and bottom, and 7% from left and right of each output image using ImageMagick's 'mogrify' (if available).
+ *
+ * Requirements on dev machine: `pdftoppm` from Poppler (poppler-utils), and optionally `mogrify` from ImageMagick.
  */
 
 import { execFile } from 'node:child_process';
@@ -77,6 +81,7 @@ function runPdftoppm(pdfPath, outPrefix, opts) {
     const args = [];
     if (opts.format === 'png') args.push('-png'); else args.push('-jpeg', '-jpegopt', 'quality=85');
     args.push('-r', String(opts.dpi));
+    args.push('-f', '4');
     // pdfPath, then output prefix (no extension)
     args.push(pdfPath, outPrefix);
 
@@ -136,9 +141,37 @@ function collectAndRename(outDir, format) {
   return uniq;
 }
 
+async function cropImages(outDir, files, trimTopBottom = 3, trimLeftRight = 7) {
+  // Keep central region: (100 - 2*trim)% in both dimensions
+  const keepX = Math.max(1, 100 - trimLeftRight * 2);
+  const keepY = Math.max(1, 100 - trimTopBottom * 2);
+  const geometry = `${keepX}%x${keepY}%+0+0`;
+
+  // Try to crop each file in-place using mogrify. If mogrify is missing, warn once and skip.
+  let warned = false;
+  for (const fname of files) {
+    const full = path.join(outDir, fname);
+    try {
+      await new Promise((resolve, reject) => {
+        execFile('mogrify', ['-gravity', 'center', '-crop', geometry, '+repage', full], (err) => {
+          if (err) return reject(err);
+          resolve();
+        });
+      });
+    } catch (e) {
+      if (!warned) {
+        console.warn(`ImageMagick 'mogrify' not available or failed; skipping trim. Error: ${e && e.message ? e.message : e}`);
+        warned = true;
+      }
+      // Stop trying further files if mogrify is not available
+      break;
+    }
+  }
+}
+
 function writeManifest(outDir, publicBase, files) {
   const manifest = {
-    pages: files.map((fname) => ({ url: path.posix.join(publicBase, fname) }))
+    pages: files.map((fname) => path.posix.join(publicBase, fname))
   };
   fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2));
 }
@@ -160,6 +193,7 @@ async function convertOne(pdfAbs, opts) {
   await runPdftoppm(pdfAbs, outPrefix, opts);
 
   const files = collectAndRename(outDir, opts.format);
+  await cropImages(outDir, files, 3, 7);
   const publicBase = `/pdf-images/${baseName}`;
   writeManifest(outDir, publicBase, files);
   console.log(`   Done: ${files.length} pages`);
