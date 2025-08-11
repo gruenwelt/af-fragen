@@ -140,13 +140,6 @@ onMount(() => {
 		Weitere Informationen, Regelungen sowie Links zu den Gesetzen und Verordnungen zum Thema Amateurfunk sowie zur Durchführung der Amateurfunkprüfungen und zur Prüfungsvorbereitung finden Sie online unter bundesnetzagentur.de/amateurfunk.<br><br>
 
 		Die Fragen wurden mit großer Unterstützung durch den Runden Tisch Amateurfunk und dessen Mitgliedsverbänden sowie mit viel Engagement einzelner Funkamateure und Beschäftigten der Bundesnetzagentur erstellt. Wir danken allen, auch allen Hinweisgebern zu Korrekturen der 2. Auflage, die damit zu der Erstellung dieser 3. Auflage beigetragen haben. Ein besonderer Dank gilt erneut Dr. Matthias Jung und Björn Swierczek vom DARC e.V., die auf Seiten der Verbände die Überarbeitung des Fragenkatalogs federführend koordiniert und besonders tatkräftig zur Überarbeitung der Prüfungsfragen beigetragen haben.<br><br>
-
-		<br>
-
-		Offizielle Hilfsmittel zur Amateurfunkprüfung können hier heruntergeladen werden: 
-    <a href="https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Telekommunikation/Unternehmen_Institutionen/Frequenzen/Amateurfunk/AntraegeFormulare/Hilfsmittel_12062024.pdf?__blob=publicationFile&v=3" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">
-      Amateurfunkprüfungen – Hilfsmittel (PDF)
-    </a>
   	</p>
 
 	<p>
@@ -161,7 +154,7 @@ onMount(() => {
 	  <strong>Besonderer Dank</strong>
 	</p>
 	<p>
-	  Vielen Dank an <a href="https://www.afup.a36.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Junghard, DF1IAV</a> für seine hilfreichen Hinweise und Anregungen zur Verbesserung der App.
+	  Vielen Dank an <a href="https://www.afup.a36.de/" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Junghard, DF1IAV</a> und <a href="https://www.youtube.com/@ArthurKonze" target="_blank" rel="noopener noreferrer" class="underline hover:text-[color:var(--color-theme-1)]">Arthur Konze</a> für seine hilfreichen Hinweise und Anregungen zur Verbesserung der App.
 	</p>
 
 
