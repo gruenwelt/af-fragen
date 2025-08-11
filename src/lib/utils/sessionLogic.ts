@@ -222,7 +222,7 @@ export async function startSession({
   setIsLoading: (v: boolean) => void;
   onSessionStart: () => void;
 }) {
-  const selectedClassNow = get(page).url.searchParams.get('class') ?? '1';
+  const selectedClassNow = get(page).url.searchParams.get('class') ?? 'V';
   setIsLoading(true);
   await tick();
   const result = await initializeSession({
@@ -348,7 +348,7 @@ export async function updateFilteredQuestions({
   if (typeof window !== 'undefined' && window.location?.search !== undefined) {
     const currentParams = new URLSearchParams(window.location.search);
     if (!currentParams.has('class')) {
-      currentParams.set('class', '1');
+      currentParams.set('class', 'V');
       const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
       window.history.replaceState({}, '', newUrl);
     }
@@ -606,7 +606,7 @@ export function initializeOnMount(
 }
 
 export function getSelectedClass(): string {
-  return browser ? get(page).url.searchParams.get('class') ?? '1' : '1';
+  return browser ? get(page).url.searchParams.get('class') ?? 'V' : 'V';
 }
 
 export function getTimeLimitMinutes(selectedClass: string, questionLimit: number): number | null {
