@@ -65,35 +65,35 @@ if (browser) {
 		<ul style="--gap:{gap}em">
 			<li aria-current={!isInfoPage && selectedClass === 'V' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== 'V') || isInfoPage}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
 				{:else}
 					<a href={`${currentPath}?class=V`}>V</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === 'B' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== 'B') || isInfoPage}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">B</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">B</span>
 				{:else}
 					<a href={`${currentPath}?class=B`}>B</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === '1' ? 'page' : undefined}>
 				{#if (($sessionStarted && selectedClass !== '1') || isInfoPage)}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 				{:else}
 					<a href={`${currentPath}?class=1`}>N</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 				{#if (($sessionStarted && selectedClass !== '2') || isInfoPage)}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
 				{:else}
 					<a href={`${currentPath}?class=2`}>N→E</a>
 				{/if}
 			</li>
 			<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 				{#if (($sessionStarted && selectedClass !== '3') || isInfoPage)}
-					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
+					<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
 				{:else}
 					<a href={`${currentPath}?class=3`}>E→A</a>
 				{/if}
@@ -165,35 +165,35 @@ if (browser) {
 					<ul style="--gap:{gap}em">
 						<li aria-current={!isInfoPage && selectedClass === 'V' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== 'V') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
 							{:else}
 								<a href={`${currentPath}?class=V`}>V</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === 'B' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== 'B') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">B</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">B</span>
 							{:else}
 								<a href={`${currentPath}?class=B`}>B</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === '1' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '1') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N</span>
 							{:else}
 								<a href={`${currentPath}?class=1`}>N</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === '2' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '2') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">N→E</span>
 							{:else}
 								<a href={`${currentPath}?class=2`}>N→E</a>
 							{/if}
 						</li>
 						<li aria-current={!isInfoPage && selectedClass === '3' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== '3') || isInfoPage}
-								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
+								<span class="opacity-50 cursor-not-allowed flex h-full items-center text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">E→A</span>
 							{:else}
 								<a href={`${currentPath}?class=3`}>E→A</a>
 							{/if}
