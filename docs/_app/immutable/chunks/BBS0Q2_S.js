@@ -1,0 +1,1 @@
+import{w as o}from"./DFSTVCez.js";const e="dark-mode",n=(()=>{if(typeof localStorage<"u"){const t=localStorage.getItem(e);return t!==null?t==="true":!1}return!1})(),r=o(n);r.subscribe(t=>{typeof document<"u"&&(document.documentElement.classList.toggle("dark",t),document.documentElement.classList.toggle("light",!t),localStorage.setItem(e,String(t)))});export{r as i};

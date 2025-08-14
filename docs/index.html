@@ -1,86 +1,74 @@
 <!doctype html>
-
-<title>Funkfragen – Amateurfunk Prüfungshilfe (N, E, A, B, V)</title>
-<meta name="description" content="Prüfungssimulator für die Amateurfunkprüfung in Deutschland – Klassen N, E, A, B, V mit offiziellen Fragen." />
-
 <html lang="de">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<link rel="icon" href="/favicon.png" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" href="/favicon.png" />
 
-		<!-- Standard Favicons -->
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-		<link rel="icon" href="/favicon.ico" sizes="any">
+    <!-- Standard Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" href="/favicon.ico" sizes="any">
 
-		<!-- Apple Touch Icons -->
-		<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
-		<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
-		<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
-		<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
-		<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
-		<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
-		<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
 
-		<!-- Android Icons -->
-		<link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
-		<link rel="icon" type="image/png" sizes="144x144" href="/android-icon-144x144.png">
-		<link rel="icon" type="image/png" sizes="96x96" href="/android-icon-96x96.png">
-		<link rel="icon" type="image/png" sizes="72x72" href="/android-icon-72x72.png">
-		<link rel="icon" type="image/png" sizes="48x48" href="/android-icon-48x48.png">
-		<link rel="icon" type="image/png" sizes="36x36" href="/android-icon-36x36.png">
+    <!-- Android Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="144x144" href="/android-icon-144x144.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/android-icon-96x96.png">
+    <link rel="icon" type="image/png" sizes="72x72" href="/android-icon-72x72.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/android-icon-48x48.png">
+    <link rel="icon" type="image/png" sizes="36x36" href="/android-icon-36x36.png">
 
-		<!-- Manifest and Browser Config -->
-		<link rel="manifest" href="/manifest.json">
-		<meta name="msapplication-config" content="/browserconfig.xml" />
-		<meta name="msapplication-TileColor" content="#ffffff">
-		<meta name="theme-color" content="#0f172a">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta property="og:title" content="Funkfragen – Amateurfunk Prüfungshilfe" />
-		<meta property="og:description" content="Prüfungssimulator für die Amateurfunkprüfung – alle offiziellen Fragen der Klassen N, E, A, B, V." />
-		<meta property="og:image" content="/social-preview.jpg" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://funkfragen.de/" />
+    <!-- Manifest and Browser Config -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Funkfragen – Amateurfunk Prüfungshilfe" />
-		<meta name="twitter:description" content="Prüfungssimulator für die Amateurfunkprüfung – N, E, A, B, V – mit offiziellen Fragen." />
-		<meta name="twitter:image" content="/social-preview.jpg" />
-		
-		<link rel="modulepreload" href="/_app/immutable/entry/start.CCtv-qCF.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/CKuh2jrv.js">
+    <!-- SEO is injected by +layout.svelte / SeoHead.svelte -->
+    
+		<link rel="modulepreload" href="/_app/immutable/entry/start.Ce_EUlmH.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/B74Flyk7.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/DFSTVCez.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/CHe4WhmO.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.B_gK5qNT.js">
+		<link rel="modulepreload" href="/_app/immutable/entry/app.bPjKi64G.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/Dp1pzeXC.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/CWj6FrbW.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/CjukLHVt.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/CjvwCGwy.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/B8cPWymD.js">
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">
 			<script>
 				{
-					__sveltekit_1x8kb3o = {
+					__sveltekit_hucsmy = {
 						base: ""
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/_app/immutable/entry/start.CCtv-qCF.js"),
-						import("/_app/immutable/entry/app.B_gK5qNT.js")
+						import("/_app/immutable/entry/start.Ce_EUlmH.js"),
+						import("/_app/immutable/entry/app.bPjKi64G.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
 				}
 			</script>
 		</div>
-	</body>
+  </body>
 </html>

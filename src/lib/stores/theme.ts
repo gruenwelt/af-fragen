@@ -6,9 +6,9 @@ const initial = (() => {
 	if (typeof localStorage !== 'undefined') {
 		const stored = localStorage.getItem(STORAGE_KEY);
 		if (stored !== null) return stored === 'true';
-		return true; // default to dark mode
+		return false; // default to light mode
 	}
-	return true; // default to dark mode
+	return false; // default to light mode
 })();
 
 export const isDarkMode = writable(initial);
