@@ -85,7 +85,7 @@ async function initializeState() {
 	let isLoading = false;
 
 	$: if (browser && $page.url) {
-		const c = $page.url.searchParams.get('class') ?? '1';
+		const c = $page.url.searchParams.get('class') ?? 'V';
 		isLoading = true;
 
 		const target = filterQuestionsByClass(questions, c);
@@ -97,7 +97,7 @@ async function initializeState() {
 	}
 
 	// Selected class for tree filtering
-	$: selectedClass = browser ? $page.url.searchParams.get('class') ?? '1' : '1';
+	$: selectedClass = browser ? $page.url.searchParams.get('class') ?? 'V' : 'V';
 
 	// Tree data filtered by selected class
 	let treeData: any[] = [];
@@ -172,7 +172,7 @@ $: if (!showSidebar && questionsContainer && filteredQuestions.length > 0 && !$i
 {#if isLoading}
 	<LoadingSpinner />
 {:else if headerReady}
-	<PdfPanel src="/Hilfsmittel_12062024-2.pdf" title="Hilfsmittel" />
+	<PdfPanel title="Hilfsmittel" />
 	{#if !$isMobile && mobileReady}
 		<div class="flex max-w-5xl mx-auto p-4 gap-4 overflow-x-hidden flex-grow overflow-auto">
 			{#if Sidebar && showSidebar}
