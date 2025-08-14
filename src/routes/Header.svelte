@@ -12,6 +12,13 @@ let githubWhite = '';
 $: github = `${base}/github.svg`;
 $: githubWhite = `${base}/github-white.png`;
 
+// Shape-based nav background controls
+let gap = 1.25;   // em, spacing between nav items
+let sz = 25;     // px, shape width at each side
+let r = 6;       // px, visual radius placeholder (reserved for future use)
+let navMainH = 0; // measured height for main nav
+let navClassH = 0; // measured height for class nav
+
 $: isDesktop = browser ? !$isMobile : undefined;
 let showPopup = true;
 
@@ -54,10 +61,8 @@ if (browser) {
 		<!-- Filter by class nav bar -->
 	<!-- This nav bar allows filtering by class via query parameter -->
 	<nav aria-label="Klassenauswahl">
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-		</svg>
-		<ul>
+		<div class="shape" style="--sz:{sz}px; --r:{r}px; --h:{navClassH}px;" bind:clientHeight={navClassH}></div>
+		<ul style="--gap:{gap}em">
 			<li aria-current={!isInfoPage && selectedClass === 'V' ? 'page' : undefined}>
 				{#if ($sessionStarted && selectedClass !== 'V') || isInfoPage}
 					<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
@@ -94,17 +99,12 @@ if (browser) {
 				{/if}
 			</li>
 		</ul>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-		</svg>
 	</nav>
 
 
 	<nav aria-label="Hauptnavigation">
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-		</svg>
-		<ul>
+		<div class="shape" style="--sz:{sz}px; --r:{r}px; --h:{navMainH}px;" bind:clientHeight={navMainH}></div>
+		<ul style="--gap:{gap}em">
 			<li aria-current={browser && currentPath === base + '/' ? 'page' : undefined}>
 				<a href={`${base}/${currentSearch}`}>Üben</a>
 			</li>
@@ -116,9 +116,6 @@ if (browser) {
 			</li>
 
 		</ul>
-		<svg viewBox="0 0 2 3" aria-hidden="true">
-			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-		</svg>
 	</nav>
 
 	<div class="corner corner-toggle">
@@ -142,10 +139,8 @@ if (browser) {
 	<div style="display: flex; flex-direction: column; align-items: center;">
 		<div style="width: 100%;">
 			<nav aria-label="Hauptnavigation">
-				<svg viewBox="0 0 2 3" aria-hidden="true">
-					<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-				</svg>
-				<ul>
+				<div class="shape" style="--sz:{sz}px; --r:{r}px; --h:{navMainH}px;" bind:clientHeight={navMainH}></div>
+				<ul style="--gap:{gap}em">
 					<li>
 						<button class="hamburger" on:click={() => showPopup = !showPopup} aria-label="Toggle menu">
 							☰
@@ -161,18 +156,13 @@ if (browser) {
 						<a href={`${base}/info${currentSearch}`}>Info</a>
 					</li>
 				</ul>
-				<svg viewBox="0 0 2 3" aria-hidden="true">
-					<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-				</svg>
 			</nav>
 		</div>
 		{#if showPopup}
 			<div style="width: 100%;">
 				<nav aria-label="Klassenauswahl" style="margin-top: 1px;">
-					<svg viewBox="0 0 2 3" aria-hidden="true">
-						<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
-					</svg>
-					<ul>
+					<div class="shape" style="--sz:{sz}px; --r:{r}px; --h:{navClassH}px;" bind:clientHeight={navClassH}></div>
+					<ul style="--gap:{gap}em">
 						<li aria-current={!isInfoPage && selectedClass === 'V' ? 'page' : undefined}>
 							{#if ($sessionStarted && selectedClass !== 'V') || isInfoPage}
 								<span class="opacity-50 cursor-not-allowed flex h-full items-center px-2 text-[color:var(--color-text)] font-bold text-[0.8rem] uppercase tracking-wider">V</span>
@@ -209,9 +199,6 @@ if (browser) {
 							{/if}
 						</li>
 					</ul>
-					<svg viewBox="0 0 2 3" aria-hidden="true">
-						<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
-					</svg>
 				</nav>
 			</div>
 		{/if}
@@ -229,6 +216,37 @@ if (browser) {
 
 
 <style>
+	nav {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		--background: rgba(255, 255, 255, 0.7);
+	}
+
+	.shape {
+		position: absolute;
+		inset: 0;
+		background: var(--background);
+		/* extend width by sz on both sides and recenter */
+		width: calc(100% + 2 * var(--sz));
+		height: 100%;
+		translate: calc(-1* var(--sz)) 0;
+		/* Angle & curve helpers (use nav height bound to --h) */
+		--rads: atan2(var(--h), var(--sz));
+		--dx: calc(var(--r) * cos(var(--rads)));
+		--dy: calc(var(--r) * sin(var(--rads)));
+		/* Slanted ends using quadratic curves for rounded corners */
+		clip-path: shape(
+			from 0 0,
+			line to 100% 0,
+			line to calc(100% - var(--sz) + var(--dx)) calc(100% - var(--dy)),
+			curve to calc(100% - var(--sz) - var(--r)) 100% with calc(100% - var(--sz)) 100%,
+			line to calc(var(--sz) + var(--r)) 100%,
+			curve to calc(var(--sz) - var(--dx)) calc(100% - var(--dy)) with var(--sz) 100%,
+			close
+		);
+	}
+
 	header {
 		display: flex;
 		justify-content: space-between;
@@ -253,33 +271,17 @@ if (browser) {
 		object-fit: contain;
 	}
 
-	nav {
-		display: flex;
-		justify-content: center;
-		--background: rgba(255, 255, 255, 0.7);
-	}
-
-	svg {
-		width: 2em;
-		height: 3em;
-		display: block;
-	}
-
-	path {
-		fill: var(--background);
-	}
-
 	ul {
 		position: relative;
 		padding: 0;
+		padding-inline: 0.5rem;
 		margin: 0;
 		height: 3em;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		list-style: none;
-		background: var(--background);
-		background-size: contain;
+		gap: var(--gap);
 	}
 
 	li {
@@ -303,7 +305,7 @@ if (browser) {
 		display: flex;
 		height: 100%;
 		align-items: center;
-		padding: 0 0.5rem;
+		padding: 0;
 		color: var(--color-text);
 		font-weight: 700;
 		font-size: 0.8rem;
@@ -321,8 +323,7 @@ if (browser) {
 	  background: none;
 	  border: none;
 	  font-size: 1.4rem;
-	  padding-left: 0.5rem;
-	  padding-right: 0.4rem;
+	  padding: 0;
 	  text-transform: none;
 	  display: flex;
 	  align-items: center;
@@ -337,23 +338,21 @@ if (browser) {
 		padding-right: 0.5rem;
 	}
 
+	/* Uniform edge spacing: trim padding on first and last visible items */
+	nav ul > li:first-of-type > *:first-child { padding-left: 0 !important; }
+	nav ul > li:last-of-type > *:last-child { padding-right: 0 !important; }
+
 :global(.dark) nav {
 	--background: rgba(30, 30, 30, 0.7);
 }
 
-:global(.dark) path {
-	fill: var(--background);
-}
 
-:global(.dark) ul {
-	background: var(--background);
-}
 
-:global(.dark) nav a {
-	color: var(--color-text);
-}
-
-:global(.dark) a:hover {
-	color: var(--color-theme-1);
+/* On mobile, shrink Klassenauswahl nav to fit its items */
+@media (max-width: 768px) {
+  nav[aria-label="Klassenauswahl"] {
+    width: fit-content;
+    margin: 0 auto;
+  }
 }
 </style>
