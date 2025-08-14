@@ -315,8 +315,12 @@ if (browser) {
 		transition: color 0.2s linear;
 	}
 
-	a:hover {
+	nav a:hover,
+	nav a:active,
+	nav a:focus,
+	nav a:focus-visible {
 		color: var(--color-theme-1);
+		outline: none;
 	}
 
 	button.hamburger {
@@ -330,6 +334,16 @@ if (browser) {
 	  transform: translateY(5.5px);
 	  cursor: pointer;
 	}
+
+	button.hamburger:hover,
+	button.hamburger:active,
+	button.hamburger:focus,
+	button.hamburger:focus-visible {
+		color: var(--color-theme-1);
+		outline: none;
+	}
+
+	:global(a) { -webkit-tap-highlight-color: transparent; }
 
 	.corner-toggle {
 		display: flex;
