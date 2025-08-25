@@ -171,7 +171,7 @@ onMount(() => {
 	</p>
 	<p class="text-sm text-gray-600">
 		Datenschutz:<br>
-		Diese Web-App speichert oder sammelt keinerlei personenbezogene Daten – Punkt. Die Nutzung ist vollständig anonym, es findet keine Erfassung oder Auswertung von Nutzeraktivitäten statt.
+		  Diese Web-App speichert oder sammelt keinerlei personenbezogene Daten. Zur Verbesserung des Angebots werden mit Umami Analytics lediglich anonyme Nutzungsstatistiken erhoben, ohne Cookies oder Tracking personenbezogener Aktivitäten.
 	</p>
 
 	<p class="text-sm text-gray-600">

@@ -8,6 +8,10 @@
 
 	import { registerSW } from 'virtual:pwa-register';
 
+	import { browser, dev } from '$app/environment';
+	const PROD_DOMAINS = ['funkfragen.de', 'www.funkfragen.de'];
+	const isProdDomain = typeof window !== 'undefined' && PROD_DOMAINS.includes(window.location.hostname);
+
 if (typeof navigator !== 'undefined') {
 	registerSW({
 	  onNeedRefresh() {},
@@ -65,6 +69,14 @@ if (typeof navigator !== 'undefined') {
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
+	{#if browser && !dev && isProdDomain}
+	  <script
+	    defer
+	    src="https://cloud.umami.is/script.js"
+	    data-website-id="aeaf4e05-e31b-48c9-80c9-b4dc0313ed42"
+	    data-domains="funkfragen.de"
+	  ></script>
+	{/if}
 </svelte:head>
 
 <div class="app">
